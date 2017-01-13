@@ -29,11 +29,11 @@
 //-----------------------------------------------
 
 // window
-const char CLASS_NAME[] = "Spacewar";
-const char GAME_TITLE[] = "Spacewar";
+const char CLASS_NAME[] = "Throw The Cheese";
+const char GAME_TITLE[] = "Throw The Cheese";
 const bool FULLSCREEN = false;              // windowed or fullscreen
-const UINT GAME_WIDTH =  640;               // width of game in pixels
-const UINT GAME_HEIGHT = 480;               // height of game in pixels
+const UINT GAME_WIDTH =  480;               // width of game in pixels
+const UINT GAME_HEIGHT = 640;               // height of game in pixels
 
 // game
 const double PI = 3.14159265;
@@ -43,19 +43,56 @@ const float MIN_FRAME_TIME = 1.0f/FRAME_RATE;   // minimum desired time for 1 fr
 const float MAX_FRAME_TIME = 1.0f/MIN_FRAME_RATE; // maximum time used in calculations
 const float GRAVITY = 6.67428e-11f;             // gravitational constant
 const float MASS_PLANET = 1.0e14f;
-const float MASS_SHIP = 5.0f;
+const float MASS_SPACE_SHIP = 5.0f;		//number subject to change
+const float MASS_PLAYER = 5.0f;			//number subject to change
 
 const int OBJECT_WIDTH = 32;
 const int OBJECT_HEIGHT = 32;
 const int OBJECT_TEXTURE_COLUMNS = 1;
 const int OBJECT_START_FRAME = 0;
 const int OBJECT_END_FRAME = 1;
-const int OBJECT_MASS = 300;
+const float OBJECT_MASS = 300.0f;
 const float OBJECT_SPEED = 300.0f;
 const float OBJECT_ANIMATION_DELAY = 0.2f;
 
+const int PLAYER_WIDTH = 32;
+const int PLAYER_HEIGHT = 64;
+const int PLAYER_TEXTURE_COLUMNS = 1;
+const int PLAYER_START_FRAME = 0;
+const int PLAYER_END_FRAME = 1;
+const float PLAYER_MASS = 50.0f;				//number subject to change - idk what to put here
+const float PLAYER_SPEED = 100.0f;			//player movement speed when going < or >
+const float PLAYER_ANIMATION_DELAY = 0.2f;		//note: make player animate only when moving and throwing
+const float PLAYER_BASE_STRENGTH = 25.0f;		//base strength, related to player throwing
+
+const int CHEESE_WIDTH = 32;
+const int CHEESE_HEIGHT = 32;
+const int CHEESE_TEXTURE_COLUMNS = 1;
+const int CHEESE_START_FRAME = 0;
+const int CHEESE_END_FRAME = 1;
+const float CHEESE_MASS = 50.0f;				//number subject to change - idk what to put here
+const float CHEESE_BASE_SPEED = 100.0f;			//base speed that cheese always moves on, MAY NOT BE RELEVANT DEPENDING ON HOW WE CALCULATE SPEED 
+const float CHEESE_ANIMATION_DELAY = 0.2f;		//note: maybe cheese animates when moving 
+
+const int WORMHOLE_WIDTH = 160;			
+const int WORMHOLE_HEIGHT = 160;
+const int WORMHOLE_TEXTURE_COLUMNS = 1;
+const int WORMHOLE_START_FRAME = 0;
+const int WORMHOLE_END_FRAME = 5;
+const float WORMHOLE_ANIMATION_DELAY = 0.1f;		//animation can look very cool
+
+const int ENEMY_SPACESHIP_WIDTH = 64;
+const int ENEMY_SPACESHIP_HEIGHT = 16;
+const int ENEMY_SPACESHIP_TEXTURE_COLUMNS = 1;
+const int ENEMY_SPACESHIP_START_FRAME = 0;
+const int ENEMY_SPACESHIP_END_FRAME = 1;
+const float ENEMY_SPACESHIP_MASS = 50.0f;				//number subject to change - idk what to put here
+const float ENEMY_SPACESHIP_SPEED = 50.0f;				
+const float ENEMY_SPACESHIP_ANIMATION_DELAY = 0.2f;		//passively animates
+
+
 // graphic images
-const char EXAMPLE_OBJECT_IMAGE[] = "pictures\\[PLACEHOLDER].jpg";
+const char EXAMPLE_OBJECT_IMAGE[] = "images\\[PLACEHOLDER].jpg";
 
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
