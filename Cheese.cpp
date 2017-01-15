@@ -48,7 +48,8 @@ void Cheese::draw()
 //=============================================================================
 void Cheese::update(float frameTime)
 {
-	
+	//if thrown
+	spriteData.angle += frameTime * CheeseNS::ROTATION_RATE;
 }
 
 //additional methods here

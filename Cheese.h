@@ -13,7 +13,7 @@ namespace CheeseNS
 
 	const int WIDTH = CHEESE_WIDTH;							//IMAGE WIDTH            
 	const int HEIGHT = CHEESE_HEIGHT;						// image height
-	const float ROTATION_RATE = (float)PI / 4;				// spin at x radians per second
+	const float ROTATION_RATE = (float)PI;				// spin at x radians per second
 	const float BASE_SPEED = CHEESE_BASE_SPEED;						// X pixels per second
 	const float MASS = CHEESE_MASS;							// mass
 	const int   TEXTURE_COLS = CHEESE_TEXTURE_COLUMNS;      // texture has x columns
@@ -48,9 +48,9 @@ public:
 	{
 
 		if (playerNumber == 1 || playerNumber == 2)
-			playerNumber == playerNo;
+			playerNumber = playerNo;
 		else
-			playerNumber == 0;
+			playerNumber = 0;
 		
 	}
 		

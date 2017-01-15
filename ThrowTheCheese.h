@@ -9,6 +9,8 @@
 #include "image.h"
 #include "object.h"
 #include "cheese.h"
+#include "Player.h"
+#include "Spaceship.h"
 
 //=============================================================================
 // This class is the core of the game
@@ -23,8 +25,15 @@ private:
 	Image exampleImage;
     Object exampleObject;
 
+	TextureManager backgroundTexture;
+	TextureManager groundTexture;
+	TextureManager cheeseTexture;
+	TextureManager spaceshipTexture;
 
+	Image background;
+	Image ground;
 	Cheese cheese;
+	Spaceship enemy_spaceship;	//only one for now, testing only
 
 public:
     // Constructor

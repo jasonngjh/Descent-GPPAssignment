@@ -64,6 +64,7 @@ const float PLAYER_MASS = 50.0f;				//number subject to change - idk what to put
 const float PLAYER_SPEED = 100.0f;			//player movement speed when going < or >
 const float PLAYER_ANIMATION_DELAY = 0.2f;		//note: make player animate only when moving and throwing
 const float PLAYER_BASE_STRENGTH = 25.0f;		//base strength, related to player throwing
+const float PLAYER_MAX_HEALTH = 100;			//for dynamic health values, should represent health as a number
 
 const int CHEESE_WIDTH = 32;
 const int CHEESE_HEIGHT = 32;
@@ -74,6 +75,7 @@ const float CHEESE_MASS = 50.0f;				//number subject to change - idk what to put
 const float CHEESE_BASE_SPEED = 100.0f;			//base speed that cheese always moves on, MAY NOT BE RELEVANT DEPENDING ON HOW WE CALCULATE SPEED 
 const float CHEESE_ANIMATION_DELAY = 0.2f;		//note: maybe cheese animates when moving 
 
+//refers to a wormhole/blackhole image, is not an actual object
 const int WORMHOLE_WIDTH = 160;			
 const int WORMHOLE_HEIGHT = 160;
 const int WORMHOLE_TEXTURE_COLUMNS = 1;
@@ -81,18 +83,23 @@ const int WORMHOLE_START_FRAME = 0;
 const int WORMHOLE_END_FRAME = 5;
 const float WORMHOLE_ANIMATION_DELAY = 0.1f;		//animation can look very cool
 
-const int ENEMY_SPACESHIP_WIDTH = 64;
-const int ENEMY_SPACESHIP_HEIGHT = 16;
-const int ENEMY_SPACESHIP_TEXTURE_COLUMNS = 1;
-const int ENEMY_SPACESHIP_START_FRAME = 0;
-const int ENEMY_SPACESHIP_END_FRAME = 1;
-const float ENEMY_SPACESHIP_MASS = 50.0f;				//number subject to change - idk what to put here
-const float ENEMY_SPACESHIP_SPEED = 50.0f;				
-const float ENEMY_SPACESHIP_ANIMATION_DELAY = 0.2f;		//passively animates
+const int SPACESHIP_WIDTH = 64;
+const int SPACESHIP_HEIGHT = 16;
+const int SPACESHIP_TEXTURE_COLUMNS = 1;
+const int SPACESHIP_START_FRAME = 0;
+const int SPACESHIP_END_FRAME = 2;
+const float SPACESHIP_MASS = 50.0f;				//number subject to change - idk what to put here
+const float SPACESHIP_SPEED = 50.0f;				
+const float SPACESHIP_ANIMATION_DELAY = 0.1f;		//passively animates
+const int SPACESHIP_STARTING_HEALTH = 3;
 
+const int GROUND_LEVEL_HEIGHT = 480;			//no objects may go beyond this line, essentially means 'ground level'
 
 // graphic images
 const char EXAMPLE_OBJECT_IMAGE[] = "images\\[PLACEHOLDER].jpg";
+const char GROUND_TILESET_IMAGE[] = "images\\ground_tile.png";
+const char CHEESE_IMAGE[] = "images\\cheese.png";
+const char SPACESHIP_IMAGE[] = "images\\spaceship.png";
 
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
@@ -100,9 +107,5 @@ const char EXAMPLE_OBJECT_IMAGE[] = "images\\[PLACEHOLDER].jpg";
 const UCHAR ESC_KEY      = VK_ESCAPE;       // escape key
 const UCHAR ALT_KEY      = VK_MENU;         // Alt key
 const UCHAR ENTER_KEY    = VK_RETURN;       // Enter key
-
-
-// weapon types
-enum WEAPON {TORPEDO, SHIP, PLANET};
 
 #endif

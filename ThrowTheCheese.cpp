@@ -14,6 +14,8 @@ Main Menu:
 Instructions is shown before the game starts (during intro) so player(s) won't miss the instructions
 Controls are shown during instructions and during the game so player(s) won't forget
 
+if 2 player, color code them red and blue for clarity
+
 */ 
 
 #include "ThrowTheCheese.h"
@@ -59,6 +61,36 @@ void ThrowTheCheese::initialize(HWND hwnd)
 	exampleObject.setY(GAME_HEIGHT / 4);
 	//set velocity, set speed, set size, etc etc
 	*/
+
+	if (!groundTexture.initialize(graphics, GROUND_TILESET_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ground texture"));
+
+	if (!cheeseTexture.initialize(graphics, CHEESE_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing cheese texture"));
+
+	if (!spaceshipTexture.initialize(graphics, SPACESHIP_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship texture"));
+
+	if (!ground.initialize(graphics, 0, 0, 0, &groundTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ground tiles"));
+
+	if(!cheese.initialize(this, ObjectNS::WIDTH, ObjectNS::HEIGHT, ObjectNS::TEXTURE_COLS, &cheeseTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing cheese game object"));
+
+	if (!enemy_spaceship.initialize(this, ObjectNS::WIDTH, ObjectNS::HEIGHT, ObjectNS::TEXTURE_COLS, &spaceshipTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
+
+	ground.setX(0);
+	ground.setY(GROUND_LEVEL_HEIGHT);		//sets ground to 3/4 of game width
+
+	cheese.setX(GAME_WIDTH / 2);
+	cheese.setY(GROUND_LEVEL_HEIGHT - CHEESE_HEIGHT);
+
+	enemy_spaceship.setFrames(SpaceshipNS::START_FRAME, SpaceshipNS::END_FRAME);
+	enemy_spaceship.setCurrentFrame(SpaceshipNS::START_FRAME);
+	enemy_spaceship.setX(GAME_WIDTH / 4);
+	enemy_spaceship.setY(GAME_HEIGHT / 4);
+
     return;
 }
 
@@ -67,8 +99,9 @@ void ThrowTheCheese::initialize(HWND hwnd)
 //=============================================================================
 void ThrowTheCheese::update()
 {
-	exampleObject.update(frameTime);
-
+	//exampleObject.update(frameTime);
+	cheese.update(frameTime);
+	enemy_spaceship.update(frameTime);
 	//other update mechanics here
 
 }
@@ -111,7 +144,9 @@ void ThrowTheCheese::render()
 {
     graphics->spriteBegin();                // begin drawing sprites
 
-    exampleObject.draw();                   // add the object to the scene
+    ground.draw();                   // add the object to the scene
+	cheese.draw();					//in real game, cheese should be drawn later, when wormhole appears
+	enemy_spaceship.draw();
 
     graphics->spriteEnd();                  // end drawing sprites
 }
@@ -123,6 +158,9 @@ void ThrowTheCheese::render()
 void ThrowTheCheese::releaseAll()
 {
 	exampleTexture.onLostDevice();
+	cheeseTexture.onLostDevice();
+	groundTexture.onLostDevice();
+	spaceshipTexture.onLostDevice();
     Game::releaseAll();
     return;
 }
@@ -134,6 +172,9 @@ void ThrowTheCheese::releaseAll()
 void ThrowTheCheese::resetAll()
 {
     exampleTexture.onResetDevice();
+	cheeseTexture.onResetDevice();
+	groundTexture.onResetDevice();
+	spaceshipTexture.onResetDevice();
     Game::resetAll();
     return;
 }

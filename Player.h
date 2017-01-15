@@ -4,7 +4,6 @@
 
 #include "entity.h"
 #include "constants.h"
-#include "cheese.h"
 
 namespace PlayerNS
 {
@@ -20,7 +19,7 @@ namespace PlayerNS
 	const int   START_FRAME = PLAYER_START_FRAME;			//which frame to start
 	const int   END_FRAME = PLAYER_END_FRAME;				//which frame to end
 	const float ANIMATION_DELAY = PLAYER_ANIMATION_DELAY;   // time between frames
-
+	const float BASE_STRENGTH = PLAYER_BASE_STRENGTH;
 
 	//DERIVED PERMANENT VALUES
 	const int X = GAME_WIDTH / 2 - WIDTH / 2;				// location on screen
@@ -32,8 +31,14 @@ namespace PlayerNS
 class Player : public Entity
 {
 private:
-	bool    shieldOn;
+	
+	float baseStrength;
 	bool	isHoldingCheese = false;
+
+	bool	isAlive = true;
+	int maxHealth;
+	int health;
+
 public:
 	// constructor
 	Player();

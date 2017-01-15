@@ -18,7 +18,6 @@ Player::Player() : Entity()
 	endFrame = PlayerNS::END_FRAME;     // last frame of ship animation
 	currentFrame = startFrame;
 	radius = PlayerNS::WIDTH / 2.0;
-	shieldOn = false;
 	mass = PlayerNS::MASS;
 	collisionType = entityNS::CIRCLE;
 }
@@ -30,6 +29,9 @@ Player::Player() : Entity()
 bool Player::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM)
 {
+	maxHealth = PLAYER_MAX_HEALTH;
+	baseStrength = PLAYER_BASE_STRENGTH;
+
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
 }
 
@@ -48,7 +50,7 @@ void Player::draw()
 //=============================================================================
 void Player::update(float frameTime)
 {
-
+	
 }
 
 //additional methods here
