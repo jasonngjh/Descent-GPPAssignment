@@ -10,6 +10,7 @@
 #include <stdlib.h>             // for detecting memory leaks
 #include <crtdbg.h>             // for detecting memory leaks
 #include "ThrowTheCheese.h"
+#include "guicon.h"
 
 // Function prototypes
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int); 
@@ -29,6 +30,9 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
     // Check for memory leak if debug build
     #if defined(DEBUG) | defined(_DEBUG)
         _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+		
+		//opens console and redirect all output to console
+		RedirectIOToConsole();	
     #endif
 
     MSG msg;

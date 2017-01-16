@@ -11,6 +11,8 @@
 #include "cheese.h"
 #include "Player.h"
 #include "Spaceship.h"
+#include "guicon.h"
+#include <iostream>
 
 //=============================================================================
 // This class is the core of the game
