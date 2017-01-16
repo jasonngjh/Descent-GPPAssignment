@@ -49,7 +49,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Spaceship.cpp">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -92,6 +92,18 @@
     <ClInclude Include="Spaceship.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Boss_Spaceship.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="powerup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AttackComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="images\cheese.png">
@@ -104,7 +116,7 @@
       <Filter>images</Filter>
     </Image>
     <Image Include="images\textures.png">
-      <Filter>images</Filter>
+      <Filter>Source Files</Filter>
     </Image>
   </ItemGroup>
 </Project>

@@ -81,6 +81,7 @@ void ThrowTheCheese::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
 
 	ground.setX(0);
+	ground.setScale(GAME_WIDTH / ground.getWidth());
 	ground.setY(GROUND_LEVEL_HEIGHT);		//sets ground to 3/4 of game width
 
 	cheese.setX(GAME_WIDTH / 2);

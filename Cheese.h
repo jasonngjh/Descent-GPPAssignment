@@ -1,10 +1,11 @@
+//this class refers to the player projectile, change file name when necessary
+
 #ifndef _CHEESE_H                 // Prevent multiple definitions if this 
 #define _CHEESE_H                     // file is included in more than one place
 #define WIN32_LEAN_AND_MEAN
 
 #include "entity.h"
 #include "constants.h"
-#include "player.h"
 
 namespace CheeseNS
 {

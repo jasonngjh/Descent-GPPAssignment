@@ -104,16 +104,20 @@
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AttackComponent.h" />
+    <ClInclude Include="Boss_Spaceship.h" />
     <ClInclude Include="Cheese.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="gameError.h" />
     <ClInclude Include="graphics.h" />
+    <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="powerup.h" />
     <ClInclude Include="Spaceship.h" />
     <ClInclude Include="ThrowTheCheese.h" />
     <ClInclude Include="textureManager.h" />

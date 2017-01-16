@@ -18,7 +18,6 @@ Cheese::Cheese() : Entity()
 	endFrame = CheeseNS::END_FRAME;     // last frame of ship animation
 	currentFrame = startFrame;
 	radius = CheeseNS::WIDTH / 2.0;
-	shieldOn = false;
 	mass = CheeseNS::MASS;
 	collisionType = entityNS::CIRCLE;
 }

@@ -32,8 +32,8 @@
 const char CLASS_NAME[] = "Throw The Cheese";
 const char GAME_TITLE[] = "Throw The Cheese";
 const bool FULLSCREEN = false;              // windowed or fullscreen
-const UINT GAME_WIDTH =  480;               // width of game in pixels
-const UINT GAME_HEIGHT = 640;               // height of game in pixels
+const UINT GAME_WIDTH = 1000;               // width of game in pixels
+const UINT GAME_HEIGHT = 760;               // height of game in pixels
 
 // game
 const double PI = 3.14159265;
@@ -75,7 +75,9 @@ const float CHEESE_MASS = 50.0f;				//number subject to change - idk what to put
 const float CHEESE_BASE_SPEED = 100.0f;			//base speed that cheese always moves on, MAY NOT BE RELEVANT DEPENDING ON HOW WE CALCULATE SPEED 
 const float CHEESE_ANIMATION_DELAY = 0.2f;		//note: maybe cheese animates when moving 
 
-//refers to a wormhole/blackhole image, is not an actual object
+//refers to a wormhole/blackhole image, is not an actual object. Remove if confirmed to go for tank theme instead of cheese theme
+//can also incorporate to 'explain' arrival of spaceships
+//not priority
 const int WORMHOLE_WIDTH = 160;			
 const int WORMHOLE_HEIGHT = 160;
 const int WORMHOLE_TEXTURE_COLUMNS = 1;
@@ -92,6 +94,13 @@ const float SPACESHIP_MASS = 50.0f;				//number subject to change - idk what to 
 const float SPACESHIP_SPEED = 50.0f;				
 const float SPACESHIP_ANIMATION_DELAY = 0.1f;		//passively animates
 const int SPACESHIP_STARTING_HEALTH = 3;
+
+const int POWERUP_WIDTH = 32;
+const int POWERUP_HEIGHT = 32;
+const int POWERUP_TEXTURE_COLUMNS = 1;
+const int POWERUP_START_FRAME = 0;
+const int POWERUP_END_FRAME = 1;
+const float POWERUP_ANIMATION_DELAY = 0.1f;		//passively animates
 
 const int GROUND_LEVEL_HEIGHT = 480;			//no objects may go beyond this line, essentially means 'ground level'
 
