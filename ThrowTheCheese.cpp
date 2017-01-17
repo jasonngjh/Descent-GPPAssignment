@@ -70,6 +70,8 @@ void ThrowTheCheese::initialize(HWND hwnd)
 
 	if (!spaceshipTexture.initialize(graphics, SPACESHIP_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship texture"));
+	if (!menu1Texture.initialize(graphics, MENU1_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu texture"));
 
 	if (!ground.initialize(graphics, 0, 0, 0, &groundTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ground tiles"));
@@ -79,6 +81,10 @@ void ThrowTheCheese::initialize(HWND hwnd)
 
 	if (!enemy_spaceship.initialize(this, ObjectNS::WIDTH, ObjectNS::HEIGHT, ObjectNS::TEXTURE_COLS, &spaceshipTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
+	
+	if (!menu1.initialize(graphics,MENU1_WIDTH, MENU1_HEIGHT, 2, &menu1Texture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu"));
+
 
 	ground.setX(0);
 	ground.setScale(GAME_WIDTH / ground.getWidth());
@@ -104,7 +110,32 @@ void ThrowTheCheese::update()
 	cheese.update(frameTime);
 	enemy_spaceship.update(frameTime);
 	//other update mechanics here
+	GENERAL_STATE state = gameControl->getGeneralState();
+	switch (state)
+	{
+	case GENERAL_STATE::menu: {
+								  if (input->isKeyDown(DOWN_KEY)){
+									  menu1.setCurrentFrame(MENU1_END_FRAME);
+									  playerCount=2;
+								  }
+								  else if (input->isKeyDown(UP_KEY)){
+									  menu1.setCurrentFrame(MENU1_START_FRAME);
+									  playerCount=1;
+								  }
+								  if (input->isKeyDown(ENTER_KEY)){
+									gameControl->setGeneralState(GENERAL_STATE::game);
+									//playerCount=number of players to initialise
+								  }
 
+	}break;
+
+	case GENERAL_STATE::game:{
+								 if (input->isKeyDown(LEFT_KEY))
+								 {
+									 cheese.setX(cheese.getX()-25);
+								 }
+	}
+	}
 }
 
 //=============================================================================
@@ -144,10 +175,19 @@ void ThrowTheCheese::collisions()
 void ThrowTheCheese::render()
 {
     graphics->spriteBegin();                // begin drawing sprites
+	switch (gameControl->getGeneralState())
+	{
+	case GENERAL_STATE::menu :{
+								 menu1.draw();
+	}break;
+	case GENERAL_STATE::game:{
+								 ground.draw();                   // add the object to the scene
+								 cheese.draw();					//in real game, cheese should be drawn later, when wormhole appears
+								 enemy_spaceship.draw();
 
-    ground.draw();                   // add the object to the scene
-	cheese.draw();					//in real game, cheese should be drawn later, when wormhole appears
-	enemy_spaceship.draw();
+	}
+	}
+    
 
     graphics->spriteEnd();                  // end drawing sprites
 }

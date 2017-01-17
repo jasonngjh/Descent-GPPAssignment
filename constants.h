@@ -32,7 +32,7 @@
 const char CLASS_NAME[] = "Throw The Cheese";
 const char GAME_TITLE[] = "Throw The Cheese";
 const bool FULLSCREEN = false;              // windowed or fullscreen
-const UINT GAME_WIDTH = 1000;               // width of game in pixels
+const UINT GAME_WIDTH = 800;               // width of game in pixels
 const UINT GAME_HEIGHT = 760;               // height of game in pixels
 
 // game
@@ -54,6 +54,7 @@ const int OBJECT_END_FRAME = 1;
 const float OBJECT_MASS = 300.0f;
 const float OBJECT_SPEED = 300.0f;
 const float OBJECT_ANIMATION_DELAY = 0.2f;
+
 
 const int PLAYER_WIDTH = 32;
 const int PLAYER_HEIGHT = 64;
@@ -104,17 +105,30 @@ const float POWERUP_ANIMATION_DELAY = 0.1f;		//passively animates
 
 const int GROUND_LEVEL_HEIGHT = 480;			//no objects may go beyond this line, essentially means 'ground level'
 
+//main menu frames
+
+const int MENU1_WIDTH = GAME_WIDTH;
+const int MENU1_HEIGHT = GAME_HEIGHT;
+const int MENU1_TEXTURE_COLUMNS = 0;
+const int MENU1_START_FRAME = 0;
+const int MENU1_END_FRAME = 1;
+
 // graphic images
 const char EXAMPLE_OBJECT_IMAGE[] = "images\\[PLACEHOLDER].jpg";
 const char GROUND_TILESET_IMAGE[] = "images\\ground_tile.png";
 const char CHEESE_IMAGE[] = "images\\cheese.png";
 const char SPACESHIP_IMAGE[] = "images\\spaceship.png";
-
+const char MENU1_IMAGE[] = "images\\menu1.png";
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
 // it would be possible to save and restore key mappings from a data file.
 const UCHAR ESC_KEY      = VK_ESCAPE;       // escape key
 const UCHAR ALT_KEY      = VK_MENU;         // Alt key
 const UCHAR ENTER_KEY    = VK_RETURN;       // Enter key
+const UCHAR DOWN_KEY	 = VK_DOWN;
+const UCHAR UP_KEY = VK_UP;
+const UCHAR SPACE_KEY = VK_SPACE;
+const UCHAR LEFT_KEY = VK_LEFT;
+const UCHAR RIGHT_KEY = VK_RIGHT;
 
 #endif
