@@ -12,6 +12,10 @@
 #include "Player.h"
 #include "Spaceship.h"
 
+#include <windows.h>
+#include <conio.h>
+#include <vector>
+
 //=============================================================================
 // This class is the core of the game
 //=============================================================================
@@ -35,7 +39,13 @@ private:
 	Cheese cheese;
 	Spaceship enemy_spaceship;	//only one for now, testing only
 
+	std::vector<Spaceship> spaceshipArray;
+	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
+	
+
 public:
+	int currentActiveSpaceships; //amt of spaceships currently alive (should be less or equal to maxActiveSpaceships)
+
     // Constructor
 	ThrowTheCheese();
 
