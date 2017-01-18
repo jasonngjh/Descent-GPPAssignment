@@ -13,11 +13,12 @@ namespace PlayerNS
 	const int WIDTH = PLAYER_WIDTH;							//IMAGE WIDTH            
 	const int HEIGHT = PLAYER_HEIGHT;						// image height
 	const float ROTATION_RATE = (float)PI / 4;				// spin at x radians per second
-	const float SPEED = PLAYER_SPEED;						// X pixels per second
 	const float MASS = PLAYER_MASS;							// mass
 	const int   TEXTURE_COLS = PLAYER_TEXTURE_COLUMNS;      // texture has x columns
-	const int   START_FRAME = PLAYER_START_FRAME;			//which frame to start
-	const int   END_FRAME = PLAYER_END_FRAME;				//which frame to end
+	const int   START_LEFT_FRAME = PLAYER_LEFT_START_FRAME;			//which frame to start
+	const int   END_LEFT_FRAME = PLAYER_LEFT_END_FRAME;				//which frame to end
+	const int   START_RIGHT_FRAME = PLAYER_RIGHT_START_FRAME;			//which frame to start
+	const int   END_RIGHT_FRAME = PLAYER_RIGHT_END_FRAME;
 	const float ANIMATION_DELAY = PLAYER_ANIMATION_DELAY;   // time between frames
 	const float BASE_STRENGTH = PLAYER_BASE_STRENGTH;
 
@@ -36,8 +37,9 @@ private:
 	bool	isHoldingCannonball = false;
 
 	bool	isAlive = true;
-	int maxHealth;
+	float maxHealth;
 	int health;
+	float speed;						// X pixels per second
 
 public:
 	// constructor
@@ -53,9 +55,12 @@ public:
 	{
 		isHoldingCannonball = isHeld;
 	}
-		
 
+	//setters
+	void setSpeed(float s);
 
+	//getters
+	float getSpeed();
 };
 #endif
 

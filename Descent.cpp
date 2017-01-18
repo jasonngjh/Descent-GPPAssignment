@@ -67,7 +67,7 @@ void Descent::initialize(HWND hwnd)
 	exampleObject.setY(GAME_HEIGHT / 4);
 	//set velocity, set speed, set size, etc etc
 	*/
-	if (pauseText->initialize(graphics, 62, true, false, "Arial") == false)
+	if (!pauseText->initialize(graphics, 62, true, false, "Arial"))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing DirectX font"));
 
 	if (!groundTexture.initialize(graphics, GROUND_TILESET_IMAGE))
@@ -81,6 +81,9 @@ void Descent::initialize(HWND hwnd)
 	if (!menu1Texture.initialize(graphics, MENU1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu texture"));
 
+	if (!tankTexture.initialize(graphics, TANK_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank texture"));
+	
 	if (!ground.initialize(graphics, 0, 0, 0, &groundTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ground tiles"));
 
@@ -93,10 +96,18 @@ void Descent::initialize(HWND hwnd)
 	if (!menu1.initialize(graphics,MENU1_WIDTH, MENU1_HEIGHT, 2, &menu1Texture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu"));
 
+	if (!tank.initialize(this,PlayerNS::WIDTH, PlayerNS::HEIGHT, PlayerNS::TEXTURE_COLS, &tankTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank"));
+
+	if (!turretTexture.initialize(graphics, TURRET_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing turret texture"));
+
+	if (!turret.initialize(graphics, TURRET_WIDTH, TURRET_HEIGHT,1, &turretTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing turret"));
 
 	ground.setX(0);
 	ground.setScale(GAME_WIDTH / ground.getWidth());
-	ground.setY(GROUND_LEVEL_HEIGHT);		//sets ground to 3/4 of game width
+	ground.setY((int)GROUND_LEVEL_HEIGHT);		//sets ground to 3/4 of game width
 
 	cannonball.setX(GAME_WIDTH / 2);
 	cannonball.setY(GROUND_LEVEL_HEIGHT - CANNONBALL_HEIGHT);
@@ -106,6 +117,8 @@ void Descent::initialize(HWND hwnd)
 	enemy_spaceship.setX(GAME_WIDTH / 4);
 	enemy_spaceship.setY(GAME_HEIGHT / 4);
 	//enemy_spaceship.setLoop(false);
+
+	initializeTank();
 
     return;
 }
@@ -118,8 +131,9 @@ void Descent::update()
 	//exampleObject.update(frameTime);
 	cannonball.update(frameTime);
 	enemy_spaceship.update(frameTime);
+	tank.update(frameTime);
 	//other update mechanics here
-
+	
 	GENERAL_STATE state = gameControl->getGeneralState();
 	switch (state)
 	{
@@ -146,17 +160,57 @@ void Descent::update()
 								 {
 									 cannonball.setX(cannonball.getX()-2);
 									 
+									 //tank & turret left
+									 if (!((tank.getCurrentFrame() > PlayerNS::START_LEFT_FRAME) && (tank.getCurrentFrame() < PlayerNS::END_LEFT_FRAME))){
+										 tank.setFrames(PlayerNS::START_LEFT_FRAME, PlayerNS::END_LEFT_FRAME);
+										 tank.setCurrentFrame(PlayerNS::START_LEFT_FRAME);
+									 }
+									 tank.setX(tank.getX() - frameTime * tank.getSpeed());
+									 turret.setX(tank.getX() + 32.0f);
+									 
 								 }
 								 if (input->isKeyDown(RIGHT_KEY))
 								 {
 									 cannonball.setX(cannonball.getX() + 2);
 
+									 //tank & turret move to the right
+									 if (!((tank.getCurrentFrame() > PlayerNS::START_RIGHT_FRAME) && (tank.getCurrentFrame() < PlayerNS::END_RIGHT_FRAME))){
+										 tank.setFrames(PlayerNS::START_RIGHT_FRAME, PlayerNS::END_RIGHT_FRAME);
+										 tank.setCurrentFrame(PlayerNS::START_RIGHT_FRAME);
+									 }
+									 tank.setX(tank.getX() + frameTime * tank.getSpeed());
+									 turret.setX(tank.getX() + 20.0f);
 								 }
+								 if (input->isKeyDown(UP_KEY))
+								 {
+									 //rotate turret towards the right
+									 std::cout << "Old X: " << turret.getX() << std::endl;
+									 std::cout << "Old Y: " << turret.getY() << std::endl;
+									 std::cout << "Old Radian: " << turret.getRadians() << std::endl;
+									 std::cout << "Old Degree: " << turret.getDegrees() << std::endl;
+									 x = ((turret.getX() * cos(turret.getRadians())) - ((turret.getY()/2) * sin(turret.getRadians())));
+									 y = (((turret.getY()/2) * cos(turret.getRadians())) + (turret.getX() * sin(turret.getRadians())));
+									 //turret.setRadians(turret.getRadians() + frameTime);
+									 turret.setX(x);
+									 turret.setY(y);
+									 std::cout << "New X: " << turret.getX() << std::endl;
+									 std::cout << "New Y: " << turret.getY() << std::endl;
+									 std::cout << "New Radians: " << turret.getRadians() << std::endl;
+									 std::cout << "New Degree: " << turret.getDegrees() << std::endl;
+								 }
+								 if (input->isKeyDown(DOWN_KEY))
+								 {
+									 //rotate turret towards left
+									 turret.setRadians(turret.getRadians() - frameTime);
+								 }
+
 								 if (input->wasKeyPressed(PAUSE_KEY))
 								 {
 									
 									 gameControl->setGeneralState(GENERAL_STATE::paused);
 								 }
+
+								 
 	}break;
 
 	case GENERAL_STATE::paused:{
@@ -218,7 +272,8 @@ void Descent::render()
 								 ground.draw();                   // add the object to the scene
 								 cannonball.draw();					//in real game, Cannonball should be drawn later, when wormhole appears
 								 enemy_spaceship.draw();
-
+								 tank.draw();
+								 turret.draw();
 	}break;
 	case GENERAL_STATE::paused:{
 								   pauseText->print("Paused", GAME_HEIGHT / 2, GAME_WIDTH / 2);
@@ -239,6 +294,8 @@ void Descent::releaseAll()
 	cannonballTexture.onLostDevice();
 	groundTexture.onLostDevice();
 	spaceshipTexture.onLostDevice();
+	tankTexture.onLostDevice();
+	turretTexture.onLostDevice();
     Game::releaseAll();
     return;
 }
@@ -253,6 +310,23 @@ void Descent::resetAll()
 	cannonballTexture.onResetDevice();
 	groundTexture.onResetDevice();
 	spaceshipTexture.onResetDevice();
+	tankTexture.onResetDevice();
+	turretTexture.onResetDevice();
     Game::resetAll();
     return;
+}
+
+//=============================================================================
+// initialise the tank
+//=============================================================================
+void Descent::initializeTank()
+{
+	tank.setFrames(PlayerNS::START_RIGHT_FRAME, PlayerNS::END_RIGHT_FRAME);
+	tank.setCurrentFrame(PlayerNS::START_RIGHT_FRAME);
+	tank.setX(GAME_WIDTH / 2);
+	tank.setY(GROUND_LEVEL_HEIGHT - CANNONBALL_HEIGHT);
+
+	turret.setX(tank.getX() + 20.0f);
+	turret.setY(tank.getY() - 14.0f);
+	turret.setRadians(4.71);
 }

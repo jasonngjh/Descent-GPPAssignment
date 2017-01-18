@@ -14,12 +14,13 @@ Player::Player() : Entity()
 	velocity.x = 0;                             // velocity X
 	velocity.y = 0;                             // velocity Y
 	frameDelay = PlayerNS::ANIMATION_DELAY;
-	startFrame = PlayerNS::START_FRAME;     // first frame of ship animation
-	endFrame = PlayerNS::END_FRAME;     // last frame of ship animation
+	startFrame = PlayerNS::START_RIGHT_FRAME;     // first frame of ship animation
+	endFrame = PlayerNS::END_RIGHT_FRAME;     // last frame of ship animation
 	currentFrame = startFrame;
 	radius = PlayerNS::WIDTH / 2.0;
 	mass = PlayerNS::MASS;
 	collisionType = entityNS::CIRCLE;
+	speed = 100.0f;
 }
 
 //=============================================================================
@@ -50,7 +51,25 @@ void Player::draw()
 //=============================================================================
 void Player::update(float frameTime)
 {
-	
+	Entity::update(frameTime);
 }
 
 //additional methods here
+
+//=============================================================================
+// setSpeed
+// set the speed of the player
+//=============================================================================
+void Player::setSpeed(float s)
+{
+	speed = s;
+}
+
+//=============================================================================
+// getSpeed
+// get the speed of the player
+//=============================================================================
+float Player::getSpeed()
+{
+	return speed;
+}
