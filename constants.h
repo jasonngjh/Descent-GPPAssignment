@@ -126,10 +126,10 @@ const UCHAR ESC_KEY      = VK_ESCAPE;       // escape key
 const UCHAR ALT_KEY      = VK_MENU;         // Alt key
 const UCHAR ENTER_KEY    = VK_RETURN;       // Enter key
 const UCHAR DOWN_KEY	 = VK_DOWN;
-const UCHAR UP_KEY = VK_UP;
 const UCHAR SPACE_KEY = VK_SPACE;
+const UCHAR UP_KEY = VK_UP;
 const UCHAR LEFT_KEY = VK_LEFT;
 const UCHAR RIGHT_KEY = VK_RIGHT;
-const UCHAR P_KEY = 0x50;
+const UCHAR PAUSE_KEY = 0x50;
 
 #endif
