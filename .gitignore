@@ -8,8 +8,8 @@
 *.opensdf
 # Build results
 
-Debug/
-Release/
+[Dd]ebug/
+[Rr]elease/
 x64/
 build/
 [Bb]in/
