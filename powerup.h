@@ -30,7 +30,7 @@ class Powerup : public Entity
 {
 private:
 	bool    shieldOn;
-	int		playerNumber;		//which player is holding the cheese
+	int		playerNumber;		//which player is holding the Cannonball
 public:
 	// constructor
 	Powerup();

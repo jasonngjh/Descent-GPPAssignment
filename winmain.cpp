@@ -9,7 +9,7 @@
 #include <Windows.h>
 #include <stdlib.h>             // for detecting memory leaks
 #include <crtdbg.h>             // for detecting memory leaks
-#include "ThrowTheCheese.h"
+#include "Descent.h"
 #include "guicon.h"
 
 // Function prototypes
@@ -18,7 +18,7 @@ bool CreateMainWindow(HWND &, HINSTANCE, int);
 LRESULT WINAPI WinProc(HWND, UINT, WPARAM, LPARAM); 
 
 // Game pointer
-ThrowTheCheese *game = NULL;
+Descent *game = NULL;
 HWND hwnd = NULL;
 
 //=============================================================================
@@ -38,7 +38,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
     MSG msg;
 
     // Create the game, sets up message handler
-    game = new ThrowTheCheese;
+    game = new Descent;
 
     // Create the window
     if (!CreateMainWindow(hwnd, hInstance, nCmdShow))

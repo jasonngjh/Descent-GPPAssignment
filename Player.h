@@ -33,7 +33,7 @@ class Player : public Entity
 private:
 	
 	float baseStrength;
-	bool	isHoldingCheese = false;
+	bool	isHoldingCannonball = false;
 
 	bool	isAlive = true;
 	int maxHealth;
@@ -49,9 +49,9 @@ public:
 		TextureManager *textureM);
 	void update(float frameTime);
 
-	void setIsHoldingCheese(bool isHeld)
+	void setIsHoldingCannonball(bool isHeld)
 	{
-		isHoldingCheese = isHeld;
+		isHoldingCannonball = isHeld;
 	}
 		
 
