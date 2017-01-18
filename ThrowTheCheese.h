@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "Spaceship.h"
 #include "gameControl.h"
+#include "textDX.h"
 //=============================================================================
 // This class is the core of the game
 //=============================================================================
@@ -20,6 +21,7 @@ class ThrowTheCheese : public Game
 private:
     //texture items
 	//game items
+	TextDX* pauseText;
 	GameControl*	gameControl=new GameControl;
 	TextureManager exampleTexture;
 	Image exampleImage;

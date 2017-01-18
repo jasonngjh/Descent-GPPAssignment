@@ -24,13 +24,17 @@ if 2 player, color code them red and blue for clarity
 // Constructor
 //=============================================================================
 ThrowTheCheese::ThrowTheCheese()
-{}
+{
+	pauseText = new TextDX();
+
+}
 
 //=============================================================================
 // Destructor
 //=============================================================================
 ThrowTheCheese::~ThrowTheCheese()
 {
+	SAFE_DELETE(pauseText);
     releaseAll();           // call onLostDevice() for every graphics item
 }
 
@@ -61,6 +65,8 @@ void ThrowTheCheese::initialize(HWND hwnd)
 	exampleObject.setY(GAME_HEIGHT / 4);
 	//set velocity, set speed, set size, etc etc
 	*/
+	if (pauseText->initialize(graphics, 62, true, false, "Arial") == false)
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing DirectX font"));
 
 	if (!groundTexture.initialize(graphics, GROUND_TILESET_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ground texture"));
@@ -133,8 +139,15 @@ void ThrowTheCheese::update()
 								 if (input->isKeyDown(LEFT_KEY))
 								 {
 									 cheese.setX(cheese.getX()-25);
+									 
+								 }
+								 if (input->isKeyDown(P_KEY))
+								 {
+									 gameControl->setGeneralState(GENERAL_STATE::paused);
 								 }
 	}
+
+	case GENERAL_STATE::paused:{}
 	}
 }
 
@@ -185,6 +198,9 @@ void ThrowTheCheese::render()
 								 cheese.draw();					//in real game, cheese should be drawn later, when wormhole appears
 								 enemy_spaceship.draw();
 
+	}
+	case GENERAL_STATE::paused:{
+								   pauseText->print("Paused", GAME_HEIGHT / 2, GAME_WIDTH / 2);
 	}
 	}
     
