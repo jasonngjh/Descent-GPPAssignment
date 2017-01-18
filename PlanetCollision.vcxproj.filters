@@ -51,6 +51,9 @@
     <ClCompile Include="Spaceship.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gameControl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -104,6 +107,9 @@
     <ClInclude Include="AttackComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gameControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="images\cheese.png">
@@ -117,6 +123,9 @@
     </Image>
     <Image Include="images\textures.png">
       <Filter>Source Files</Filter>
+    </Image>
+    <Image Include="..\..\..\Desktop\GPP Assignment Menu Photos\menu1.png">
+      <Filter>images</Filter>
     </Image>
   </ItemGroup>
 </Project>

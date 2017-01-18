@@ -93,6 +93,7 @@
     <ClCompile Include="Cheese.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="gameControl.cpp" />
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="input.cpp" />
@@ -110,6 +111,7 @@
     <ClInclude Include="constants.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="gameControl.h" />
     <ClInclude Include="gameError.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="HealthComponent.h" />
@@ -123,6 +125,7 @@
     <ClInclude Include="textureManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\Desktop\GPP Assignment Menu Photos\menu1.png" />
     <Image Include="images\cheese.png" />
     <Image Include="images\ground_tile.png" />
     <Image Include="images\orion.jpg" />
