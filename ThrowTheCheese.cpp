@@ -145,9 +145,15 @@ void ThrowTheCheese::update()
 								 {
 									 gameControl->setGeneralState(GENERAL_STATE::paused);
 								 }
-	}
+	}break;
 
-	case GENERAL_STATE::paused:{}
+	case GENERAL_STATE::paused:{
+								   if (input->wasKeyPressed(P_KEY))
+								   {
+									   
+									   gameControl->setGeneralState(GENERAL_STATE::game);
+								   }
+	}
 	}
 }
 
@@ -198,7 +204,7 @@ void ThrowTheCheese::render()
 								 cheese.draw();					//in real game, cheese should be drawn later, when wormhole appears
 								 enemy_spaceship.draw();
 
-	}
+	}break;
 	case GENERAL_STATE::paused:{
 								   pauseText->print("Paused", GAME_HEIGHT / 2, GAME_WIDTH / 2);
 	}
