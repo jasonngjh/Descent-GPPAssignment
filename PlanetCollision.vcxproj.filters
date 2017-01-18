@@ -51,7 +51,11 @@
     <ClCompile Include="Spaceship.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="gameControl.cpp">
+=======
+    <ClCompile Include="guicon.cpp">
+>>>>>>> refs/remotes/origin/jason
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -107,7 +111,11 @@
     <ClInclude Include="AttackComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="gameControl.h">
+=======
+    <ClInclude Include="guicon.h">
+>>>>>>> refs/remotes/origin/jason
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,2 +1,6 @@
 #TargetFrameworkVersion=v4.0:PlatformToolSet=v120:EnableManagedIncrementalBuild=false:VCToolArchitecture=Native32Bit
+<<<<<<< HEAD
 Debug|Win32|C:\Users\NPStudent\Source\Repos\gppassignmentwex\|
+=======
+Debug|Win32|D:\School Stuffs\Year 3\Sem 3.2\Game Programming\Projects\gppassignment2\|
+>>>>>>> refs/remotes/origin/jason

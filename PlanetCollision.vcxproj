@@ -95,6 +95,7 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="gameControl.cpp" />
     <ClCompile Include="graphics.cpp" />
+    <ClCompile Include="guicon.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="Object.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="gameControl.h" />
     <ClInclude Include="gameError.h" />
     <ClInclude Include="graphics.h" />
+    <ClInclude Include="guicon.h" />
     <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="input.h" />

@@ -42,6 +42,8 @@ void ThrowTheCheese::initialize(HWND hwnd)
 {
     Game::initialize(hwnd); // throws GameError
 
+	std::cout << "initialising game" << std::endl;
+
 	//object and texture initialization
 	/*
     // game item texture 

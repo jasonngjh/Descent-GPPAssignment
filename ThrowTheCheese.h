@@ -12,10 +12,15 @@
 #include "Player.h"
 #include "Spaceship.h"
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 #include <windows.h>
 #include <conio.h>
 #include <vector>
+=======
+#include "guicon.h"
+#include <iostream>
+>>>>>>> refs/remotes/origin/jason
 
 =======
 #include "gameControl.h"
