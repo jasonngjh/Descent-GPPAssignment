@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -52,11 +51,8 @@
     <ClCompile Include="Spaceship.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="gameControl.cpp">
-=======
     <ClCompile Include="guicon.cpp">
->>>>>>> refs/remotes/origin/jason
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -112,11 +108,8 @@
     <ClInclude Include="AttackComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="gameControl.h">
-=======
     <ClInclude Include="guicon.h">
->>>>>>> refs/remotes/origin/jason
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -137,8 +130,7 @@
       <Filter>images</Filter>
     </Image>
   </ItemGroup>
-=======
-﻿<?xml version="1.0" encoding="utf-8"?>
+ <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -274,5 +266,4 @@
       <Filter>images</Filter>
     </Image>
   </ItemGroup>
->>>>>>> refs/remotes/origin/wex
 </Project>
