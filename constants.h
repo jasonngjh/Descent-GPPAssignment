@@ -132,5 +132,6 @@ const UCHAR UP_KEY = VK_UP;
 const UCHAR SPACE_KEY = VK_SPACE;
 const UCHAR LEFT_KEY = VK_LEFT;
 const UCHAR RIGHT_KEY = VK_RIGHT;
+const UCHAR P_KEY = 0x50;
 
 #endif
