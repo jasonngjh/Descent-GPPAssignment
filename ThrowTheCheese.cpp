@@ -113,11 +113,7 @@ void ThrowTheCheese::update()
 	cheese.update(frameTime);
 	enemy_spaceship.update(frameTime);
 	//other update mechanics here
-<<<<<<< HEAD
 
-
-
-=======
 	GENERAL_STATE state = gameControl->getGeneralState();
 	switch (state)
 	{
@@ -144,7 +140,6 @@ void ThrowTheCheese::update()
 								 }
 	}
 	}
->>>>>>> refs/remotes/origin/wex
 }
 
 //=============================================================================

@@ -96,7 +96,7 @@ const float SPACESHIP_SPEED = 50.0f;
 const float SPACESHIP_ANIMATION_DELAY = 0.01f;		//passively animates
 const int SPACESHIP_STARTING_HEALTH = 3;
 
-const int MAX_NO_OF_SPACESHIPS; //number of spaceships allowed to exist
+const int MAX_NO_OF_SPACESHIPS = 30; //number of spaceships allowed to exist
 
 const int POWERUP_WIDTH = 32;
 const int POWERUP_HEIGHT = 32;
