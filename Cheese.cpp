@@ -49,6 +49,29 @@ void Cheese::update(float frameTime)
 {
 	//if thrown
 	spriteData.angle += frameTime * CheeseNS::ROTATION_RATE;
+	if (spriteData.x > GAME_WIDTH - CheeseNS::WIDTH*getScale())
+	{
+		// position at right screen edge
+		spriteData.x = GAME_WIDTH - CheeseNS::WIDTH*getScale();
+		velocity.x = -velocity.x;               // reverse X direction
+	}
+	else if (spriteData.x < 0)                  // else if hit left screen edge
+	{
+		spriteData.x = 0;                       // position at left screen edge
+		velocity.x = -velocity.x;               // reverse X direction
+	}
+	// if hit bottom screen edge
+	if (spriteData.y > GAME_HEIGHT - CheeseNS::HEIGHT*getScale())
+	{
+		// position at bottom screen edge
+		spriteData.y = GAME_HEIGHT - CheeseNS::HEIGHT*getScale();
+		velocity.y = -velocity.y;               // reverse Y direction
+	}
+	else if (spriteData.y < 0)                  // else if hit top screen edge
+	{
+		spriteData.y = 0;                       // position at top screen edge
+		velocity.y = -velocity.y;               // reverse Y direction
+	}
 }
 
 //additional methods here

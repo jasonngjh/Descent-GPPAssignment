@@ -140,23 +140,33 @@ void ThrowTheCheese::update()
 	}break;
 
 	case GENERAL_STATE::game:{
+								 // checkpoints: player health = 0 -> change to end game screen
+								 // if boss die -> change to end game screen
+								 // if esc(quit pressed) -> change to end game screen
 								 if (input->isKeyDown(LEFT_KEY))
 								 {
-									 cheese.setX(cheese.getX()-25);
+									 cheese.setX(cheese.getX()-2);
 									 
 								 }
-								 if (input->isKeyDown(P_KEY))
+								 if (input->isKeyDown(RIGHT_KEY))
 								 {
+									 cheese.setX(cheese.getX() + 2);
+
+								 }
+								 if (input->wasKeyPressed(PAUSE_KEY))
+								 {
+									
 									 gameControl->setGeneralState(GENERAL_STATE::paused);
 								 }
 	}break;
 
 	case GENERAL_STATE::paused:{
-								   if (input->wasKeyPressed(P_KEY))
+								  if (input->wasKeyPressed(PAUSE_KEY))
 								   {
 									   
 									   gameControl->setGeneralState(GENERAL_STATE::game);
 								   }
+								   
 	}
 	}
 }
