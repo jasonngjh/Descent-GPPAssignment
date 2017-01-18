@@ -74,10 +74,10 @@ void ThrowTheCheese::initialize(HWND hwnd)
 	if (!ground.initialize(graphics, 0, 0, 0, &groundTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ground tiles"));
 
-	if(!cheese.initialize(this, ObjectNS::WIDTH, ObjectNS::HEIGHT, ObjectNS::TEXTURE_COLS, &cheeseTexture))
+	if (!cheese.initialize(this, CheeseNS::WIDTH, CheeseNS::HEIGHT, CheeseNS::TEXTURE_COLS, &cheeseTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing cheese game object"));
 
-	if (!enemy_spaceship.initialize(this, ObjectNS::WIDTH, ObjectNS::HEIGHT, ObjectNS::TEXTURE_COLS, &spaceshipTexture))
+	if (!enemy_spaceship.initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, &spaceshipTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
 
 	ground.setX(0);
@@ -91,6 +91,7 @@ void ThrowTheCheese::initialize(HWND hwnd)
 	enemy_spaceship.setCurrentFrame(SpaceshipNS::START_FRAME);
 	enemy_spaceship.setX(GAME_WIDTH / 4);
 	enemy_spaceship.setY(GAME_HEIGHT / 4);
+	//enemy_spaceship.setLoop(false);
 
     return;
 }
@@ -104,6 +105,8 @@ void ThrowTheCheese::update()
 	cheese.update(frameTime);
 	enemy_spaceship.update(frameTime);
 	//other update mechanics here
+
+
 
 }
 
@@ -137,6 +140,8 @@ void ThrowTheCheese::collisions()
 
 
 }
+
+
 
 //=============================================================================
 // Render game items
