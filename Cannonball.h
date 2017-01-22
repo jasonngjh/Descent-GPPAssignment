@@ -58,7 +58,7 @@ public:
 		
 	}
 		
-
+	enum hitWho{player, bossShip,spaceship};
 	//any other relevant methods here
 
 };

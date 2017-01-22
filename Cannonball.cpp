@@ -50,7 +50,7 @@ void Cannonball::update(float frameTime)
 	//http://jsfiddle.net/LyM87/ cannonball physics
 	//if thrown
 	//spriteData.angle += frameTime * CannonballNS::ROTATION_RATE;
-	velocity.y += 250.0f*frameTime;
+	velocity.y += GRAVITY*frameTime;
 	spriteData.y += frameTime*velocity.y;
 	spriteData.x += frameTime*velocity.x;
 	
