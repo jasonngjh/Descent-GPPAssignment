@@ -90,6 +90,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Boss_Spaceship.cpp" />
     <ClCompile Include="Cannonball.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="game.cpp" />
@@ -131,6 +132,7 @@
     <ClInclude Include="waveControl.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\Desktop\boss_spaceship.png" />
     <Image Include="..\..\..\Desktop\GPP Assignment Menu Photos\menu1.png" />
     <Image Include="images\cheese.png" />
     <Image Include="images\ground_tile.png" />

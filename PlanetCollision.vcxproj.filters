@@ -63,6 +63,9 @@
     <ClCompile Include="waveControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Boss_Spaceship.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -143,6 +146,9 @@
       <Filter>Source Files</Filter>
     </Image>
     <Image Include="..\..\..\Desktop\GPP Assignment Menu Photos\menu1.png">
+      <Filter>images</Filter>
+    </Image>
+    <Image Include="..\..\..\Desktop\boss_spaceship.png">
       <Filter>images</Filter>
     </Image>
   </ItemGroup>

@@ -11,6 +11,7 @@
 #include "cannonball.h"
 #include "Player.h"
 #include "Spaceship.h"
+#include "Boss_Spaceship.h"
 
 #include <windows.h>
 #include <conio.h>
@@ -29,14 +30,16 @@ class Descent : public Game
 private:
     //texture items
 	//game items
-	TextDX* pauseText;
-	TextDX* waveNumberText;
-	GameControl*	gameControl=new GameControl;
-	WaveControl*	waveControl = new WaveControl;
+	
 	TextureManager exampleTexture;
 	Image exampleImage;
     Object exampleObject;
+	TextDX* pauseText;
+	TextDX* waveNumberText;
+	GameControl*	gameControl = new GameControl;
+	WaveControl*	waveControl = new WaveControl;
 
+	TextureManager bossTexture;
 	TextureManager backgroundTexture;
 	TextureManager groundTexture;
 	TextureManager cannonballTexture;
@@ -48,6 +51,7 @@ private:
 	Cannonball cannonball;
 	Spaceship enemy_spaceship;	//only one for now, testing only
 	Image menu1;
+	Boss_Spaceship boss;
 
 	int waveNumber=1;
 	std::vector<Spaceship> spaceshipArray;

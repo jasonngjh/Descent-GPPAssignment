@@ -68,6 +68,7 @@ void Descent::initialize(HWND hwnd)
 	exampleObject.setY(GAME_HEIGHT / 4);
 	//set velocity, set speed, set size, etc etc
 	*/
+
 	if (pauseText->initialize(graphics, 62, true, false, "Invasion2000") == false)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing DirectX font"));
 	if (waveNumberText->initialize(graphics, 62, true, false, "Invasion2000") == false)
@@ -81,6 +82,8 @@ void Descent::initialize(HWND hwnd)
 
 	if (!spaceshipTexture.initialize(graphics, SPACESHIP_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship texture"));
+	if (!bossTexture.initialize(graphics,BOSS_SPACESHIP_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss texture"));
 	if (!menu1Texture.initialize(graphics, MENU1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu texture"));
 
@@ -95,6 +98,8 @@ void Descent::initialize(HWND hwnd)
 	
 	if (!menu1.initialize(graphics,MENU1_WIDTH, MENU1_HEIGHT, 2, &menu1Texture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu"));
+	if (!boss.initialize(this, Boss_SpaceshipNS::WIDTH, Boss_SpaceshipNS::HEIGHT, Boss_SpaceshipNS::TEXTURE_COLS, &bossTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss game object"));
 
 
 	ground.setX(0);
@@ -109,6 +114,12 @@ void Descent::initialize(HWND hwnd)
 	enemy_spaceship.setCurrentFrame(SpaceshipNS::START_FRAME);
 	enemy_spaceship.setX(GAME_WIDTH / 4);
 	enemy_spaceship.setY(GAME_HEIGHT / 4);
+
+	boss.setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
+	boss.setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
+	boss.setX(GAME_WIDTH / 4);
+	boss.setY(GAME_HEIGHT / 4);
+
 	//enemy_spaceship.setLoop(false);
 
     return;
@@ -157,6 +168,7 @@ void Descent::update()
 								 {
 									 cannonball.hit(land);
 									 cannonball.update(frameTime);
+
 								 }
 
 								 if (input->wasKeyPressed(PAUSE_KEY))
@@ -166,9 +178,30 @@ void Descent::update()
 								 }
 								 switch (waveState){
 								 case WAVE_STATE::pauseWave:{
+																std::cout << "pause" << std::endl; 
 																if (input->isKeyDown(SPACE_KEY))
 																	waveControl->setWaveState(WAVE_STATE::wave1);
 								 }break;
+								 case WAVE_STATE::wave1:{//add wave 1 behaviors
+															std::cout << "wave1" << std::endl;
+															if (input->wasKeyPressed(LEFT_KEY))
+															{
+																waveControl->setWaveState(WAVE_STATE::wave2);
+															}
+															 
+								 }break;
+								 case WAVE_STATE::wave2:{//add wave 2 enemy behavior
+															if (input->wasKeyPressed(RIGHT_KEY))
+															{
+																waveControl->setWaveState(WAVE_STATE::wave3);
+															}
+															std::cout << "wave2" << std::endl;
+								 }break;
+								 case WAVE_STATE::wave3:{//add boss spaceship behaviour
+															
+															std::cout << "wave3"<<std::endl;
+								 }break;
+								 
 								 }
 								
 
@@ -248,7 +281,9 @@ void Descent::render()
 								 }break;
 								 case WAVE_STATE::wave1:{enemy_spaceship.draw(); }break;//draw wave 3 stuff
 								 case WAVE_STATE::wave2:{}break;//draw wave 2 stuff
-								 case WAVE_STATE::wave3:{}break;//draw boss wave stuff
+								 case WAVE_STATE::wave3:{
+															boss.draw();
+								 }break;//draw boss wave stuff
 								 }
 
 	}break;

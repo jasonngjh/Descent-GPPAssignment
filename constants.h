@@ -99,6 +99,14 @@ const int SPACESHIP_STARTING_HEALTH = 3;
 
 const int MAX_NO_OF_SPACESHIPS = 30; //number of spaceships allowed to exist
 
+const int BOSS_SPACESHIP_WIDTH = 212;
+const int BOSS_SPACESHIP_HEIGHT = 265;
+const int BOSS_SPACESHIP_TEXTURE_COLUMNS = 3;
+const int BOSS_SPACESHIP_START_FRAME = 0;
+const int BOSS_SPACESHIP_END_FRAME = 2;
+const float BOSS_SPACESHIP_ANIMATION_DELAY = 0.10f;
+const int BOSS_SPACESHIP_STARTING_HEALTH = 10;
+
 const int POWERUP_WIDTH = 32;
 const int POWERUP_HEIGHT = 32;
 const int POWERUP_TEXTURE_COLUMNS = 1;
@@ -122,6 +130,7 @@ const char GROUND_TILESET_IMAGE[] = "images\\ground_tile.png";
 const char CANNONBALL_IMAGE[] = "images\\cannonball.png";
 const char SPACESHIP_IMAGE[] = "images\\spaceship.png";
 const char MENU1_IMAGE[] = "images\\menu1.png";
+const char BOSS_SPACESHIP_IMAGE[] = "images\\boss_spaceship.png";
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
 // it would be possible to save and restore key mappings from a data file.
