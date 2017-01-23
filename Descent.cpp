@@ -98,8 +98,9 @@ void Descent::initialize(HWND hwnd)
 	ground.setScale(GAME_WIDTH / ground.getWidth());
 	ground.setY(GROUND_LEVEL_HEIGHT);		//sets ground to 3/4 of game width
 
-	cannonball.setX(GAME_WIDTH / 2);
-	cannonball.setY(GROUND_LEVEL_HEIGHT - CANNONBALL_HEIGHT);
+	cannonball.setX(CannonballNS::X);
+	cannonball.setY(CannonballNS::Y);
+	//cannonball.setVelocity(VECTOR2(CannonballNS::BASE_SPEED, -CannonballNS::BASE_SPEED));
 
 	enemy_spaceship.setFrames(SpaceshipNS::START_FRAME, SpaceshipNS::END_FRAME);
 	enemy_spaceship.setCurrentFrame(SpaceshipNS::START_FRAME);
@@ -152,11 +153,19 @@ void Descent::update()
 									 cannonball.setX(cannonball.getX() + 2);
 
 								 }
+
+								/* if (input->isKeyDown(SPACE_KEY))
+								 {
+									 cannonball.setY(cannonball.getY()+CannonballNS::MASS/100);
+								 }*/
 								 if (input->wasKeyPressed(PAUSE_KEY))
 								 {
 									
 									 gameControl->setGeneralState(GENERAL_STATE::paused);
 								 }
+
+								
+
 	}break;
 
 	case GENERAL_STATE::paused:{

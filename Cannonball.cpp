@@ -47,8 +47,27 @@ void Cannonball::draw()
 //=============================================================================
 void Cannonball::update(float frameTime)
 {
+	//http://jsfiddle.net/LyM87/ cannonball physics
 	//if thrown
-	spriteData.angle += frameTime * CannonballNS::ROTATION_RATE;
+	//spriteData.angle += frameTime * CannonballNS::ROTATION_RATE;
+	velocity.y += GRAVITY*frameTime;
+	spriteData.y += frameTime*velocity.y;
+	spriteData.x += frameTime*velocity.x;
+	
+	if (spriteData.y > GAME_HEIGHT - 50)
+	{
+		spriteData.y = GAME_HEIGHT - 50;
+		velocity.y = 0.0;
+		velocity.x = 0.0;
+	}
+	if (input->isKeyDown(SPACE_KEY))
+	{
+		velocity.y = -500.0;
+		velocity.x = 300.0;
+	}
+	
+
+
 	if (spriteData.x > GAME_WIDTH - CannonballNS::WIDTH*getScale())
 	{
 		// position at right screen edge

@@ -41,8 +41,8 @@ const float FRAME_RATE = 200.0f;                // the target frame rate (frames
 const float MIN_FRAME_RATE = 10.0f;             // the minimum frame rate
 const float MIN_FRAME_TIME = 1.0f/FRAME_RATE;   // minimum desired time for 1 frame
 const float MAX_FRAME_TIME = 1.0f/MIN_FRAME_RATE; // maximum time used in calculations
-const float GRAVITY = 6.67428e-11f;             // gravitational constant
-const float MASS_PLANET = 1.0e14f;
+const float GRAVITY = 225.5f;             // gravitational constant
+const float MASS_PLANET = 5000.0;
 const float MASS_SPACE_SHIP = 5.0f;		//number subject to change
 const float MASS_PLAYER = 5.0f;			//number subject to change
 
@@ -61,7 +61,7 @@ const int PLAYER_HEIGHT = 64;
 const int PLAYER_TEXTURE_COLUMNS = 1;
 const int PLAYER_START_FRAME = 0;
 const int PLAYER_END_FRAME = 1;
-const float PLAYER_MASS = 50.0f;				//number subject to change - idk what to put here
+const float PLAYER_MASS = 50.0;				//number subject to change - idk what to put here
 const float PLAYER_SPEED = 100.0f;			//player movement speed when going < or >
 const float PLAYER_ANIMATION_DELAY = 0.2f;		//note: make player animate only when moving and throwing
 const float PLAYER_BASE_STRENGTH = 25.0f;		//base strength, related to player throwing
@@ -72,8 +72,8 @@ const int CANNONBALL_HEIGHT = 32;
 const int CANNONBALL_TEXTURE_COLUMNS = 1;
 const int CANNONBALL_START_FRAME = 0;
 const int CANNONBALL_END_FRAME = 1;
-const float CANNONBALL_MASS = 50.0f;				//number subject to change - idk what to put here
-const float CANNONBALL_BASE_SPEED = 100.0f;			//base speed that CANNONBALL always moves on, MAY NOT BE RELEVANT DEPENDING ON HOW WE CALCULATE SPEED 
+const float CANNONBALL_MASS = 1200.0f;				//number subject to change - idk what to put here
+const float CANNONBALL_BASE_SPEED = 200.0f;			//base speed that CANNONBALL always moves on, MAY NOT BE RELEVANT DEPENDING ON HOW WE CALCULATE SPEED 
 const float CANNONBALL_ANIMATION_DELAY = 0.2f;		//note: maybe Cannonball animates when moving 
 
 //refers to a wormhole/blackhole image, is not an actual object. Remove if confirmed to go for tank theme instead of Cannonball theme
