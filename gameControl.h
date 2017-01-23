@@ -1,15 +1,14 @@
 #ifndef _GAMECONTROL_H
 #define _GAMECONTROL_H
-
-enum class GENERAL_STATE : int {
-	menu = 1,
-	game = 2,
-	paused = 3,
-	gameOver = 4,
-	gameClear = 5,
-	instructions = 6,
-	credits = 7,
-	home = 8,
+enum class GENERAL_STATE {
+	menu ,
+	game ,
+	paused ,
+	gameOver ,
+	gameClear ,
+	instructions,
+	credits ,
+	home ,
 };
 
 class GameControl {

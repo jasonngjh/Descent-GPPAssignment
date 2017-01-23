@@ -104,6 +104,7 @@
     <ClCompile Include="textDX.cpp" />
     <ClCompile Include="Descent.cpp" />
     <ClCompile Include="textureManager.cpp" />
+    <ClCompile Include="waveControl.cpp" />
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +128,7 @@
     <ClInclude Include="textDX.h" />
     <ClInclude Include="Descent.h" />
     <ClInclude Include="textureManager.h" />
+    <ClInclude Include="waveControl.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\Desktop\GPP Assignment Menu Photos\menu1.png" />

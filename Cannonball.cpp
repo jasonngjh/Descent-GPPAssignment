@@ -29,6 +29,7 @@ Cannonball::Cannonball() : Entity()
 bool Cannonball::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM)
 {
+	damageLeft = CannonballNS::DAMAGE;
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
 }
 
@@ -54,12 +55,7 @@ void Cannonball::update(float frameTime)
 	spriteData.y += frameTime*velocity.y;
 	spriteData.x += frameTime*velocity.x;
 	
-	if (spriteData.y > GAME_HEIGHT - 50)
-	{
-		spriteData.y = GAME_HEIGHT - 50;
-		velocity.y = 0.0;
-		velocity.x = 0.0;
-	}
+
 	if (input->isKeyDown(SPACE_KEY))
 	{
 		velocity.y = -500.0;
@@ -91,6 +87,22 @@ void Cannonball::update(float frameTime)
 		spriteData.y = 0;                       // position at top screen edge
 		velocity.y = -velocity.y;               // reverse Y direction
 	}
-}
 
+	
+}
+void Cannonball::hit(hitWho target)
+{
+	if (target == land) 
+	{
+			spriteData.y = GAME_HEIGHT - 50;//change value to where ur land is changes
+			velocity.y = 0.0;
+			velocity.x = 0.0;
+	
+	}
+	if (target == spaceShip)
+	{
+		damageLeft -= 1;
+		
+	}
+}
 //additional methods here

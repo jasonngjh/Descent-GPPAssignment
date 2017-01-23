@@ -75,6 +75,7 @@ const int CANNONBALL_END_FRAME = 1;
 const float CANNONBALL_MASS = 1200.0f;				//number subject to change - idk what to put here
 const float CANNONBALL_BASE_SPEED = 200.0f;			//base speed that CANNONBALL always moves on, MAY NOT BE RELEVANT DEPENDING ON HOW WE CALCULATE SPEED 
 const float CANNONBALL_ANIMATION_DELAY = 0.2f;		//note: maybe Cannonball animates when moving 
+const int CANNONBALL_DAMAGE = 5;
 
 //refers to a wormhole/blackhole image, is not an actual object. Remove if confirmed to go for tank theme instead of Cannonball theme
 //can also incorporate to 'explain' arrival of spaceships
@@ -133,5 +134,7 @@ const UCHAR UP_KEY = VK_UP;
 const UCHAR LEFT_KEY = VK_LEFT;
 const UCHAR RIGHT_KEY = VK_RIGHT;
 const UCHAR PAUSE_KEY = 0x50;
+
+enum hitWho{land,spaceShip,bossShip,player};
 
 #endif

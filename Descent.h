@@ -19,6 +19,7 @@
 #include <iostream>
 
 #include "gameControl.h"
+#include "waveControl.h"
 #include "textDX.h"
 //=============================================================================
 // This class is the core of the game
@@ -29,7 +30,9 @@ private:
     //texture items
 	//game items
 	TextDX* pauseText;
+	TextDX* waveNumberText;
 	GameControl*	gameControl=new GameControl;
+	WaveControl*	waveControl = new WaveControl;
 	TextureManager exampleTexture;
 	Image exampleImage;
     Object exampleObject;
@@ -46,6 +49,7 @@ private:
 	Spaceship enemy_spaceship;	//only one for now, testing only
 	Image menu1;
 
+	int waveNumber=1;
 	std::vector<Spaceship> spaceshipArray;
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
 	

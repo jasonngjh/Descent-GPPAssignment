@@ -1,33 +1,9 @@
-﻿Build started 22/1/2017 11:52:42 PM.
-     1>Project "C:\Users\Wexner\Source\Repos\gppassignment2\PlanetCollision.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         F:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"F:\Program Files (x86)\Microsoft Visual Studio 12.0\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Cannonball.cpp Descent.cpp winmain.cpp
-         Cannonball.cpp
-     1>c:\users\wexner\source\repos\gppassignment2\cannonball.h(38): warning C4305: 'initializing' : truncation from 'double' to 'float'
-     1>c:\users\wexner\source\repos\gppassignment2\cannonball.h(39): warning C4305: 'initializing' : truncation from 'double' to 'float'
-         Generating Code...
-         Skipping... (no relevant changes detected)
-         winmain.cpp
-         Descent.cpp
-       Link:
-         F:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Wexner\Source\Repos\gppassignment2\Debug\Throw Ball Game.exe" /NOLOGO /LIBPATH:"F:\Program Files (x86)\Microsoft Visual Studio 12.0\\Lib\x86" d3d9.lib d3dx9.lib winmm.lib xinput.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Wexner\Source\Repos\gppassignment2\Debug\Throw Ball Game.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Wexner\Source\Repos\gppassignment2\Debug\Throw Ball Game.lib" /MACHINE:X86 /SAFESEH:NO Debug\Cannonball.obj
-         Debug\entity.obj
-         Debug\game.obj
-         Debug\gameControl.obj
-         Debug\graphics.obj
-         Debug\guicon.obj
-         Debug\image.obj
-         Debug\input.obj
-         Debug\Object.obj
-         Debug\Player.obj
-         Debug\Spaceship.obj
-         Debug\textDX.obj
-         Debug\Descent.obj
-         Debug\textureManager.obj
-         Debug\winmain.obj
-         PlanetCollision.vcxproj -> C:\Users\Wexner\Source\Repos\gppassignment2\Debug\Throw Ball Game.exe
-     1>Done Building Project "C:\Users\Wexner\Source\Repos\gppassignment2\PlanetCollision.vcxproj" (Build target(s)).
+﻿Build started 23/01/2017 3:11:43 PM.
+     1>Project "C:\Users\NPStudent\Source\Repos\gppassignment2wex\PlanetCollision.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         PlanetCollision.vcxproj -> C:\Users\NPStudent\Source\Repos\gppassignment2wex\Debug\Throw Ball Game.exe
+     1>Done Building Project "C:\Users\NPStudent\Source\Repos\gppassignment2wex\PlanetCollision.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.75
+Time Elapsed 00:00:00.05

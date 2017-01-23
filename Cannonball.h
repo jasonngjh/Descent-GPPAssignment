@@ -21,6 +21,7 @@ namespace CannonballNS
 	const int   START_FRAME = CANNONBALL_START_FRAME;			//which frame to start
 	const int   END_FRAME = CANNONBALL_END_FRAME;				//which frame to end
 	const float ANIMATION_DELAY = CANNONBALL_ANIMATION_DELAY;   // time between frames
+	const int DAMAGE = CANNONBALL_DAMAGE;
 
 	//DERIVED PERMANENT VALUES
 	const int X = GAME_WIDTH / 2 - WIDTH / 2;				// location on screen
@@ -34,9 +35,8 @@ class Cannonball : public Entity
 {
 private:
 	bool    shieldOn;
-	int		playerNumber;		//which player is holding the Cannonball
-	float acc = 9.8;
-	float dt = 0.1; 
+	int		playerNumber;		//which player is holding the Cannonball 
+	int damageLeft;
 	
 public:
 	// constructor
@@ -47,7 +47,7 @@ public:
 	virtual bool initialize(Game *gamePtr, int width, int height, int ncols,
 		TextureManager *textureM);
 	void update(float frameTime);
-
+	void hit(hitWho);
 	void setCannonballIsHeld(int playerNo)
 	{
 
@@ -58,7 +58,7 @@ public:
 		
 	}
 		
-	enum hitWho{player, bossShip,spaceship};
+	
 	//any other relevant methods here
 
 };

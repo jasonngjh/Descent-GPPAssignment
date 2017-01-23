@@ -26,6 +26,7 @@ if 2 player, color code them red and blue for clarity
 Descent::Descent()
 {
 	pauseText = new TextDX();
+	waveNumberText = new TextDX();
 
 }
 
@@ -67,7 +68,9 @@ void Descent::initialize(HWND hwnd)
 	exampleObject.setY(GAME_HEIGHT / 4);
 	//set velocity, set speed, set size, etc etc
 	*/
-	if (pauseText->initialize(graphics, 62, true, false, "Arial") == false)
+	if (pauseText->initialize(graphics, 62, true, false, "Invasion2000") == false)
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing DirectX font"));
+	if (waveNumberText->initialize(graphics, 62, true, false, "Invasion2000") == false)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing DirectX font"));
 
 	if (!groundTexture.initialize(graphics, GROUND_TILESET_IMAGE))
@@ -122,9 +125,11 @@ void Descent::update()
 	//other update mechanics here
 
 	GENERAL_STATE state = gameControl->getGeneralState();
+	WAVE_STATE waveState = waveControl->getWaveState();
 	switch (state)
 	{
 	case GENERAL_STATE::menu: {
+								  
 									if (input->isKeyDown(DOWN_KEY)){
 										menu1.setCurrentFrame(MENU1_END_FRAME);
 										playerCount=2;
@@ -134,36 +139,37 @@ void Descent::update()
 										playerCount=1;
 									}
 									if (input->isKeyDown(ENTER_KEY)){
-									gameControl->setGeneralState(GENERAL_STATE::game);
+									gameControl->setGeneralState(GENERAL_STATE::instructions);
 									//playerCount=number of players to initialise
 									}
-								}break;
-
+	}break;
+	case GENERAL_STATE::instructions : {
+										   if (input->isKeyDown(SPACE_KEY))
+										   gameControl->setGeneralState(GENERAL_STATE::game);
+	}
 	case GENERAL_STATE::game:{
+								 
 								 // checkpoints: player health = 0 -> change to end game screen
 								 // if boss die -> change to end game screen
 								 // if esc(quit pressed) -> change to end game screen
-								 if (input->isKeyDown(LEFT_KEY))
+								 // TRY TO MOVE CONTROLS TO THE SPECIFIC CLASS FOR REUSABILITY ******************************************
+								 if (cannonball.getY() > GAME_HEIGHT - 50)
 								 {
-									 cannonball.setX(cannonball.getX()-2);
-									 
-								 }
-								 if (input->isKeyDown(RIGHT_KEY))
-								 {
-									 cannonball.setX(cannonball.getX() + 2);
-
+									 cannonball.hit(land);
+									 cannonball.update(frameTime);
 								 }
 
-								/* if (input->isKeyDown(SPACE_KEY))
-								 {
-									 cannonball.setY(cannonball.getY()+CannonballNS::MASS/100);
-								 }*/
 								 if (input->wasKeyPressed(PAUSE_KEY))
 								 {
 									
 									 gameControl->setGeneralState(GENERAL_STATE::paused);
 								 }
-
+								 switch (waveState){
+								 case WAVE_STATE::pauseWave:{
+																if (input->isKeyDown(SPACE_KEY))
+																	waveControl->setWaveState(WAVE_STATE::wave1);
+								 }break;
+								 }
 								
 
 	}break;
@@ -206,6 +212,10 @@ void Descent::collisions()
 		ship1.bounce(collisionVector, planet);
 		ship1.damage(PLANET);
 	}*/
+	if (cannonball.collidesWith(enemy_spaceship, collisionVector))
+	{
+		cannonball.hit(spaceShip);
+	}
 
 
 }
@@ -223,10 +233,23 @@ void Descent::render()
 	case GENERAL_STATE::menu :{
 								 menu1.draw();
 	}break;
+	case GENERAL_STATE::instructions:{
+								//draw instructions
+	}
 	case GENERAL_STATE::game:{
 								 ground.draw();                   // add the object to the scene
 								 cannonball.draw();					//in real game, Cannonball should be drawn later, when wormhole appears
-								 enemy_spaceship.draw();
+								 
+								 switch (waveControl->getWaveState())
+								 {
+								 case WAVE_STATE::pauseWave:{
+																waveNumberText->print("Wave 1", GAME_HEIGHT / 2, GAME_WIDTH / 2); // need to change to picture
+																
+								 }break;
+								 case WAVE_STATE::wave1:{enemy_spaceship.draw(); }break;//draw wave 3 stuff
+								 case WAVE_STATE::wave2:{}break;//draw wave 2 stuff
+								 case WAVE_STATE::wave3:{}break;//draw boss wave stuff
+								 }
 
 	}break;
 	case GENERAL_STATE::paused:{
@@ -244,6 +267,7 @@ void Descent::render()
 //=============================================================================
 void Descent::releaseAll()
 {
+	
 	exampleTexture.onLostDevice();
 	cannonballTexture.onLostDevice();
 	groundTexture.onLostDevice();
