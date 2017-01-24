@@ -46,12 +46,12 @@ private:
 	Spaceship enemy_spaceship;	//only one for now, testing only
 	Image menu1;
 
-	std::vector<Spaceship> spaceshipArray;
+	std::vector<Spaceship> array_spaceships;
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
 	
 	int playerCount;//use this value to count 1 player or 2 player
 public:
-	int currentActiveSpaceships; //amt of spaceships currently alive (should be less or equal to maxActiveSpaceships)
+	int currentActiveSpaceships=0; //amt of spaceships currently alive (should be less or equal to maxActiveSpaceships)
 
     // Constructor
 	Descent();

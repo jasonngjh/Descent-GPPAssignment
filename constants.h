@@ -91,12 +91,16 @@ const int SPACESHIP_HEIGHT = 32;
 const int SPACESHIP_TEXTURE_COLUMNS = 12;
 const int SPACESHIP_START_FRAME = 0;
 const int SPACESHIP_END_FRAME = 11;
+const int SPACESHIP_DAMAGED_START_FRAME = 12;
+const int SPACESHIP_DAMAGED_END_FRAME = 23;
 const float SPACESHIP_MASS = 50.0f;				//number subject to change - idk what to put here
 const float SPACESHIP_SPEED = 50.0f;				
-const float SPACESHIP_ANIMATION_DELAY = 0.01f;		//passively animates
-const int SPACESHIP_STARTING_HEALTH = 3;
+const float SPACESHIP_ANIMATION_DELAY = 0.1f;		//passively animates
+const int SPACESHIP_STARTING_HEALTH = 5;
 
 const int MAX_NO_OF_SPACESHIPS = 30; //number of spaceships allowed to exist
+const int WAVE_1_SPACESHIPS_AMT_OF_ROWS = 4;
+const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 8;
 
 const int POWERUP_WIDTH = 32;
 const int POWERUP_HEIGHT = 32;
@@ -105,6 +109,7 @@ const int POWERUP_START_FRAME = 0;
 const int POWERUP_END_FRAME = 1;
 const float POWERUP_ANIMATION_DELAY = 0.1f;		//passively animates
 
+const int SKY_LEVEL_DIVIDER = 78;
 const int GROUND_LEVEL_HEIGHT = 480;			//no objects may go beyond this line, essentially means 'ground level'
 
 //main menu frames

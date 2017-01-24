@@ -50,6 +50,15 @@ void Spaceship::draw()
 void Spaceship::update(float frameTime)
 {
 	Entity::update(frameTime);
+
+	if (isAtCriticalHealth)
+	{
+		//may consider moving this to somewhere else, since it's something that needs to be only called once anyway
+		startFrame = SPACESHIP_DAMAGED_START_FRAME;
+		endFrame = SPACESHIP_DAMAGED_END_FRAME;
+	}
+		
+
 }
 
 //additional methods here

@@ -1,60 +1,47 @@
-<<<<<<< HEAD
-﻿Build started 18/1/2017 10:02:07 AM.
-     1>Project "D:\School Stuffs\Year 3\Sem 3.2\Game Programming\Projects\gppassignment2\PlanetCollision.vcxproj" on node 2 (Build target(s)).
-     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(381,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (PlanetCollision.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+﻿Build started 24/1/2017 11:47:37 AM.
+     1>Project "C:\Users\Jack\Source\Repos\gppassignment2\PlanetCollision.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Cheese.cpp Object.cpp Player.cpp Spaceship.cpp ThrowTheCheese.cpp entity.cpp game.cpp gameControl.cpp graphics.cpp image.cpp input.cpp textureManager.cpp winmain.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Cannonball.cpp Descent.cpp Object.cpp Player.cpp Spaceship.cpp entity.cpp game.cpp graphics.cpp image.cpp input.cpp textDX.cpp textureManager.cpp winmain.cpp
+         Cannonball.cpp
+         Generating Code...
+         Compiling...
          winmain.cpp
-     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\throwthecheese.h(21): fatal error C1083: Cannot open include file: 'gameControl.h': No such file or directory
          textureManager.cpp
+         textDX.cpp
          input.cpp
          image.cpp
          graphics.cpp
-         gameControl.cpp
-     1>c1xx : fatal error C1083: Cannot open source file: 'gameControl.cpp': No such file or directory
          game.cpp
          entity.cpp
-         ThrowTheCheese.cpp
-     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\throwthecheese.h(21): fatal error C1083: Cannot open include file: 'gameControl.h': No such file or directory
          Spaceship.cpp
          Player.cpp
-     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\player.cpp(32): warning C4244: '=' : conversion from 'const float' to 'int', possible loss of data
+     1>c:\users\jack\source\repos\gppassignment2\player.cpp(32): warning C4244: '=' : conversion from 'const float' to 'int', possible loss of data
          Object.cpp
-         Cheese.cpp
+         Descent.cpp
+     1>c:\users\jack\source\repos\gppassignment2\descent.cpp(98): warning C4244: 'argument' : conversion from 'const UINT' to 'float', possible loss of data
+     1>c:\users\jack\source\repos\gppassignment2\descent.cpp(99): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>c:\users\jack\source\repos\gppassignment2\descent.cpp(144): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\jack\source\repos\gppassignment2\descent.cpp(145): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
          Generating Code...
-     1>Done Building Project "D:\School Stuffs\Year 3\Sem 3.2\Game Programming\Projects\gppassignment2\PlanetCollision.vcxproj" (Build target(s)) -- FAILED.
-
-Build FAILED.
-
-Time Elapsed 00:00:09.33
-=======
-﻿Build started 18/01/2017 10:06:15 AM.
-     1>Project "C:\Users\NPStudent\Source\Repos\gppassignmentwex\PlanetCollision.vcxproj" on node 2 (Build target(s)).
-     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(381,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (PlanetCollision.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ThrowTheCheese.cpp
-         ThrowTheCheese.cpp
-     1>c:\users\npstudent\source\repos\gppassignmentwex\throwthecheese.cpp(96): warning C4244: 'argument' : conversion from 'const UINT' to 'float', possible loss of data
-     1>c:\users\npstudent\source\repos\gppassignmentwex\throwthecheese.cpp(97): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\NPStudent\Source\Repos\gppassignmentwex\Debug\Throw Ball Game.exe" /NOLOGO /LIBPATH:"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Lib\x86" d3d9.lib d3dx9.lib winmm.lib xinput.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\NPStudent\Source\Repos\gppassignmentwex\Debug\Throw Ball Game.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\NPStudent\Source\Repos\gppassignmentwex\Debug\Throw Ball Game.lib" /MACHINE:X86 /SAFESEH:NO Debug\Cheese.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Jack\Source\Repos\gppassignment2\Debug\Throw Ball Game.exe" /NOLOGO /LIBPATH:"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Lib\x86" d3d9.lib d3dx9.lib winmm.lib xinput.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Jack\Source\Repos\gppassignment2\Debug\Throw Ball Game.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Jack\Source\Repos\gppassignment2\Debug\Throw Ball Game.lib" /MACHINE:X86 /SAFESEH:NO Debug\Cannonball.obj
          Debug\entity.obj
          Debug\game.obj
          Debug\gameControl.obj
          Debug\graphics.obj
+         Debug\guicon.obj
          Debug\image.obj
          Debug\input.obj
          Debug\Object.obj
          Debug\Player.obj
          Debug\Spaceship.obj
          Debug\textDX.obj
-         Debug\ThrowTheCheese.obj
+         Debug\Descent.obj
          Debug\textureManager.obj
          Debug\winmain.obj
-         PlanetCollision.vcxproj -> C:\Users\NPStudent\Source\Repos\gppassignmentwex\Debug\Throw Ball Game.exe
-     1>Done Building Project "C:\Users\NPStudent\Source\Repos\gppassignmentwex\PlanetCollision.vcxproj" (Build target(s)).
+         PlanetCollision.vcxproj -> C:\Users\Jack\Source\Repos\gppassignment2\Debug\Throw Ball Game.exe
+     1>Done Building Project "C:\Users\Jack\Source\Repos\gppassignment2\PlanetCollision.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.88
->>>>>>> refs/remotes/origin/wex
+Time Elapsed 00:00:09.13
