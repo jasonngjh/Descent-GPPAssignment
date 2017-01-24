@@ -126,10 +126,64 @@ void Descent::initialize(HWND hwnd)
 
 	enemy_spaceship.setFrames(SpaceshipNS::START_FRAME, SpaceshipNS::END_FRAME);
 	enemy_spaceship.setCurrentFrame(SpaceshipNS::START_FRAME);
-	enemy_spaceship.setX(GAME_WIDTH / 4);
-	enemy_spaceship.setY(GAME_HEIGHT / 4);
-
+	enemy_spaceship.setX(1);
+	enemy_spaceship.setY(1);
+	enemy_spaceship.setHealth(2); //for testing only
+	enemy_spaceship.setIsAtCritical(true);
+	
 	initializeTank();
+
+	std::cout << "initialising spaceship array" << std::endl;
+
+	int x = SPACESHIP_WIDTH;
+	int y = 0;
+
+	//wave one
+	
+	for (int i = 0; i < WAVE_1_SPACESHIPS_AMT_OF_ROWS; i++)
+	{
+
+		//spawn at y
+		y += SPACESHIP_HEIGHT*2;
+
+		std::cout << GAME_WIDTH / (SPACESHIP_WIDTH * 2.5) << std::endl;
+
+		for (int j = 0; j < GAME_WIDTH/(SPACESHIP_WIDTH); j++)
+		{
+			Spaceship spaceship;
+
+			//check if current Y can support game_width/spaceship_width amount of ships
+			//if yes, create spaceship at game_width/width*i
+
+			//if no, shift to next Y, keep current i counter
+
+			if (x + SPACESHIP_WIDTH > GAME_WIDTH)
+			{
+				x = 0;//SPACESHIP_WIDTH;
+			}
+
+			else
+			{
+				x = SPACESHIP_WIDTH + (GAME_WIDTH / SPACESHIP_WIDTH)*(j + 1) + (SPACESHIP_WIDTH*j);
+			}
+
+			spaceship.setX(x);
+			spaceship.setY(y);
+
+			//previous loop can no longer support current Y
+
+			if (!spaceship.initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, &spaceshipTexture))
+				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
+
+			array_spaceships.push_back(spaceship);
+			std::cout << "Adding spaceship at row " << i + 1 << "(no. " << j+1 << " in row) for wave one at x: " << spaceship.getX() << " y: " << spaceship.getY() << "." << std::endl;
+
+			currentActiveSpaceships++;
+
+			std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
+			//zombieArray[i].update(ship, frameTime);
+		}
+	}
 
     return;
 }
@@ -251,6 +305,16 @@ void Descent::update()
 
 			gameControl->setGeneralState(GENERAL_STATE::paused);
 		}
+
+		if (currentActiveSpaceships > 0)
+		{
+			//endlessly loop update for each zombie until no more zombies
+			for (int i = 0; i < currentActiveSpaceships; i++)
+			{
+			//std::cout << "looping spaceship" << std::endl;
+			array_spaceships[i].update(frameTime);
+			}
+		}
 	}break;
 
 	case GENERAL_STATE::paused:{
@@ -333,6 +397,11 @@ void Descent::render()
 								 turret.draw();
 								 tank.draw();
 								 
+								 for (int i = 0; i < currentActiveSpaceships; i++)
+								 {
+									 array_spaceships[i].draw();
+								 }
+								 
 								 switch (waveControl->getWaveState())
 								 {
 								 case WAVE_STATE::pauseWave:{
@@ -353,6 +422,7 @@ void Descent::render()
 															boss.draw();
 								 }break;//draw boss wave stuff
 								 }
+								 
 	}break;
 	case GENERAL_STATE::paused:{
 								   pauseText->print("Paused", GAME_HEIGHT / 2, GAME_WIDTH / 2);

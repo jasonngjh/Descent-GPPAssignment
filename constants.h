@@ -46,8 +46,8 @@ const float MASS_PLANET = 5000.0;
 const float MASS_SPACE_SHIP = 5.0f;		//number subject to change
 const float MASS_PLAYER = 5.0f;			//number subject to change
 
-const int OBJECT_WIDTH = 32;
-const int OBJECT_HEIGHT = 32;
+const int OBJECT_WIDTH = 16;
+const int OBJECT_HEIGHT = 16;
 const int OBJECT_TEXTURE_COLUMNS = 1;
 const int OBJECT_START_FRAME = 0;
 const int OBJECT_END_FRAME = 1;
@@ -92,12 +92,16 @@ const int SPACESHIP_HEIGHT = 32;
 const int SPACESHIP_TEXTURE_COLUMNS = 12;
 const int SPACESHIP_START_FRAME = 0;
 const int SPACESHIP_END_FRAME = 11;
+const int SPACESHIP_DAMAGED_START_FRAME = 12;
+const int SPACESHIP_DAMAGED_END_FRAME = 23;
 const float SPACESHIP_MASS = 50.0f;				//number subject to change - idk what to put here
 const float SPACESHIP_SPEED = 50.0f;				
-const float SPACESHIP_ANIMATION_DELAY = 0.01f;		//passively animates
-const int SPACESHIP_STARTING_HEALTH = 3;
+const float SPACESHIP_ANIMATION_DELAY = 0.1f;		//passively animates
+const int SPACESHIP_STARTING_HEALTH = 5;
 
 const int MAX_NO_OF_SPACESHIPS = 30; //number of spaceships allowed to exist
+const int WAVE_1_SPACESHIPS_AMT_OF_ROWS = 4;
+const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 8;
 
 const int BOSS_SPACESHIP_WIDTH = 212;
 const int BOSS_SPACESHIP_HEIGHT = 265;
@@ -115,6 +119,7 @@ const int POWERUP_END_FRAME = 1;
 const float POWERUP_ANIMATION_DELAY = 0.1f;		//passively animates
 
 const int GROUND_LEVEL_HEIGHT = GAME_HEIGHT - GAME_HEIGHT / 10;			//no objects may go beyond this line, essentially means 'ground level'
+const int SKY_LEVEL_DIVIDER = 78;
 
 //main menu frames
 
