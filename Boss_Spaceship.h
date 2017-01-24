@@ -28,7 +28,7 @@ namespace Boss_SpaceshipNS
 }
 
 // inherits from Entity class
-class Boss_Spaceship : public Spaceship
+class Boss_Spaceship : public Entity
 {
 private:
 	bool isAlive = true;

@@ -51,9 +51,9 @@ private:
 	Cannonball cannonball;
 	Spaceship enemy_spaceship;	//only one for now, testing only
 	Image menu1;
+	//Boss_Spaceship boss;
 	Boss_Spaceship boss;
-
-	int waveNumber=1;
+		int waveNumber=1;
 	std::vector<Spaceship> spaceshipArray;
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
 	

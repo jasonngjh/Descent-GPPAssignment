@@ -48,6 +48,7 @@ public:
 		TextureManager *textureM);
 	void update(float frameTime);
 	void hit(hitWho);
+	int getDamageLeft();
 	void setCannonballIsHeld(int playerNo)
 	{
 

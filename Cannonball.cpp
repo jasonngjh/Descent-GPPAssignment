@@ -90,18 +90,27 @@ void Cannonball::update(float frameTime)
 
 	
 }
+int Cannonball::getDamageLeft(){ return damageLeft; }
 void Cannonball::hit(hitWho target)
 {
-	if (target == land) 
+	if (target == land)
 	{
-			spriteData.y = GAME_HEIGHT - 50;//change value to where ur land is changes
-			velocity.y = 0.0;
-			velocity.x = 0.0;
-	
+		spriteData.y = GAME_HEIGHT - 50;//change value to where ur land is changes
+		velocity.y = 0.0;
+		velocity.x = 0.0;
+
 	}
 	if (target == spaceShip)
 	{
+		if (damageLeft>0)
 		damageLeft -= 1;
+		else damageLeft = 0;
+	}
+	if (target == bossShip)
+	{
+		if (damageLeft>0)
+			damageLeft -= 1;
+		else damageLeft = 0;
 		
 	}
 }
