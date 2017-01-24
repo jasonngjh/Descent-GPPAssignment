@@ -15,10 +15,8 @@ namespace PlayerNS
 	const float ROTATION_RATE = (float)PI / 4;				// spin at x radians per second
 	const float MASS = PLAYER_MASS;							// mass
 	const int   TEXTURE_COLS = PLAYER_TEXTURE_COLUMNS;      // texture has x columns
-	const int   START_LEFT_FRAME = PLAYER_LEFT_START_FRAME;			//which frame to start
-	const int   END_LEFT_FRAME = PLAYER_LEFT_END_FRAME;				//which frame to end
-	const int   START_RIGHT_FRAME = PLAYER_RIGHT_START_FRAME;			//which frame to start
-	const int   END_RIGHT_FRAME = PLAYER_RIGHT_END_FRAME;
+	const int   START_FRAME = PLAYER_START_FRAME;			//which frame to start
+	const int   END_FRAME = PLAYER_END_FRAME;				//which frame to end
 	const float ANIMATION_DELAY = PLAYER_ANIMATION_DELAY;   // time between frames
 	const float BASE_STRENGTH = PLAYER_BASE_STRENGTH;
 
@@ -40,6 +38,8 @@ private:
 	float maxHealth;
 	int health;
 	float speed;						// X pixels per second
+	int tankAngle;
+	bool tankDirection;
 
 public:
 	// constructor
@@ -58,9 +58,12 @@ public:
 
 	//setters
 	void setSpeed(float s);
+	void setTankAngle(int a);
 
 	//getters
 	float getSpeed();
+	int getTankAngle();
+	bool getTankDirection();
 };
 #endif
 
