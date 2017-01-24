@@ -41,13 +41,13 @@ const float FRAME_RATE = 200.0f;                // the target frame rate (frames
 const float MIN_FRAME_RATE = 10.0f;             // the minimum frame rate
 const float MIN_FRAME_TIME = 1.0f/FRAME_RATE;   // minimum desired time for 1 frame
 const float MAX_FRAME_TIME = 1.0f/MIN_FRAME_RATE; // maximum time used in calculations
-const float GRAVITY = 6.67428e-11f;             // gravitational constant
-const float MASS_PLANET = 1.0e14f;
+const float GRAVITY = 225.5f;             // gravitational constant
+const float MASS_PLANET = 5000.0;
 const float MASS_SPACE_SHIP = 5.0f;		//number subject to change
 const float MASS_PLAYER = 5.0f;			//number subject to change
 
-const int OBJECT_WIDTH = 32;
-const int OBJECT_HEIGHT = 32;
+const int OBJECT_WIDTH = 16;
+const int OBJECT_HEIGHT = 16;
 const int OBJECT_TEXTURE_COLUMNS = 1;
 const int OBJECT_START_FRAME = 0;
 const int OBJECT_END_FRAME = 1;
@@ -72,9 +72,10 @@ const int CANNONBALL_HEIGHT = 32;
 const int CANNONBALL_TEXTURE_COLUMNS = 1;
 const int CANNONBALL_START_FRAME = 0;
 const int CANNONBALL_END_FRAME = 1;
-const float CANNONBALL_MASS = 50.0f;				//number subject to change - idk what to put here
-const float CANNONBALL_BASE_SPEED = 100.0f;			//base speed that CANNONBALL always moves on, MAY NOT BE RELEVANT DEPENDING ON HOW WE CALCULATE SPEED 
+const float CANNONBALL_MASS = 1200.0f;				//number subject to change - idk what to put here
+const float CANNONBALL_BASE_SPEED = 200.0f;			//base speed that CANNONBALL always moves on, MAY NOT BE RELEVANT DEPENDING ON HOW WE CALCULATE SPEED 
 const float CANNONBALL_ANIMATION_DELAY = 0.2f;		//note: maybe Cannonball animates when moving 
+const int CANNONBALL_DAMAGE = 5;
 
 //refers to a wormhole/blackhole image, is not an actual object. Remove if confirmed to go for tank theme instead of Cannonball theme
 //can also incorporate to 'explain' arrival of spaceships
@@ -91,12 +92,24 @@ const int SPACESHIP_HEIGHT = 32;
 const int SPACESHIP_TEXTURE_COLUMNS = 12;
 const int SPACESHIP_START_FRAME = 0;
 const int SPACESHIP_END_FRAME = 11;
+const int SPACESHIP_DAMAGED_START_FRAME = 12;
+const int SPACESHIP_DAMAGED_END_FRAME = 23;
 const float SPACESHIP_MASS = 50.0f;				//number subject to change - idk what to put here
 const float SPACESHIP_SPEED = 50.0f;				
-const float SPACESHIP_ANIMATION_DELAY = 0.01f;		//passively animates
-const int SPACESHIP_STARTING_HEALTH = 3;
+const float SPACESHIP_ANIMATION_DELAY = 0.1f;		//passively animates
+const int SPACESHIP_STARTING_HEALTH = 5;
 
 const int MAX_NO_OF_SPACESHIPS = 30; //number of spaceships allowed to exist
+const int WAVE_1_SPACESHIPS_AMT_OF_ROWS = 4;
+const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 8;
+
+const int BOSS_SPACESHIP_WIDTH = 212;
+const int BOSS_SPACESHIP_HEIGHT = 265;
+const int BOSS_SPACESHIP_TEXTURE_COLUMNS = 3;
+const int BOSS_SPACESHIP_START_FRAME = 0;
+const int BOSS_SPACESHIP_END_FRAME = 2;
+const float BOSS_SPACESHIP_ANIMATION_DELAY = 0.0001f;
+const int BOSS_SPACESHIP_STARTING_HEALTH = 10;
 
 const int POWERUP_WIDTH = 32;
 const int POWERUP_HEIGHT = 32;
@@ -106,6 +119,7 @@ const int POWERUP_END_FRAME = 1;
 const float POWERUP_ANIMATION_DELAY = 0.1f;		//passively animates
 
 const int GROUND_LEVEL_HEIGHT = GAME_HEIGHT - GAME_HEIGHT / 10;			//no objects may go beyond this line, essentially means 'ground level'
+const int SKY_LEVEL_DIVIDER = 78;
 
 //main menu frames
 
@@ -126,6 +140,7 @@ const char GROUND_TILESET_IMAGE[] = "images\\ground_tile.png";
 const char CANNONBALL_IMAGE[] = "images\\cannonball.png";
 const char SPACESHIP_IMAGE[] = "images\\spaceship.png";
 const char MENU1_IMAGE[] = "images\\menu1.png";
+const char BOSS_SPACESHIP_IMAGE[] = "images\\boss_spaceship.png";
 const char TANK_IMAGE[] = "images\\tank.png";
 const char BKGRND_IMAGE[] = "images\\background.png";
 const char TURRET_IMAGE[] = "images\\turret.png";
@@ -141,6 +156,9 @@ const UCHAR SPACE_KEY = VK_SPACE;
 const UCHAR UP_KEY = VK_UP;
 const UCHAR LEFT_KEY = VK_LEFT;
 const UCHAR RIGHT_KEY = VK_RIGHT;
+const UCHAR TAB_KEY = VK_TAB;
 const UCHAR PAUSE_KEY = 0x50;
+
+enum hitWho{land,spaceShip,bossShip,player};
 
 #endif

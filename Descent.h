@@ -11,6 +11,7 @@
 #include "cannonball.h"
 #include "Player.h"
 #include "Spaceship.h"
+#include "Boss_Spaceship.h"
 
 #include <windows.h>
 #include <conio.h>
@@ -19,6 +20,7 @@
 #include <iostream>
 
 #include "gameControl.h"
+#include "waveControl.h"
 #include "textDX.h"
 //=============================================================================
 // This class is the core of the game
@@ -28,12 +30,16 @@ class Descent : public Game
 private:
     //texture items
 	//game items
-	TextDX* pauseText;
-	GameControl*	gameControl=new GameControl;
+	
 	TextureManager exampleTexture;
 	Image exampleImage;
     Object exampleObject;
+	TextDX* pauseText;
+	TextDX* waveNumberText;
+	GameControl*	gameControl = new GameControl;
+	WaveControl*	waveControl = new WaveControl;
 
+	TextureManager bossTexture;
 	TextureManager backgroundTexture;
 	TextureManager groundTexture;
 	TextureManager cannonballTexture;
@@ -47,15 +53,19 @@ private:
 	Cannonball cannonball;
 	Spaceship enemy_spaceship;	//only one for now, testing only
 	Image menu1;
+	//Boss_Spaceship boss;
+	Boss_Spaceship boss;
+	int waveNumber=1;
 	Player tank;
 	Image turret;
 	std::vector<Spaceship> spaceshipArray;
+	std::vector<Spaceship> array_spaceships;
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
 	
 	int playerCount;//use this value to count 1 player or 2 player
 
 public:
-	int currentActiveSpaceships; //amt of spaceships currently alive (should be less or equal to maxActiveSpaceships)
+	int currentActiveSpaceships=0; //amt of spaceships currently alive (should be less or equal to maxActiveSpaceships)
 
     // Constructor
 	Descent();

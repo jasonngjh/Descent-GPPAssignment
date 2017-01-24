@@ -3,3 +3,6 @@
 GameControl::GameControl() {
 	generalState = GENERAL_STATE::menu;
 }
+GameControl::~GameControl()
+{
+}

@@ -26,7 +26,7 @@ if 2 player, color code them red and blue for clarity
 Descent::Descent()
 {
 	pauseText = new TextDX();
-
+	waveNumberText = new TextDX();
 }
 
 //=============================================================================
@@ -35,6 +35,7 @@ Descent::Descent()
 Descent::~Descent()
 {
 	SAFE_DELETE(pauseText);
+	SAFE_DELETE(waveNumberText);
     releaseAll();           // call onLostDevice() for every graphics item
 }
 
@@ -68,6 +69,8 @@ void Descent::initialize(HWND hwnd)
 	//set velocity, set speed, set size, etc etc
 	*/
 	if (!pauseText->initialize(graphics, 62, true, false, "Arial"))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing DirectX font"));
+	if (waveNumberText->initialize(graphics, 62, true, false, "Invasion2000") == false)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing DirectX font"));
 
 	if (!groundTexture.initialize(graphics, GROUND_TILESET_IMAGE))
@@ -109,6 +112,10 @@ void Descent::initialize(HWND hwnd)
 
 	if (!background.initialize(graphics, 0, 0, 0, &backgroundTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error initialising background"));
+	if (!bossTexture.initialize(graphics, BOSS_SPACESHIP_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss texture"));
+	if (!boss.initialize(this, Boss_SpaceshipNS::WIDTH, Boss_SpaceshipNS::HEIGHT, Boss_SpaceshipNS::TEXTURE_COLS, &bossTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss game object"));
 
 	ground.setX(0);
 	ground.setScale(GAME_WIDTH / ground.getWidth());
@@ -119,10 +126,64 @@ void Descent::initialize(HWND hwnd)
 
 	enemy_spaceship.setFrames(SpaceshipNS::START_FRAME, SpaceshipNS::END_FRAME);
 	enemy_spaceship.setCurrentFrame(SpaceshipNS::START_FRAME);
-	enemy_spaceship.setX(GAME_WIDTH / 4);
-	enemy_spaceship.setY(GAME_HEIGHT / 4);
-
+	enemy_spaceship.setX(1);
+	enemy_spaceship.setY(1);
+	enemy_spaceship.setHealth(2); //for testing only
+	enemy_spaceship.setIsAtCritical(true);
+	
 	initializeTank();
+
+	std::cout << "initialising spaceship array" << std::endl;
+
+	int x = SPACESHIP_WIDTH;
+	int y = 0;
+
+	//wave one
+	
+	for (int i = 0; i < WAVE_1_SPACESHIPS_AMT_OF_ROWS; i++)
+	{
+
+		//spawn at y
+		y += SPACESHIP_HEIGHT*2;
+
+		std::cout << GAME_WIDTH / (SPACESHIP_WIDTH * 2.5) << std::endl;
+
+		for (int j = 0; j < GAME_WIDTH/(SPACESHIP_WIDTH); j++)
+		{
+			Spaceship spaceship;
+
+			//check if current Y can support game_width/spaceship_width amount of ships
+			//if yes, create spaceship at game_width/width*i
+
+			//if no, shift to next Y, keep current i counter
+
+			if (x + SPACESHIP_WIDTH > GAME_WIDTH)
+			{
+				x = 0;//SPACESHIP_WIDTH;
+			}
+
+			else
+			{
+				x = SPACESHIP_WIDTH + (GAME_WIDTH / SPACESHIP_WIDTH)*(j + 1) + (SPACESHIP_WIDTH*j);
+			}
+
+			spaceship.setX(x);
+			spaceship.setY(y);
+
+			//previous loop can no longer support current Y
+
+			if (!spaceship.initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, &spaceshipTexture))
+				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
+
+			array_spaceships.push_back(spaceship);
+			std::cout << "Adding spaceship at row " << i + 1 << "(no. " << j+1 << " in row) for wave one at x: " << spaceship.getX() << " y: " << spaceship.getY() << "." << std::endl;
+
+			currentActiveSpaceships++;
+
+			std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
+			//zombieArray[i].update(ship, frameTime);
+		}
+	}
 
     return;
 }
@@ -133,12 +194,10 @@ void Descent::initialize(HWND hwnd)
 void Descent::update()
 {
 	//exampleObject.update(frameTime);
-	cannonball.update(frameTime);
-	enemy_spaceship.update(frameTime);
-	tank.update(frameTime);
 	//other update mechanics here
 
 	GENERAL_STATE state = gameControl->getGeneralState();
+	WAVE_STATE waveState = waveControl->getWaveState();
 	switch (state)
 	{
 	case GENERAL_STATE::menu: {
@@ -155,8 +214,17 @@ void Descent::update()
 			//playerCount=number of players to initialise
 		}
 	}break;
+	case GENERAL_STATE::instructions : {
+										   if (input->isKeyDown(TAB_KEY)){
+											   gameControl->setGeneralState(GENERAL_STATE::game);
+										   }
+	}break;
 
 	case GENERAL_STATE::game:{
+		cannonball.update(frameTime);
+		enemy_spaceship.update(frameTime);
+		tank.update(frameTime);
+
 	// checkpoints: player health = 0 -> change to end game screen
 	// if boss die -> change to end game screen
 	// if esc(quit pressed) -> change to end game screen
@@ -189,11 +257,63 @@ void Descent::update()
 				break;
 			}
 		}
+		
+		if (cannonball.getY() > GAME_HEIGHT - 50)
+		 {
+			 cannonball.hit(land);
+			 cannonball.update(frameTime);
+
+		 }
+
+		 switch (waveState){
+			case WAVE_STATE::pauseWave:{
+											std::cout << "pause" << std::endl; 
+											if (input->isKeyDown(SPACE_KEY))
+												waveControl->setWaveState(WAVE_STATE::wave1);
+			 }break;
+			 case WAVE_STATE::wave1:{//add wave 1 behaviors
+										std::cout << "wave 1" << std::endl;
+										enemy_spaceship.update(frameTime);
+										if (input->wasKeyPressed(LEFT_KEY))
+										{
+											waveControl->setWaveState(WAVE_STATE::wave2);
+										}
+										 
+			 }break;
+			 case WAVE_STATE::wave2:{//add wave 2 enemy behavior
+										std::cout << "wave 2" << std::endl;
+										if (input->wasKeyPressed(RIGHT_KEY))
+										{
+											waveControl->setWaveState(WAVE_STATE::wave3);
+										}
+			 }break;
+			 case WAVE_STATE::wave3:{//add boss spaceship behaviour
+										std::cout << "wave 3" << std::endl;
+										boss.setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
+										boss.setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
+										boss.setX(GAME_WIDTH / 4);
+										boss.setY(GAME_HEIGHT / 4);
+										boss.update(frameTime);
+
+										
+			 }break;
 								 
+		}
+		
 		if (input->wasKeyPressed(PAUSE_KEY))
 		{
 
 			gameControl->setGeneralState(GENERAL_STATE::paused);
+		}
+
+		if (currentActiveSpaceships > 0)
+		{
+			//endlessly loop update for each zombie until no more zombies
+			for (int i = 0; i < currentActiveSpaceships; i++)
+			{
+			//std::cout << "looping spaceship" << std::endl;
+			array_spaceships[i].update(frameTime);
+			}
 		}
 	}break;
 
@@ -234,6 +354,21 @@ void Descent::collisions()
 		ship1.bounce(collisionVector, planet);
 		ship1.damage(PLANET);
 	}*/
+	if (cannonball.collidesWith(enemy_spaceship, collisionVector))
+	{
+		cannonball.bounce(collisionVector, enemy_spaceship);
+		cannonball.hit(spaceShip);
+		std::cout << "COLLIDE SPACESHIP" << std::endl;
+	}
+	if (cannonball.collidesWith(boss, collisionVector))
+	{
+		cannonball.bounce(collisionVector, boss);
+		
+			std::cout << cannonball.getDamageLeft() + "COLLIDE BOSSSHIP" << std::endl;
+		
+		cannonball.hit(bossShip);
+		
+	}	
 
 
 }
@@ -251,6 +386,9 @@ void Descent::render()
 	case GENERAL_STATE::menu :{
 								 menu1.draw();
 	}break;
+	case GENERAL_STATE::instructions:{
+								//draw instructions
+	}break;
 	case GENERAL_STATE::game:{
 								 background.draw();
 								 ground.draw();                   // add the object to the scene
@@ -258,6 +396,33 @@ void Descent::render()
 								 enemy_spaceship.draw();
 								 turret.draw();
 								 tank.draw();
+								 
+								 for (int i = 0; i < currentActiveSpaceships; i++)
+								 {
+									 array_spaceships[i].draw();
+								 }
+								 
+								 switch (waveControl->getWaveState())
+								 {
+								 case WAVE_STATE::pauseWave:{
+																waveNumberText->print("Wave 1", GAME_HEIGHT / 2, GAME_WIDTH / 2); // need to change to picture
+																
+								 }break;
+								 case WAVE_STATE::wave1:{
+															enemy_spaceship.draw(); 
+														//	std::cout << "wave1" << std::endl;
+								 }break;//draw wave 3 stuff
+								 case WAVE_STATE::wave2:{
+															//std::cout << "wave2" << std::endl;
+
+								 }break;//draw wave 2 stuff
+								 case WAVE_STATE::wave3:{
+															
+															//std::cout << "wave3" << std::endl;
+															boss.draw();
+								 }break;//draw boss wave stuff
+								 }
+								 
 	}break;
 	case GENERAL_STATE::paused:{
 								   pauseText->print("Paused", GAME_HEIGHT / 2, GAME_WIDTH / 2);
