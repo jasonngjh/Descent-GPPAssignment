@@ -18,7 +18,7 @@ Spaceship::Spaceship() : Entity()
 	endFrame = SpaceshipNS::END_FRAME;     // last frame of ship animation
 	currentFrame = startFrame;
 	radius = SpaceshipNS::WIDTH / 2.0;
-	mass = SpaceshipNS::MASS;
+	mass = SpaceshipNS::MASS;			
 	collisionType = entityNS::CIRCLE;
 }
 

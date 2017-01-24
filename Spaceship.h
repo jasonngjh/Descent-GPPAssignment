@@ -28,7 +28,7 @@ namespace SpaceshipNS
 
 // inherits from Entity class
 class Spaceship : public Entity
-{
+{		
 private:
 
 	bool isAlive = true;

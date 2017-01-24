@@ -6,20 +6,20 @@
 #include "Spaceship.h"
 #include "constants.h"
 
-namespace Boss_Spaceship
+namespace Boss_SpaceshipNS
 {
 
 	//PERMANENT VALUES, ANYTHING YOU DECLARE HERE IS NOT MEANT TO BE MANIPULATED DURING THE GAME
 
-	const int WIDTH = SPACESHIP_WIDTH;							//IMAGE WIDTH            
-	const int HEIGHT = SPACESHIP_HEIGHT;						// image height
+	const int WIDTH = BOSS_SPACESHIP_WIDTH;							//IMAGE WIDTH            
+	const int HEIGHT = BOSS_SPACESHIP_HEIGHT;						// image height
 	const float ROTATION_RATE = (float)PI / 4;				// spin at x radians per second
 	const float SPEED = SPACESHIP_SPEED;						// X pixels per second
 	const float MASS = SPACESHIP_MASS;							// mass
-	const int   TEXTURE_COLS = SPACESHIP_TEXTURE_COLUMNS;      // texture has x columns
-	const int   START_FRAME = SPACESHIP_START_FRAME;			//which frame to start
-	const int   END_FRAME = SPACESHIP_END_FRAME;				//which frame to end
-	const float ANIMATION_DELAY = SPACESHIP_ANIMATION_DELAY;   // time between frames
+	const int   TEXTURE_COLS = BOSS_SPACESHIP_TEXTURE_COLUMNS;      // texture has x columns
+	const int   START_FRAME = BOSS_SPACESHIP_START_FRAME;			//which frame to start
+	const int   END_FRAME = BOSS_SPACESHIP_END_FRAME;				//which frame to end
+	const float ANIMATION_DELAY = BOSS_SPACESHIP_ANIMATION_DELAY;   // time between frames
 
 	//DERIVED PERMANENT VALUES
 	const int X = GAME_WIDTH / 2 - WIDTH / 2;				// location on screen
@@ -28,7 +28,7 @@ namespace Boss_Spaceship
 }
 
 // inherits from Entity class
-class Boss_Spaceship : public Spaceship
+class Boss_Spaceship : public Entity
 {
 private:
 	bool isAlive = true;

@@ -29,6 +29,7 @@ Cannonball::Cannonball() : Entity()
 bool Cannonball::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM)
 {
+	damageLeft = CannonballNS::DAMAGE;
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
 }
 
@@ -47,8 +48,22 @@ void Cannonball::draw()
 //=============================================================================
 void Cannonball::update(float frameTime)
 {
+	//http://jsfiddle.net/LyM87/ cannonball physics
 	//if thrown
-	spriteData.angle += frameTime * CannonballNS::ROTATION_RATE;
+	//spriteData.angle += frameTime * CannonballNS::ROTATION_RATE;
+	velocity.y += GRAVITY*frameTime;
+	spriteData.y += frameTime*velocity.y;
+	spriteData.x += frameTime*velocity.x;
+	
+
+	if (input->isKeyDown(SPACE_KEY))
+	{
+		velocity.y = -500.0;
+		velocity.x = 300.0;
+	}
+	
+
+
 	if (spriteData.x > GAME_WIDTH - CannonballNS::WIDTH*getScale())
 	{
 		// position at right screen edge
@@ -72,6 +87,31 @@ void Cannonball::update(float frameTime)
 		spriteData.y = 0;                       // position at top screen edge
 		velocity.y = -velocity.y;               // reverse Y direction
 	}
-}
 
+	
+}
+int Cannonball::getDamageLeft(){ return damageLeft; }
+void Cannonball::hit(hitWho target)
+{
+	if (target == land)
+	{
+		spriteData.y = GAME_HEIGHT - 50;//change value to where ur land is changes
+		velocity.y = 0.0;
+		velocity.x = 0.0;
+
+	}
+	if (target == spaceShip)
+	{
+		if (damageLeft>0)
+		damageLeft -= 1;
+		else damageLeft = 0;
+	}
+	if (target == bossShip)
+	{
+		if (damageLeft>0)
+			damageLeft -= 1;
+		else damageLeft = 0;
+		
+	}
+}
 //additional methods here

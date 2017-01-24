@@ -26,6 +26,7 @@ if 2 player, color code them red and blue for clarity
 Descent::Descent()
 {
 	pauseText = new TextDX();
+	waveNumberText = new TextDX();
 
 }
 
@@ -67,7 +68,10 @@ void Descent::initialize(HWND hwnd)
 	exampleObject.setY(GAME_HEIGHT / 4);
 	//set velocity, set speed, set size, etc etc
 	*/
-	if (pauseText->initialize(graphics, 62, true, false, "Arial") == false)
+
+	if (pauseText->initialize(graphics, 62, true, false, "Invasion2000") == false)
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing DirectX font"));
+	if (waveNumberText->initialize(graphics, 62, true, false, "Invasion2000") == false)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing DirectX font"));
 
 	if (!groundTexture.initialize(graphics, GROUND_TILESET_IMAGE))
@@ -78,6 +82,7 @@ void Descent::initialize(HWND hwnd)
 
 	if (!spaceshipTexture.initialize(graphics, SPACESHIP_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship texture"));
+	
 	if (!menu1Texture.initialize(graphics, MENU1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu texture"));
 
@@ -92,19 +97,26 @@ void Descent::initialize(HWND hwnd)
 	
 	if (!menu1.initialize(graphics,MENU1_WIDTH, MENU1_HEIGHT, 2, &menu1Texture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu"));
+	if (!bossTexture.initialize(graphics, BOSS_SPACESHIP_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss texture"));
+	if (!boss.initialize(this, Boss_SpaceshipNS::WIDTH, Boss_SpaceshipNS::HEIGHT, Boss_SpaceshipNS::TEXTURE_COLS, &bossTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss game object"));
 
 
 	ground.setX(0);
 	ground.setScale(GAME_WIDTH / ground.getWidth());
 	ground.setY(GROUND_LEVEL_HEIGHT);		//sets ground to 3/4 of game width
 
-	cannonball.setX(GAME_WIDTH / 2);
-	cannonball.setY(GROUND_LEVEL_HEIGHT - CANNONBALL_HEIGHT);
+	cannonball.setX(CannonballNS::X);
+	cannonball.setY(CannonballNS::Y);
+	cannonball.setVelocity(VECTOR2(CannonballNS::BASE_SPEED, -CannonballNS::BASE_SPEED));
 
 	enemy_spaceship.setFrames(SpaceshipNS::START_FRAME, SpaceshipNS::END_FRAME);
 	enemy_spaceship.setCurrentFrame(SpaceshipNS::START_FRAME);
 	enemy_spaceship.setX(GAME_WIDTH / 4);
 	enemy_spaceship.setY(GAME_HEIGHT / 4);
+
+
 	//enemy_spaceship.setLoop(false);
 
     return;
@@ -116,14 +128,17 @@ void Descent::initialize(HWND hwnd)
 void Descent::update()
 {
 	//exampleObject.update(frameTime);
-	cannonball.update(frameTime);
-	enemy_spaceship.update(frameTime);
+	//cannonball.update(frameTime);
+	//enemy_spaceship.update(frameTime);
+	
 	//other update mechanics here
 
 	GENERAL_STATE state = gameControl->getGeneralState();
+	WAVE_STATE waveState = waveControl->getWaveState();
 	switch (state)
 	{
 	case GENERAL_STATE::menu: {
+								  
 									if (input->isKeyDown(DOWN_KEY)){
 										menu1.setCurrentFrame(MENU1_END_FRAME);
 										playerCount=2;
@@ -133,30 +148,69 @@ void Descent::update()
 										playerCount=1;
 									}
 									if (input->isKeyDown(ENTER_KEY)){
-									gameControl->setGeneralState(GENERAL_STATE::game);
+									gameControl->setGeneralState(GENERAL_STATE::instructions);
 									//playerCount=number of players to initialise
 									}
-								}break;
-
+	}break;
+	case GENERAL_STATE::instructions : {
+										   if (input->isKeyDown(TAB_KEY)){
+											   gameControl->setGeneralState(GENERAL_STATE::game);
+										   }
+	}break;
 	case GENERAL_STATE::game:{
+								 cannonball.update(frameTime);
 								 // checkpoints: player health = 0 -> change to end game screen
 								 // if boss die -> change to end game screen
 								 // if esc(quit pressed) -> change to end game screen
-								 if (input->isKeyDown(LEFT_KEY))
+								 // TRY TO MOVE CONTROLS TO THE SPECIFIC CLASS FOR REUSABILITY ******************************************
+								 if (cannonball.getY() > GAME_HEIGHT - 50)
 								 {
-									 cannonball.setX(cannonball.getX()-2);
-									 
-								 }
-								 if (input->isKeyDown(RIGHT_KEY))
-								 {
-									 cannonball.setX(cannonball.getX() + 2);
+									 cannonball.hit(land);
+									 cannonball.update(frameTime);
 
 								 }
+
 								 if (input->wasKeyPressed(PAUSE_KEY))
 								 {
 									
 									 gameControl->setGeneralState(GENERAL_STATE::paused);
 								 }
+								 switch (waveState){
+								 case WAVE_STATE::pauseWave:{
+																std::cout << "pause" << std::endl; 
+																if (input->isKeyDown(SPACE_KEY))
+																	waveControl->setWaveState(WAVE_STATE::wave1);
+								 }break;
+								 case WAVE_STATE::wave1:{//add wave 1 behaviors
+															std::cout << "wave 1" << std::endl;
+															enemy_spaceship.update(frameTime);
+															if (input->wasKeyPressed(LEFT_KEY))
+															{
+																waveControl->setWaveState(WAVE_STATE::wave2);
+															}
+															 
+								 }break;
+								 case WAVE_STATE::wave2:{//add wave 2 enemy behavior
+															std::cout << "wave 2" << std::endl;
+															if (input->wasKeyPressed(RIGHT_KEY))
+															{
+																waveControl->setWaveState(WAVE_STATE::wave3);
+															}
+								 }break;
+								 case WAVE_STATE::wave3:{//add boss spaceship behaviour
+															std::cout << "wave 3" << std::endl;
+															boss.setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
+															boss.setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
+															boss.setX(GAME_WIDTH / 4);
+															boss.setY(GAME_HEIGHT / 4);
+															boss.update(frameTime);
+
+															
+								 }break;
+								 
+								 }
+								
+
 	}break;
 
 	case GENERAL_STATE::paused:{
@@ -166,7 +220,7 @@ void Descent::update()
 									   gameControl->setGeneralState(GENERAL_STATE::game);
 								   }
 								   
-	}
+	}break;
 	}
 }
 
@@ -197,7 +251,21 @@ void Descent::collisions()
 		ship1.bounce(collisionVector, planet);
 		ship1.damage(PLANET);
 	}*/
-
+	if (cannonball.collidesWith(enemy_spaceship, collisionVector))
+	{
+		cannonball.bounce(collisionVector, enemy_spaceship);
+		cannonball.hit(spaceShip);
+		std::cout << "COLLIDE SPACESHIP" << std::endl;
+	}
+	if (cannonball.collidesWith(boss, collisionVector))
+	{
+		cannonball.bounce(collisionVector, boss);
+		
+			std::cout << cannonball.getDamageLeft() + "COLLIDE BOSSSHIP" << std::endl;
+		
+		cannonball.hit(bossShip);
+		
+	}
 
 }
 
@@ -214,15 +282,38 @@ void Descent::render()
 	case GENERAL_STATE::menu :{
 								 menu1.draw();
 	}break;
+	case GENERAL_STATE::instructions:{
+								//draw instructions
+	}break;
 	case GENERAL_STATE::game:{
 								 ground.draw();                   // add the object to the scene
 								 cannonball.draw();					//in real game, Cannonball should be drawn later, when wormhole appears
-								 enemy_spaceship.draw();
+								 
+								 switch (waveControl->getWaveState())
+								 {
+								 case WAVE_STATE::pauseWave:{
+																waveNumberText->print("Wave 1", GAME_HEIGHT / 2, GAME_WIDTH / 2); // need to change to picture
+																
+								 }break;
+								 case WAVE_STATE::wave1:{
+															enemy_spaceship.draw(); 
+														//	std::cout << "wave1" << std::endl;
+								 }break;//draw wave 3 stuff
+								 case WAVE_STATE::wave2:{
+															//std::cout << "wave2" << std::endl;
+
+								 }break;//draw wave 2 stuff
+								 case WAVE_STATE::wave3:{
+															
+															//std::cout << "wave3" << std::endl;
+															boss.draw();
+								 }break;//draw boss wave stuff
+								 }
 
 	}break;
 	case GENERAL_STATE::paused:{
 								   pauseText->print("Paused", GAME_HEIGHT / 2, GAME_WIDTH / 2);
-	}
+	}break;
 	}
     
 
@@ -235,6 +326,7 @@ void Descent::render()
 //=============================================================================
 void Descent::releaseAll()
 {
+	
 	exampleTexture.onLostDevice();
 	cannonballTexture.onLostDevice();
 	groundTexture.onLostDevice();
