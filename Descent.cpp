@@ -26,7 +26,7 @@ if 2 player, color code them red and blue for clarity
 Descent::Descent()
 {
 	pauseText = new TextDX();
-
+	waveNumberText = new TextDX();
 }
 
 //=============================================================================
@@ -35,6 +35,7 @@ Descent::Descent()
 Descent::~Descent()
 {
 	SAFE_DELETE(pauseText);
+	SAFE_DELETE(waveNumberText);
     releaseAll();           // call onLostDevice() for every graphics item
 }
 
