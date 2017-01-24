@@ -1,9 +1,10 @@
-﻿Build started 24/01/2017 2:46:50 PM.
-     1>Project "C:\Users\NPStudent\Source\Repos\gppassignment2wex\PlanetCollision.vcxproj" on node 2 (Build target(s)).
-     1>Link:
-         PlanetCollision.vcxproj -> C:\Users\NPStudent\Source\Repos\gppassignment2wex\Debug\Throw Ball Game.exe
-     1>Done Building Project "C:\Users\NPStudent\Source\Repos\gppassignment2wex\PlanetCollision.vcxproj" (Build target(s)).
+﻿Build started 24/01/2017 3:11:49 PM.
+     1>Project "C:\Users\NPStudent\Source\Repos\gppassignment2wex\PlanetCollision.vcxproj" on node 2 (ClCompile target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Boss_Spaceship.cpp
+         Boss_Spaceship.cpp
+     1>Done Building Project "C:\Users\NPStudent\Source\Repos\gppassignment2wex\PlanetCollision.vcxproj" (ClCompile target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.04
+Time Elapsed 00:00:01.14
