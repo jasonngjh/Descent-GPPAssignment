@@ -29,11 +29,11 @@
 //-----------------------------------------------
 
 // window
-const char CLASS_NAME[] = "Throw The Cannonball";
-const char GAME_TITLE[] = "Throw The Cannonball";
+const char CLASS_NAME[] = "Descent";
+const char GAME_TITLE[] = "Descent";
 const bool FULLSCREEN = false;              // windowed or fullscreen
-const UINT GAME_WIDTH = 800;               // width of game in pixels
-const UINT GAME_HEIGHT = 760;               // height of game in pixels
+const UINT GAME_WIDTH = 540;               // width of game in pixels
+const UINT GAME_HEIGHT = 640;               // height of game in pixels
 
 // game
 const double PI = 3.14159265;
@@ -56,13 +56,19 @@ const float OBJECT_SPEED = 300.0f;
 const float OBJECT_ANIMATION_DELAY = 0.2f;
 
 
-const int PLAYER_WIDTH = 32;
+const int PLAYER_WIDTH = 81;
 const int PLAYER_HEIGHT = 64;
-const int PLAYER_TEXTURE_COLUMNS = 1;
+const int PLAYER_TEXTURE_COLUMNS = 4;
 const int PLAYER_START_FRAME = 0;
+<<<<<<< HEAD
 const int PLAYER_END_FRAME = 1;
 const float PLAYER_MASS = 50.0;				//number subject to change - idk what to put here
 const float PLAYER_SPEED = 100.0f;			//player movement speed when going < or >
+=======
+const int PLAYER_END_FRAME = 3;
+const float PLAYER_MASS = 50.0f;				//number subject to change - idk what to put here
+//const float PLAYER_SPEED = 100.0f;			//player movement speed when going < or >
+>>>>>>> refs/remotes/origin/jason
 const float PLAYER_ANIMATION_DELAY = 0.2f;		//note: make player animate only when moving and throwing
 const float PLAYER_BASE_STRENGTH = 25.0f;		//base strength, related to player throwing
 const float PLAYER_MAX_HEALTH = 100;			//for dynamic health values, should represent health as a number
@@ -114,7 +120,7 @@ const int POWERUP_START_FRAME = 0;
 const int POWERUP_END_FRAME = 1;
 const float POWERUP_ANIMATION_DELAY = 0.1f;		//passively animates
 
-const int GROUND_LEVEL_HEIGHT = 480;			//no objects may go beyond this line, essentially means 'ground level'
+const int GROUND_LEVEL_HEIGHT = GAME_HEIGHT - GAME_HEIGHT / 10;			//no objects may go beyond this line, essentially means 'ground level'
 
 //main menu frames
 
@@ -124,13 +130,25 @@ const int MENU1_TEXTURE_COLUMNS = 0;
 const int MENU1_START_FRAME = 0;
 const int MENU1_END_FRAME = 1;
 
+//turret frames
+const int TURRET_WIDTH = 35;
+const int TURRET_HEIGHT = 35;
+const int TURRET_TEXTURE_COLUMNS = 7;
+
 // graphic images
 const char EXAMPLE_OBJECT_IMAGE[] = "images\\[PLACEHOLDER].jpg";
 const char GROUND_TILESET_IMAGE[] = "images\\ground_tile.png";
 const char CANNONBALL_IMAGE[] = "images\\cannonball.png";
 const char SPACESHIP_IMAGE[] = "images\\spaceship.png";
 const char MENU1_IMAGE[] = "images\\menu1.png";
+<<<<<<< HEAD
 const char BOSS_SPACESHIP_IMAGE[] = "images\\boss_spaceship.png";
+=======
+const char TANK_IMAGE[] = "images\\tank.png";
+const char BKGRND_IMAGE[] = "images\\background.png";
+const char TURRET_IMAGE[] = "images\\turret.png";
+
+>>>>>>> refs/remotes/origin/jason
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
 // it would be possible to save and restore key mappings from a data file.

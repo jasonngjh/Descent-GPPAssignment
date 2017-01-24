@@ -96,7 +96,6 @@ LRESULT Game::messageHandler( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam 
 void Game::initialize(HWND hw)
 {
     hwnd = hw;                                  // save window handle
-
     // initialize graphics
     graphics = new Graphics();
     // throws GameError
