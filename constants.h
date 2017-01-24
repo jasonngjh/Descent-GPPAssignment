@@ -101,7 +101,7 @@ const int SPACESHIP_STARTING_HEALTH = 5;
 
 const int MAX_NO_OF_SPACESHIPS = 30; //number of spaceships allowed to exist
 const int WAVE_1_SPACESHIPS_AMT_OF_ROWS = 4;
-const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 8;
+const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 6;
 
 const int BOSS_SPACESHIP_WIDTH = 212;
 const int BOSS_SPACESHIP_HEIGHT = 265;

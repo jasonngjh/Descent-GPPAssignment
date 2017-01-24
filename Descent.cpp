@@ -48,6 +48,8 @@ void Descent::initialize(HWND hwnd)
     Game::initialize(hwnd); // throws GameError
 
 	std::cout << "initialising game" << std::endl;
+#pragma region Initialize Assets
+
 
 	//object and texture initialization
 	/*
@@ -130,23 +132,29 @@ void Descent::initialize(HWND hwnd)
 	enemy_spaceship.setY(1);
 	enemy_spaceship.setHealth(2); //for testing only
 	enemy_spaceship.setIsAtCritical(true);
+
+#pragma endregion
 	
 	initializeTank();
 
 	std::cout << "initialising spaceship array" << std::endl;
+#pragma region Initialize Spaceships
+
+	
 
 	int x = SPACESHIP_WIDTH;
 	int y = 0;
 
 	//wave one
-	
+	std::cout << "GAME WIDTH DIVIDED BY SHIP WIDTH (spaceships per row):" << GAME_WIDTH / (SPACESHIP_WIDTH) << std::endl;
+
 	for (int i = 0; i < WAVE_1_SPACESHIPS_AMT_OF_ROWS; i++)
 	{
 
 		//spawn at y
-		y += SPACESHIP_HEIGHT*2;
+		y += SPACESHIP_HEIGHT*2;	//multipled by 2 so rows are one unit height away from each other
 
-		std::cout << GAME_WIDTH / (SPACESHIP_WIDTH * 2.5) << std::endl;
+		
 
 		for (int j = 0; j < GAME_WIDTH/(SPACESHIP_WIDTH); j++)
 		{
@@ -157,14 +165,15 @@ void Descent::initialize(HWND hwnd)
 
 			//if no, shift to next Y, keep current i counter
 
-			if (x + SPACESHIP_WIDTH > GAME_WIDTH)
+			if (x + (SPACESHIP_WIDTH*2) > GAME_WIDTH)
 			{
 				x = 0;//SPACESHIP_WIDTH;
+				break;
 			}
 
 			else
 			{
-				x = SPACESHIP_WIDTH + (GAME_WIDTH / SPACESHIP_WIDTH)*(j + 1) + (SPACESHIP_WIDTH*j);
+				x =(GAME_WIDTH / SPACESHIP_WIDTH)*(j + 1) + (SPACESHIP_WIDTH*j);
 			}
 
 			spaceship.setX(x);
@@ -184,6 +193,8 @@ void Descent::initialize(HWND hwnd)
 			//zombieArray[i].update(ship, frameTime);
 		}
 	}
+
+#pragma endregion
 
     return;
 }
