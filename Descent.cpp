@@ -103,8 +103,8 @@ void Descent::initialize(HWND hwnd)
 
 	enemy_spaceship.setFrames(SpaceshipNS::START_FRAME, SpaceshipNS::END_FRAME);
 	enemy_spaceship.setCurrentFrame(SpaceshipNS::START_FRAME);
-	enemy_spaceship.setX(GAME_WIDTH / 4);
-	enemy_spaceship.setY(GAME_HEIGHT / 4);
+	enemy_spaceship.setX(1);
+	enemy_spaceship.setY(1);
 	enemy_spaceship.setHealth(2); //for testing only
 	enemy_spaceship.setIsAtCritical(true);
 
@@ -125,7 +125,7 @@ void Descent::initialize(HWND hwnd)
 
 		std::cout << GAME_WIDTH / (SPACESHIP_WIDTH * 2.5) << std::endl;
 
-		for (int j = 0; j < GAME_WIDTH/(SPACESHIP_WIDTH*2.5); j++)
+		for (int j = 0; j < GAME_WIDTH/(SPACESHIP_WIDTH); j++)
 		{
 			Spaceship spaceship;
 
@@ -134,12 +134,15 @@ void Descent::initialize(HWND hwnd)
 
 			//if no, shift to next Y, keep current i counter
 
-			if (x + SPACESHIP_WIDTH * 2 > GAME_WIDTH)
+			if (x + SPACESHIP_WIDTH > GAME_WIDTH)
 			{
-				x = SPACESHIP_WIDTH;
+				x = 0;//SPACESHIP_WIDTH;
 			}
 
-			x = SPACESHIP_WIDTH + (GAME_WIDTH / SPACESHIP_WIDTH)*(j + 1) + (SPACESHIP_WIDTH*j * 2);
+			else
+			{
+				x = SPACESHIP_WIDTH + (GAME_WIDTH / SPACESHIP_WIDTH)*(j + 1) + (SPACESHIP_WIDTH*j);
+			}
 
 			spaceship.setX(x);
 			spaceship.setY(y);
@@ -150,7 +153,7 @@ void Descent::initialize(HWND hwnd)
 				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
 
 			array_spaceships.push_back(spaceship);
-			std::cout << "Adding spaceship " << i + 1 << " for wave one at x: " << spaceship.getX() << " y: " << spaceship.getY() << "." << std::endl;
+			std::cout << "Adding spaceship at row " << i + 1 << "(no. " << j+1 << " in row) for wave one at x: " << spaceship.getX() << " y: " << spaceship.getY() << "." << std::endl;
 
 			currentActiveSpaceships++;
 
@@ -169,8 +172,6 @@ void Descent::initialize(HWND hwnd)
 void Descent::update()
 {
 	//exampleObject.update(frameTime);
-	cannonball.update(frameTime);
-	enemy_spaceship.update(frameTime);
 	//other update mechanics here
 
 	GENERAL_STATE state = gameControl->getGeneralState();
@@ -192,6 +193,10 @@ void Descent::update()
 								}break;
 
 	case GENERAL_STATE::game:{
+
+								 cannonball.update(frameTime);
+								 enemy_spaceship.update(frameTime);
+
 								 // checkpoints: player health = 0 -> change to end game screen
 								 // if boss die -> change to end game screen
 								 // if esc(quit pressed) -> change to end game screen

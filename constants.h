@@ -32,8 +32,8 @@
 const char CLASS_NAME[] = "Throw The Cannonball";
 const char GAME_TITLE[] = "Throw The Cannonball";
 const bool FULLSCREEN = false;              // windowed or fullscreen
-const UINT GAME_WIDTH = 800;               // width of game in pixels
-const UINT GAME_HEIGHT = 760;               // height of game in pixels
+const UINT GAME_WIDTH = 540;               // width of game in pixels
+const UINT GAME_HEIGHT = 640;               // height of game in pixels
 
 // game
 const double PI = 3.14159265;
@@ -46,8 +46,8 @@ const float MASS_PLANET = 1.0e14f;
 const float MASS_SPACE_SHIP = 5.0f;		//number subject to change
 const float MASS_PLAYER = 5.0f;			//number subject to change
 
-const int OBJECT_WIDTH = 32;
-const int OBJECT_HEIGHT = 32;
+const int OBJECT_WIDTH = 16;
+const int OBJECT_HEIGHT = 16;
 const int OBJECT_TEXTURE_COLUMNS = 1;
 const int OBJECT_START_FRAME = 0;
 const int OBJECT_END_FRAME = 1;
