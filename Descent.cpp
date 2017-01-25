@@ -247,7 +247,6 @@ void Descent::update()
 	}break;
 
 	case GENERAL_STATE::game:{
-<<<<<<< HEAD
 		background.update(frameTime);
 		cannonball.update(frameTime);
 		enemy_spaceship.update(frameTime);
