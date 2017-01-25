@@ -154,7 +154,7 @@ const char BOSS_SPACESHIP_IMAGE[] = "images\\boss_spaceship.png";
 const char TANK_IMAGE[] = "images\\tank.png";
 const char BKGRND_IMAGE[] = "images\\background.png";
 const char TURRET_IMAGE[] = "images\\turret.png";
-const char SHELL_IMAGE[] = "images\\shell.gif";
+const char SHELL_IMAGE[] = "images\\shell.png";
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
 // it would be possible to save and restore key mappings from a data file.

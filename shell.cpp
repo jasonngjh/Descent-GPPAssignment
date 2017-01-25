@@ -50,6 +50,8 @@ void Shell::update(float frameTime)
 	//http://jsfiddle.net/LyM87/ cannonball physics
 	//if thrown
 	//spriteData.angle += frameTime * ShellNS::ROTATION_RATE;
+
+	
 	if (spriteData.x > GAME_WIDTH - ShellNS::WIDTH*getScale())
 	{
 		// position at right screen edge

@@ -289,6 +289,10 @@ void Descent::update()
 			 case WAVE_STATE::wave2:{//add wave 2 enemy behavior
 										shell.update(frameTime);
 										std::cout << "wave 2" << std::endl;
+
+										
+										
+										
 										if (input->wasKeyPressed(TH_KEY))
 										{
 											waveControl->setWaveState(WAVE_STATE::wave3);
