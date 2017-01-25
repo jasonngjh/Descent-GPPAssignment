@@ -52,17 +52,45 @@ void Cannonball::update(float frameTime)
 	//if thrown
 	//spriteData.angle += frameTime * CannonballNS::ROTATION_RATE;
 	velocity.y += GRAVITY*frameTime;
-	spriteData.y += frameTime*velocity.y;
-	spriteData.x += frameTime*velocity.x;
-	
+	//spriteData.y += frameTime*velocity.y;
+	//spriteData.x += frameTime*velocity.x;
+	spriteData.x += frameTime * velocity.x;
+	spriteData.y += frameTime * velocity.y;
 
 	if (input->isKeyDown(SPACE_KEY))
 	{
-		velocity.y = -500.0;
-		velocity.x = 300.0;
-	}
-	
+		switch (tank.getTankAngle())
+		{
+		case 20: spriteData.x = tank.getX() + 63.0f;
+				 spriteData.y = tank.getY() - 15.0f;
+				 velocity.y = -100.0;
+				 velocity.x = 200.0f;
+			break;
+		case 40: velocity.y = -300.0;
+			velocity.x = 0;
+			break;
+		case 60: velocity.y = -300.0;
+			velocity.x = 0;
+			break;
 
+		case 90: spriteData.x = tank.getX() + 36.0f;
+				spriteData.y = tank.getY() - 33.0f;
+				velocity.y = -400.0;
+				velocity.x - 0.0;
+			break;
+
+		case 120: velocity.y = -300.0;
+			velocity.x = 0;
+			break;
+		case 140: velocity.y = -300.0;
+			velocity.x = 0;
+			break;
+		case 160: velocity.y = -300.0;
+			velocity.x = 0;
+			break;
+		}
+			
+	}
 
 	if (spriteData.x > GAME_WIDTH - CannonballNS::WIDTH*getScale())
 	{
@@ -95,7 +123,7 @@ void Cannonball::hit(hitWho target)
 {
 	if (target == land)
 	{
-		spriteData.y = GAME_HEIGHT - 50;//change value to where ur land is changes
+		spriteData.y = GAME_HEIGHT - 80;//change value to where ur land is changes
 		velocity.y = 0.0;
 		velocity.x = 0.0;
 
@@ -115,3 +143,12 @@ void Cannonball::hit(hitWho target)
 	}
 }
 //additional methods here
+
+//=============================================================================
+// setTankAngle
+// set the tank angle
+//=============================================================================
+void Cannonball::getTank(Player t)
+{
+	tank = t;
+}

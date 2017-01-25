@@ -22,6 +22,8 @@
 #include "gameControl.h"
 #include "waveControl.h"
 #include "textDX.h"
+#include <thread>
+#include "animation.h"
 //=============================================================================
 // This class is the core of the game
 //=============================================================================
@@ -47,9 +49,11 @@ private:
 	TextureManager menu1Texture;
 	TextureManager tankTexture;
 	TextureManager turretTexture;
+	TextureManager smokeTexture;
 
 	Image background;
 	Image ground;
+	Image smoke;
 	Cannonball cannonball;
 	Spaceship enemy_spaceship;	//only one for now, testing only
 	Image menu1;
@@ -63,6 +67,7 @@ private:
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
 	
 	int playerCount;//use this value to count 1 player or 2 player
+	int highestY;
 
 public:
 	int currentActiveSpaceships=0; //amt of spaceships currently alive (should be less or equal to maxActiveSpaceships)
