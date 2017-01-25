@@ -54,7 +54,6 @@ void Cannonball::update(float frameTime)
 	velocity.y += GRAVITY*frameTime;
 	spriteData.y += frameTime*velocity.y;
 	spriteData.x += frameTime*velocity.x;
-	
 
 	if (input->isKeyDown(SPACE_KEY))
 	{
