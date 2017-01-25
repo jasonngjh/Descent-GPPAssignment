@@ -419,7 +419,7 @@ void Descent::render()
 														//	std::cout << "wave1" << std::endl;
 								 }break;//draw wave 3 stuff
 								 case WAVE_STATE::wave2:{
-
+															std::cout << "shell draw" << std::endl;
 															shell.draw();
 															//std::cout << "wave2" << std::endl;
 
