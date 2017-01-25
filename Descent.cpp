@@ -140,46 +140,43 @@ void Descent::initialize(HWND hwnd)
 	std::cout << "initialising spaceship array" << std::endl;
 #pragma region Initialize Spaceships
 
-	
-
-	int x = SPACESHIP_WIDTH;
-	int y = 0;
+	int x = 0;	//starting position of first spaceship is a unit length away the left side of the screen
+	int y = 0;					//to be manipulated in first for loop
 
 	//wave one
-	std::cout << "GAME WIDTH DIVIDED BY SHIP WIDTH (spaceships per row):" << GAME_WIDTH / (SPACESHIP_WIDTH) << std::endl;
+	std::cout << "GAME WIDTH DIVIDED BY SHIP WIDTH (spaceships per row):" << GAME_WIDTH / (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS) << std::endl;
 
 	for (int i = 0; i < WAVE_1_SPACESHIPS_AMT_OF_ROWS; i++)
 	{
-
-		//spawn at y
-		y += SPACESHIP_HEIGHT*2;	//multipled by 2 so rows are one unit height away from each other
-
-		
+		//this for loop spawns at Y
+		y += SPACESHIP_HEIGHT+VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//multipled by 2 so rows are one unit height away from each other
 
 		for (int j = 0; j < GAME_WIDTH/(SPACESHIP_WIDTH); j++)
 		{
 			Spaceship spaceship;
 
 			//check if current Y can support game_width/spaceship_width amount of ships
-			//if yes, create spaceship at game_width/width*i
 
-			//if no, shift to next Y, keep current i counter
-
-			if (x + (SPACESHIP_WIDTH*2) > GAME_WIDTH)
+			if (x + ((HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS+SPACESHIP_WIDTH)) > GAME_WIDTH-HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS)
 			{
-				x = 0;//SPACESHIP_WIDTH;
-				break;
+				//if current ship's X is more than game width, shift to next Y, keep current i counter
+
+				x = HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//ship starts as first ship in a new row
+				break;	//means that previous row can no longer support any more spaceships without clipping, breaks and starts new row (Y)
 			}
 
-			else
+			else		
 			{
-				x =(GAME_WIDTH / SPACESHIP_WIDTH)*(j + 1) + (SPACESHIP_WIDTH*j);
+				//this is true if current y can support more ships
+				//create spaceship at X position of game_width/width*i, current row
+				//x = (GAME_WIDTH / SPACESHIP_WIDTH)*(j+1) + (LENGTH_GAP_BETWEEN_SPACESHIPS*j);
+				x = (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS*j);
+				std::cout << "Current x: " << x << "." << std::endl;
 			}
 
 			spaceship.setX(x);
 			spaceship.setY(y);
-
-			//previous loop can no longer support current Y
+			spaceship.setHealth(SPACESHIP_STARTING_HEALTH);
 
 			if (!spaceship.initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, &spaceshipTexture))
 				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
@@ -190,7 +187,6 @@ void Descent::initialize(HWND hwnd)
 			currentActiveSpaceships++;
 
 			std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
-			//zombieArray[i].update(ship, frameTime);
 		}
 	}
 
@@ -221,7 +217,7 @@ void Descent::update()
 			playerCount = 1;
 		}
 		if (input->isKeyDown(ENTER_KEY)){
-			gameControl->setGeneralState(GENERAL_STATE::game);
+			gameControl->setGeneralState(GENERAL_STATE::instructions);
 			//playerCount=number of players to initialise
 		}
 	}break;
@@ -232,9 +228,19 @@ void Descent::update()
 	}break;
 
 	case GENERAL_STATE::game:{
-		cannonball.update(frameTime);
+		cannonball.update(frameTime/5);
 		enemy_spaceship.update(frameTime);
 		tank.update(frameTime);
+
+		if (currentActiveSpaceships > 0)
+		{
+			//endlessly loop update for each zombie until no more zombies
+			for (int i = 0; i < currentActiveSpaceships; i++)
+			{
+				//std::cout << "looping spaceship" << std::endl;
+				array_spaceships[i].update(frameTime);
+			}
+		}
 
 	// checkpoints: player health = 0 -> change to end game screen
 	// if boss die -> change to end game screen
@@ -283,7 +289,7 @@ void Descent::update()
 												waveControl->setWaveState(WAVE_STATE::wave1);
 			 }break;
 			 case WAVE_STATE::wave1:{//add wave 1 behaviors
-										std::cout << "wave 1" << std::endl;
+										//std::cout << "wave 1" << std::endl;
 										enemy_spaceship.update(frameTime);
 										if (input->wasKeyPressed(LEFT_KEY))
 										{
@@ -292,14 +298,14 @@ void Descent::update()
 										 
 			 }break;
 			 case WAVE_STATE::wave2:{//add wave 2 enemy behavior
-										std::cout << "wave 2" << std::endl;
+										//std::cout << "wave 2" << std::endl;
 										if (input->wasKeyPressed(RIGHT_KEY))
 										{
 											waveControl->setWaveState(WAVE_STATE::wave3);
 										}
 			 }break;
 			 case WAVE_STATE::wave3:{//add boss spaceship behaviour
-										std::cout << "wave 3" << std::endl;
+										//std::cout << "wave 3" << std::endl;
 										boss.setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
 										boss.setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
 										boss.setX(GAME_WIDTH / 4);
@@ -317,15 +323,7 @@ void Descent::update()
 			gameControl->setGeneralState(GENERAL_STATE::paused);
 		}
 
-		if (currentActiveSpaceships > 0)
-		{
-			//endlessly loop update for each zombie until no more zombies
-			for (int i = 0; i < currentActiveSpaceships; i++)
-			{
-			//std::cout << "looping spaceship" << std::endl;
-			array_spaceships[i].update(frameTime);
-			}
-		}
+		
 	}break;
 
 	case GENERAL_STATE::paused:{
@@ -365,21 +363,68 @@ void Descent::collisions()
 		ship1.bounce(collisionVector, planet);
 		ship1.damage(PLANET);
 	}*/
-	if (cannonball.collidesWith(enemy_spaceship, collisionVector))
-	{
-		cannonball.bounce(collisionVector, enemy_spaceship);
-		cannonball.hit(spaceShip);
-		std::cout << "COLLIDE SPACESHIP" << std::endl;
-	}
+
 	if (cannonball.collidesWith(boss, collisionVector))
 	{
 		cannonball.bounce(collisionVector, boss);
 		
-			std::cout << cannonball.getDamageLeft() + "COLLIDE BOSSSHIP" << std::endl;
+			//std::cout << cannonball.getDamageLeft() + "COLLIDE BOSSSHIP" << std::endl;
 		
 		cannonball.hit(bossShip);
 		
 	}	
+
+	for (int i = 0; i < array_spaceships.size(); i++)
+	{
+		//Zombie zombie = zombieArray[i];
+		// if collision between bullet and zombies
+		if (cannonball.collidesWith(array_spaceships[i], collisionVector))
+		{
+
+			if (!cannonball.getActive())
+			{
+				//do nothing
+			}
+			else
+			{
+				cannonball.hit(spaceShip);
+				//actual damage code
+
+				//calculate damage from cannonball
+				int forcePower = 2;// cannonball.getDamageLeft();	//if unavailable, use 3
+
+				array_spaceships[i].setHealth(array_spaceships[i].getHealth() - forcePower);	//decreases health
+				std::cout << "Spaceship " << i << " took " << forcePower << " damage." << std::endl;
+				std::cout << array_spaceships[i].getHealth() << " health left " << std::endl;
+
+				
+
+				std::cout << "Cannonball has " << cannonball.getDamageLeft() << " power left " << std::endl;
+
+				if (array_spaceships[i].getHealth() <= SPACESHIP_STARTING_HEALTH / SPACESHIP_CRITICAL_HEALTH_FACTOR)
+				{
+					array_spaceships[i].setIsAtCritical(true);
+				}
+
+				if (array_spaceships[i].getHealth() <= 0)
+				{
+					//simple destruction (not intended for actual game)
+					array_spaceships[i].setVisible(false);
+					std::cout << "Spaceship " << i << " is kill" << std::endl;
+					array_spaceships.erase(array_spaceships.begin() + i);
+					currentActiveSpaceships--;
+				}
+
+				if (cannonball.getDamageLeft() == 0)
+				{
+					std::cout << "Cannonball is kill" << std::endl;
+					cannonball.setVisible(false);
+					cannonball.setActive(false);
+				}
+
+			}
+		}
+	}
 
 
 }
