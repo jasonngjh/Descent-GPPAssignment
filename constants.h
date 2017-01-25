@@ -39,8 +39,8 @@ const UINT GAME_HEIGHT = 640;               // height of game in pixels
 const double PI = 3.14159265;
 const float FRAME_RATE = 200.0f;                // the target frame rate (frames/sec)
 const float MIN_FRAME_RATE = 10.0f;             // the minimum frame rate
-const float MIN_FRAME_TIME = 1.0f/FRAME_RATE;   // minimum desired time for 1 frame
-const float MAX_FRAME_TIME = 1.0f/MIN_FRAME_RATE; // maximum time used in calculations
+const float MIN_FRAME_TIME = 1.0f / FRAME_RATE;   // minimum desired time for 1 frame
+const float MAX_FRAME_TIME = 1.0f / MIN_FRAME_RATE; // maximum time used in calculations
 const float GRAVITY = 225.5f;             // gravitational constant
 const float MASS_PLANET = 5000.0;
 const float MASS_SPACE_SHIP = 5.0f;		//number subject to change
@@ -80,7 +80,7 @@ const int CANNONBALL_DAMAGE = 5;
 //refers to a wormhole/blackhole image, is not an actual object. Remove if confirmed to go for tank theme instead of Cannonball theme
 //can also incorporate to 'explain' arrival of spaceships
 //not priority
-const int WORMHOLE_WIDTH = 160;			
+const int WORMHOLE_WIDTH = 160;
 const int WORMHOLE_HEIGHT = 160;
 const int WORMHOLE_TEXTURE_COLUMNS = 1;
 const int WORMHOLE_START_FRAME = 0;
@@ -95,7 +95,7 @@ const int SPACESHIP_END_FRAME = 11;
 const int SPACESHIP_DAMAGED_START_FRAME = 12;
 const int SPACESHIP_DAMAGED_END_FRAME = 23;
 const float SPACESHIP_MASS = 50.0f;				//number subject to change - idk what to put here
-const float SPACESHIP_SPEED = 50.0f;				
+const float SPACESHIP_SPEED = 50.0f;
 const float SPACESHIP_ANIMATION_DELAY = 0.1f;		//passively animates
 const int SPACESHIP_STARTING_HEALTH = 5;
 
@@ -148,20 +148,17 @@ const char TURRET_IMAGE[] = "images\\turret.png";
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
 // it would be possible to save and restore key mappings from a data file.
-const UCHAR ESC_KEY      = VK_ESCAPE;       // escape key
-const UCHAR ALT_KEY      = VK_MENU;         // Alt key
-const UCHAR ENTER_KEY    = VK_RETURN;       // Enter key
-const UCHAR DOWN_KEY	 = VK_DOWN;
+const UCHAR ESC_KEY = VK_ESCAPE;       // escape key
+const UCHAR ALT_KEY = VK_MENU;         // Alt key
+const UCHAR ENTER_KEY = VK_RETURN;       // Enter key
+const UCHAR DOWN_KEY = VK_DOWN;
 const UCHAR SPACE_KEY = VK_SPACE;
 const UCHAR UP_KEY = VK_UP;
 const UCHAR LEFT_KEY = VK_LEFT;
 const UCHAR RIGHT_KEY = VK_RIGHT;
 const UCHAR TAB_KEY = VK_TAB;
 const UCHAR PAUSE_KEY = 0x50;
-const UCHAR ONE_KEY = 0x31;
-const UCHAR TWO_KEY = 0x32;
-const UCHAR THREE_KEY = 0x33;
 
-enum hitWho{land,spaceShip,bossShip,player};
+enum hitWho{ land, spaceShip, bossShip, player };
 
 #endif
