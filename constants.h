@@ -141,6 +141,17 @@ const int SMOKE_TEXTURE_COLS = 4;
 const int SMOKE_START_FRAME = 0;
 const int SMOKE_END_FRAME = 3;
 
+//shell
+const int SHELL_WIDTH = 18;
+const int SHELL_HEIGHT = 7;
+const int SHELL_START_FRAME = 0;
+const int SHELL_END_FRAME = 0;
+const int SHELL_TEXTURE_COLUMNS = 0;
+const float SHELL_MASS = 5.0f;
+const float SHELL_BASE_SPEED = 5.0f;
+const float SHELL_ANIMATION_DELAY = 0.0f;
+const int SHELL_DAMAGE = 10;
+
 //background frames
 const int BACKGROUND_WIDTH = 540;
 const int BACKGROUND_HEIGHT = 640;
@@ -159,6 +170,7 @@ const char TANK_IMAGE[] = "images\\tank.png";
 const char BKGRND_IMAGE[] = "images\\background.png";
 const char TURRET_IMAGE[] = "images\\turret.png";
 const char SMOKE_IMAGE[] = "images\\smoke.png";
+const char SHELL_IMAGE[] = "images\\shell.png";
 
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
@@ -173,6 +185,9 @@ const UCHAR LEFT_KEY = VK_LEFT;
 const UCHAR RIGHT_KEY = VK_RIGHT;
 const UCHAR TAB_KEY = VK_TAB;
 const UCHAR PAUSE_KEY = 0x50;
+const UCHAR O_KEY = 0x31;
+const UCHAR TW_KEY = 0x32;
+const UCHAR TH_KEY = 0x33;
 
 enum hitWho{land,spaceShip,bossShip,player};
 

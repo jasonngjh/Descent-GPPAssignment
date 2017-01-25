@@ -195,6 +195,12 @@ void Descent::initialize(HWND hwnd)
 			std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
 			//zombieArray[i].update(ship, frameTime);
 		}
+		if (!shellTexture.initialize(graphics, SHELL_IMAGE))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell texture"));
+		if (!shell.initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, &shellTexture))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
+
+		
 	}
 
     return;
@@ -222,7 +228,7 @@ void Descent::update()
 			playerCount = 1;
 		}
 		if (input->isKeyDown(ENTER_KEY)){
-			gameControl->setGeneralState(GENERAL_STATE::game);
+			gameControl->setGeneralState(GENERAL_STATE::instructions);
 			//playerCount=number of players to initialise
 		}
 	}break;
@@ -238,11 +244,7 @@ void Descent::update()
 		enemy_spaceship.update(frameTime);
 		tank.update(frameTime);
 		smoke.update(frameTime);
-
-		// checkpoints: player health = 0 -> change to end game screen
-		// if boss die -> change to end game screen
-		// if esc(quit pressed) -> change to end game screen
-
+		
 		if (input->isKeyDown(LEFT_KEY))
 		{
 			turret.setX(tank.getX() + 28.0f);
@@ -293,15 +295,20 @@ void Descent::update()
 			 case WAVE_STATE::wave1:{//add wave 1 behaviors
 										std::cout << "wave 1" << std::endl;
 										enemy_spaceship.update(frameTime);
-										if (input->wasKeyPressed(LEFT_KEY))
+										if (input->wasKeyPressed(TW_KEY))
 										{
 											waveControl->setWaveState(WAVE_STATE::wave2);
 										}
 										 
 			 }break;
 			 case WAVE_STATE::wave2:{//add wave 2 enemy behavior
+										shell.update(frameTime);
 										std::cout << "wave 2" << std::endl;
-										if (input->wasKeyPressed(RIGHT_KEY))
+
+										
+										
+										
+										if (input->wasKeyPressed(TH_KEY))
 										{
 											waveControl->setWaveState(WAVE_STATE::wave3);
 										}
@@ -410,7 +417,7 @@ void Descent::render()
 								 background.draw();
 								 ground.draw();                   // add the object to the scene
 								 cannonball.draw();					//in real game, Cannonball should be drawn later, when wormhole appears
-								 enemy_spaceship.draw();
+								// enemy_spaceship.draw();
 								 turret.draw();
 								 tank.draw();
 								 smoke.draw();
@@ -431,6 +438,8 @@ void Descent::render()
 														//	std::cout << "wave1" << std::endl;
 								 }break;//draw wave 3 stuff
 								 case WAVE_STATE::wave2:{
+															std::cout << "shell draw" << std::endl;
+															shell.draw();
 															//std::cout << "wave2" << std::endl;
 
 								 }break;//draw wave 2 stuff
