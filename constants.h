@@ -98,10 +98,13 @@ const float SPACESHIP_MASS = 50.0f;				//number subject to change - idk what to 
 const float SPACESHIP_SPEED = 50.0f;				
 const float SPACESHIP_ANIMATION_DELAY = 0.1f;		//passively animates
 const int SPACESHIP_STARTING_HEALTH = 5;
+const double SPACESHIP_CRITICAL_HEALTH_FACTOR = 0.25;
+const int HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 80;	//this affects how much ships can be created in a row, if values are too high will lead to weird spaceship orientation
+const int VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 20;	
 
 const int MAX_NO_OF_SPACESHIPS = 30; //number of spaceships allowed to exist
 const int WAVE_1_SPACESHIPS_AMT_OF_ROWS = 4;
-const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 8;
+const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 6;
 
 const int BOSS_SPACESHIP_WIDTH = 212;
 const int BOSS_SPACESHIP_HEIGHT = 265;
@@ -117,6 +120,12 @@ const int POWERUP_TEXTURE_COLUMNS = 1;
 const int POWERUP_START_FRAME = 0;
 const int POWERUP_END_FRAME = 1;
 const float POWERUP_ANIMATION_DELAY = 0.1f;		//passively animates
+
+//individual powerup effect values
+const double POWERUP_TIME_SLOW_MULTIPLER = 2; //the bigger the number the slower it gets
+const double POWERUP_TIME_FAST_MULTIPLIER = 0.5; //the lower the number the faster it gets (past 0.5 it gets weird)
+const int POWERUP_TIME_FREEZE_DURATION = 10; //in seconds
+const int POWERUP_FORCE_MULTIPLIER = 2;
 
 const int GROUND_LEVEL_HEIGHT = GAME_HEIGHT - GAME_HEIGHT / 10;			//no objects may go beyond this line, essentially means 'ground level'
 const int SKY_LEVEL_DIVIDER = 78;
