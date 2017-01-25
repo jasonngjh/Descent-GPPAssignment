@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "Spaceship.h"
 #include "Boss_Spaceship.h"
+#include "shell.h"
 
 #include <windows.h>
 #include <conio.h>
@@ -39,6 +40,7 @@ private:
 	GameControl*	gameControl = new GameControl;
 	WaveControl*	waveControl = new WaveControl;
 
+	TextureManager shellTexture;
 	TextureManager bossTexture;
 	TextureManager backgroundTexture;
 	TextureManager groundTexture;
@@ -58,6 +60,7 @@ private:
 	int waveNumber=1;
 	Player tank;
 	Image turret;
+	Shell shell;
 	std::vector<Spaceship> spaceshipArray;
 	std::vector<Spaceship> array_spaceships;
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)

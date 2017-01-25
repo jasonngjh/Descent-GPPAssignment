@@ -129,6 +129,16 @@ const int MENU1_TEXTURE_COLUMNS = 0;
 const int MENU1_START_FRAME = 0;
 const int MENU1_END_FRAME = 1;
 
+//shell
+const int SHELL_WIDTH = 18;
+const int SHELL_HEIGHT = 7;
+const int SHELL_START_FRAME = 0;
+const int SHELL_END_FRAME = 0;
+const int SHELL_TEXTURE_COLUMNS = 0;
+const float SHELL_MASS = 5.0f;
+const float SHELL_BASE_SPEED = 5.0f;
+const float SHELL_ANIMATION_DELAY = 0.0f;
+const int SHELL_DAMAGE = 10;
 //turret frames
 const int TURRET_WIDTH = 35;
 const int TURRET_HEIGHT = 35;
@@ -144,7 +154,7 @@ const char BOSS_SPACESHIP_IMAGE[] = "images\\boss_spaceship.png";
 const char TANK_IMAGE[] = "images\\tank.png";
 const char BKGRND_IMAGE[] = "images\\background.png";
 const char TURRET_IMAGE[] = "images\\turret.png";
-
+const char SHELL_IMAGE[] = "images\\shell.gif";
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
 // it would be possible to save and restore key mappings from a data file.

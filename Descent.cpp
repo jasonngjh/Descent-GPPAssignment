@@ -183,6 +183,12 @@ void Descent::initialize(HWND hwnd)
 			std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
 			//zombieArray[i].update(ship, frameTime);
 		}
+		if (!shellTexture.initialize(graphics, SHELL_IMAGE))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell texture"));
+		if (!shell.initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, &shellTexture))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
+
+		
 	}
 
     return;
@@ -393,7 +399,7 @@ void Descent::render()
 								 background.draw();
 								 ground.draw();                   // add the object to the scene
 								 cannonball.draw();					//in real game, Cannonball should be drawn later, when wormhole appears
-								 enemy_spaceship.draw();
+								// enemy_spaceship.draw();
 								 turret.draw();
 								 tank.draw();
 								 
@@ -413,6 +419,8 @@ void Descent::render()
 														//	std::cout << "wave1" << std::endl;
 								 }break;//draw wave 3 stuff
 								 case WAVE_STATE::wave2:{
+
+															shell.draw();
 															//std::cout << "wave2" << std::endl;
 
 								 }break;//draw wave 2 stuff
