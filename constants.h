@@ -134,6 +134,20 @@ const int TURRET_WIDTH = 35;
 const int TURRET_HEIGHT = 35;
 const int TURRET_TEXTURE_COLUMNS = 7;
 
+//smoke frames
+const int SMOKE_WIDTH = 16;
+const int SMOKE_HEIGHT = 32;
+const int SMOKE_TEXTURE_COLS = 4;
+const int SMOKE_START_FRAME = 0;
+const int SMOKE_END_FRAME = 3;
+
+//background frames
+const int BACKGROUND_WIDTH = 540;
+const int BACKGROUND_HEIGHT = 640;
+const int BACKGROUND_TEXTURE_COLS = 4;
+const int BACKGROUND_START_FRAME = 0;
+const int BACKGROUND_END_FRAME = 3;
+
 // graphic images
 const char EXAMPLE_OBJECT_IMAGE[] = "images\\[PLACEHOLDER].jpg";
 const char GROUND_TILESET_IMAGE[] = "images\\ground_tile.png";
@@ -144,6 +158,7 @@ const char BOSS_SPACESHIP_IMAGE[] = "images\\boss_spaceship.png";
 const char TANK_IMAGE[] = "images\\tank.png";
 const char BKGRND_IMAGE[] = "images\\background.png";
 const char TURRET_IMAGE[] = "images\\turret.png";
+const char SMOKE_IMAGE[] = "images\\smoke.png";
 
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
