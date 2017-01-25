@@ -90,6 +90,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\gppassignment2wex\shell.cpp" />
     <ClCompile Include="Boss_Spaceship.cpp" />
     <ClCompile Include="Cannonball.cpp" />
     <ClCompile Include="entity.cpp" />
@@ -109,6 +110,7 @@
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\gppassignment2wex\shell.h" />
     <ClInclude Include="AttackComponent.h" />
     <ClInclude Include="Boss_Spaceship.h" />
     <ClInclude Include="Cannonball.h" />

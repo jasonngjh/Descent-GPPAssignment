@@ -210,7 +210,7 @@ void Descent::update()
 			playerCount = 1;
 		}
 		if (input->isKeyDown(ENTER_KEY)){
-			gameControl->setGeneralState(GENERAL_STATE::game);
+			gameControl->setGeneralState(GENERAL_STATE::instructions);
 			//playerCount=number of players to initialise
 		}
 	}break;
@@ -274,7 +274,7 @@ void Descent::update()
 			 case WAVE_STATE::wave1:{//add wave 1 behaviors
 										std::cout << "wave 1" << std::endl;
 										enemy_spaceship.update(frameTime);
-										if (input->wasKeyPressed(LEFT_KEY))
+										if (input->wasKeyPressed(TW_KEY))
 										{
 											waveControl->setWaveState(WAVE_STATE::wave2);
 										}
@@ -282,7 +282,7 @@ void Descent::update()
 			 }break;
 			 case WAVE_STATE::wave2:{//add wave 2 enemy behavior
 										std::cout << "wave 2" << std::endl;
-										if (input->wasKeyPressed(RIGHT_KEY))
+										if (input->wasKeyPressed(TH_KEY))
 										{
 											waveControl->setWaveState(WAVE_STATE::wave3);
 										}
