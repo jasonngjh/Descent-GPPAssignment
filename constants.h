@@ -158,6 +158,9 @@ const UCHAR LEFT_KEY = VK_LEFT;
 const UCHAR RIGHT_KEY = VK_RIGHT;
 const UCHAR TAB_KEY = VK_TAB;
 const UCHAR PAUSE_KEY = 0x50;
+const UCHAR ONE_KEY = 0x31;
+const UCHAR TWO_KEY = 0x32;
+const UCHAR THREE_KEY = 0x33;
 
 enum hitWho{land,spaceShip,bossShip,player};
 
