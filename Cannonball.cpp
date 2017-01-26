@@ -61,32 +61,91 @@ void Cannonball::update(float frameTime)
 	{
 		switch (tank.getTankAngle())
 		{
-		case 20: spriteData.x = tank.getX() + 63.0f;
-				 spriteData.y = tank.getY() - 15.0f;
-				 velocity.y = -100.0;
+		case 20: 
+			if (tank.getTankDirection()){ // if facing right of screen
+				spriteData.x = tank.getX() + 55.0f;
+				spriteData.y = tank.getY() - 15.0f;
+			}
+			else{ //else face left
+				spriteData.x = tank.getX() + 63.0f;
+				spriteData.y = tank.getY() - 15.0f;
+			}
+				velocity.y = -100.0;
+				velocity.x = 200.0f;
+			break;
+		case 40: 
+			if (tank.getTankDirection()){
+				spriteData.x = tank.getX() + 55.0f;
+				spriteData.y = tank.getY() - 23.0f;
+			}
+			else{
+				spriteData.x = tank.getX() + 63.0f;
+				spriteData.y = tank.getY() - 23.0f;
+			}
+				 velocity.y = -200.0;
 				 velocity.x = 200.0f;
 			break;
-		case 40: velocity.y = -300.0;
-			velocity.x = 0;
-			break;
-		case 60: velocity.y = -300.0;
-			velocity.x = 0;
+		case 60: 
+			if (tank.getTankDirection()){
+				spriteData.x = tank.getX() + 45.0f;
+				spriteData.y = tank.getY() - 31.0f;
+			}
+			else{
+				spriteData.x = tank.getX() + 55.0f;
+				spriteData.y = tank.getY() - 31.0f;
+			}
+				 velocity.y = -300.0;
+				 velocity.x = 200.0f;
 			break;
 
-		case 90: spriteData.x = tank.getX() + 36.0f;
+		case 90: 
+			if (tank.getTankDirection()){
+				spriteData.x = tank.getX() + 27.0f;
 				spriteData.y = tank.getY() - 33.0f;
+			}
+			else{
+				spriteData.x = tank.getX() + 37.0f;
+				spriteData.y = tank.getY() - 33.0f;
+			}
 				velocity.y = -400.0;
-				velocity.x - 0.0;
+				velocity.x = 0.0;
 			break;
 
-		case 120: velocity.y = -300.0;
-			velocity.x = 0;
+		case 120: 
+			if (tank.getTankDirection()){
+				spriteData.x = tank.getX() + 12.0f;
+				spriteData.y = tank.getY() - 31.0f;
+			}
+			else{
+				spriteData.x = tank.getX() + 21.0f;
+				spriteData.y = tank.getY() - 31.0f;
+			}
+				velocity.y = -300.0;
+				velocity.x = -200.0f;
 			break;
-		case 140: velocity.y = -300.0;
-			velocity.x = 0;
+		case 140: 
+			if (tank.getTankDirection()){
+				spriteData.x = tank.getX() + 7.0f;
+				spriteData.y = tank.getY() - 23.0f;
+			}
+			else{
+				spriteData.x = tank.getX() + 17.0f;
+				spriteData.y = tank.getY() - 23.0f;
+			}
+				velocity.y = -200.0;
+				velocity.x = -200.0f;
 			break;
-		case 160: velocity.y = -300.0;
-			velocity.x = 0;
+		case 160: 
+			if (tank.getTankDirection()){
+				spriteData.x = tank.getX() + 0.0f;
+				spriteData.y = tank.getY() - 15.0f;
+			}
+			else{
+				spriteData.x = tank.getX() + 14.0f;
+				spriteData.y = tank.getY() - 15.0f;
+			}
+				velocity.y = -100.0;
+				velocity.x = -200.0;
 			break;
 		}
 			

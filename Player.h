@@ -4,6 +4,7 @@
 
 #include "entity.h"
 #include "constants.h"
+#include "HealthComponent.h"
 
 namespace PlayerNS
 {
@@ -40,6 +41,7 @@ private:
 	float speed;						// X pixels per second
 	int tankAngle;
 	bool tankDirection;
+	HealthComponent* health;
 
 public:
 	// constructor
