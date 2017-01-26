@@ -29,11 +29,11 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 {
     // Check for memory leak if debug build
     #if defined(DEBUG) | defined(_DEBUG)
-        _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-		
-		//opens console and redirect all output to console
-		RedirectIOToConsole();	
+        _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);	
     #endif
+
+	//opens console and redirect all output to console
+	RedirectIOToConsole();
 
     MSG msg;
 
@@ -78,7 +78,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
         DestroyWindow(hwnd);
         MessageBox(NULL, "Unknown error occured in game.", "Error", MB_OK);
     }
-
+	_CrtDumpMemoryLeaks();
     SAFE_DELETE (game);     // free memory before exit
     return 0;
 }
