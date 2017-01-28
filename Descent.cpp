@@ -52,24 +52,7 @@ void Descent::initialize(HWND hwnd)
 #pragma region Initialize Assets
 
 	//object and texture initialization
-	/*
-    // game item texture 
-    if (!exampleTexture.initialize(graphics, EXAMPLE_OBJECT_IMAGE))
-        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing example texture"));
 
-    if (!exampleImage.initialize(graphics,0,0,0,&exampleTexture))
-        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing example image"));
-
-	//initialize object
-	if (!exampleObject.initialize(this, ObjectNS::WIDTH, ObjectNS::HEIGHT, ObjectNS::TEXTURE_COLS, &exampleTexture))
-        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing example object"));
-	//lines to manipulate object (if any)
-	exampleObject.setFrames(ObjectNS::START_FRAME, ObjectNS::END_FRAME);
-	exampleObject.setCurrentFrame(ObjectNS::START_FRAME); 
-	exampleObject.setX(GAME_WIDTH / 4);
-	exampleObject.setY(GAME_HEIGHT / 4);
-	//set velocity, set speed, set size, etc etc
-	*/
 	if (!pauseText->initialize(graphics, 62, true, false, "Arial"))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing DirectX font"));
 	if (waveNumberText->initialize(graphics, 62, true, false, "Invasion2000") == false)
@@ -125,6 +108,11 @@ void Descent::initialize(HWND hwnd)
 	if (!smoke.initialize(graphics, SMOKE_WIDTH, SMOKE_HEIGHT, SMOKE_TEXTURE_COLS, &smokeTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing smoke"));
 
+	if (!shellTexture.initialize(graphics, SHELL_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell texture"));
+	if (!shell.initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, &shellTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
+
 	background.setFrames(BACKGROUND_START_FRAME,BACKGROUND_END_FRAME);
 	background.setCurrentFrame(BACKGROUND_START_FRAME);
 
@@ -142,16 +130,17 @@ void Descent::initialize(HWND hwnd)
 	enemy_spaceship.setHealth(2); //for testing only
 	enemy_spaceship.setIsAtCritical(true);
 
-#pragma endregion
-
-	smoke.setFrames(SMOKE_START_FRAME,SMOKE_END_FRAME);
+	smoke.setFrames(SMOKE_START_FRAME, SMOKE_END_FRAME);
 	smoke.setCurrentFrame(SMOKE_START_FRAME);
 	smoke.setVisible(false);
+
+#pragma endregion
 
 	initializeTank();
 
 	std::cout << "initialising spaceship array" << std::endl;
-#pragma region Initialize Spaceships
+#pragma region Spawn Spaceships
+	//place inside game state wave 1 when created
 
 	int x = 0;	//starting position of first spaceship is a unit length away the left side of the screen
 	int y = 0;					//to be manipulated in first for loop
@@ -170,7 +159,7 @@ void Descent::initialize(HWND hwnd)
 
 			//check if current Y can support game_width/spaceship_width amount of ships
 
-			if (x + ((HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS+SPACESHIP_WIDTH)) > GAME_WIDTH-HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS)
+			if (x + ((HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS+SPACESHIP_WIDTH)) > GAME_WIDTH-HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS || j >= AMT_OF_SPACESHIPS_PER_ROW)
 			{
 				//if current ship's X is more than game width, shift to next Y, keep current i counter
 
@@ -201,10 +190,7 @@ void Descent::initialize(HWND hwnd)
 
 			std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
 		}
-		if (!shellTexture.initialize(graphics, SHELL_IMAGE))
-			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell texture"));
-		if (!shell.initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, &shellTexture))
-			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
+		
 
 		
 	}
@@ -418,7 +404,7 @@ void Descent::collisions()
 				//actual damage code
 
 				//calculate damage from cannonball
-				int forcePower = 2;// cannonball.getDamageLeft();	//if unavailable, use 3
+				int forcePower = 20;// cannonball.getDamageLeft();	//if unavailable, use 3
 
 				array_spaceships[i].setHealth(array_spaceships[i].getHealth() - forcePower);	//decreases health
 				std::cout << "Spaceship " << i << " took " << forcePower << " damage." << std::endl;
@@ -572,4 +558,44 @@ void Descent::initializeTank()
 	
 	cannonball.setX(tank.getX());
 	cannonball.setY(tank.getY());
+}
+
+//=============================================================================
+// moves all spaceships once
+// constantly called by thread (timer)
+// the intention is that ships move to the right, and then down once all ships in its row has moved
+//=============================================================================
+void Descent::moveSpaceships()
+{
+	for (int i = 0; i < currentActiveSpaceships; i++)
+	{
+		//iterates through every existing spaceship
+		//individually shifts each spaceship to its current direction
+		//if spaceships hits the edge of the screen, it will be shifted downwards and will move to the other direction
+
+		if (array_spaceships[i].getIsMovingRight()) //is moving to the right
+		{
+			
+			if ((array_spaceships[i].getX() + SPACESHIP_WIDTH) < GAME_WIDTH + HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS)
+				array_spaceships[i].setX(array_spaceships[i].getX() + SPACESHIP_WIDTH); //ships moves its width horizontally to the right
+			else
+			{
+				array_spaceships[i].setY(array_spaceships[i].getY() + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS);	//ship shifts downwards
+				array_spaceships[i].setIsMovingRight(false);													//ship changes moving direction
+			}
+				
+		}
+
+		else //is moving left
+		{
+			if ((array_spaceships[i].getX() + SPACESHIP_WIDTH) > GAME_WIDTH + HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS)
+				array_spaceships[i].setX(array_spaceships[i].getX() - SPACESHIP_WIDTH); //ships moves its width horizontally to the left
+			else
+			{
+				array_spaceships[i].setY(array_spaceships[i].getY() + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS);//ship shifts downwards
+				array_spaceships[i].setIsMovingRight(true);													//ship changes moving direction
+			}
+		}
+
+	}
 }

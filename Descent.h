@@ -65,7 +65,6 @@ private:
 	Player tank;
 	Image turret;
 	Shell shell;
-	std::vector<Spaceship> spaceshipArray;
 	std::vector<Spaceship> array_spaceships;
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
 	
@@ -92,6 +91,7 @@ public:
 
 	//other functions
 	void initializeTank();
+	void moveSpaceships();
 };
 
 #endif

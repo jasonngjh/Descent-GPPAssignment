@@ -103,6 +103,7 @@ const int HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 80;	//this affects how much
 const int VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 20;	
 
 const int MAX_NO_OF_SPACESHIPS = 30; //number of spaceships allowed to exist
+const int AMT_OF_SPACESHIPS_PER_ROW = 5; //number should not be less than GAME_WIDTH/(SPACESHIP_WIDTH + HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS)
 const int WAVE_1_SPACESHIPS_AMT_OF_ROWS = 4;
 const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 6;
 

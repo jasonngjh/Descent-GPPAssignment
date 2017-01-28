@@ -34,6 +34,7 @@ private:
 	bool isAlive = true;
 	bool isAtCriticalHealth = false; 
 	bool hasFiredWeapon = false; //may remove this, use this to check if spaceship has fired on player in the last X seconds
+	bool isMovingRight = true; //default it moves right, if false means is moving left
 	int health; //counted in small numbers, represents amount of times spaceship can get hit again, maybe can use different animation frames to indicate damage
 
 public:
@@ -54,6 +55,9 @@ public:
 
 	bool getIsAtCriticalHealth() { return isAtCriticalHealth; }
 	void setIsAtCritical(bool criticalState) { isAtCriticalHealth = criticalState; }
+
+	bool getIsMovingRight() { return isMovingRight; }
+	void setIsMovingRight(bool isRight){ isMovingRight = isRight; }
 
 
 
