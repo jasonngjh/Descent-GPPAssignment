@@ -137,6 +137,10 @@ void Descent::initialize(HWND hwnd)
 
 	currentActiveSpaceships = 0;
 	isAllSpaceshipMovingRight = true;
+	isShipsReadyToShift = false;
+
+	boss.setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
+	boss.setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
 
 #pragma endregion
 
@@ -341,11 +345,14 @@ void Descent::update()
 			 }break;
 			 case WAVE_STATE::wave3:{//add boss spaceship behaviour
 										//std::cout << "wave 3" << std::endl;
-										boss.setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
-										boss.setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
+										//boss.setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
+										//boss.setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
 										boss.setX(GAME_WIDTH / 4);
 										boss.setY(GAME_HEIGHT / 4);
 										boss.update(frameTime);
+
+										std::cout << "BOSS BATTA " << std::endl;
+
 			 }break;
 								 
 		}
@@ -583,27 +590,124 @@ void Descent::initializeTank()
 //=============================================================================
 // moves all spaceships once
 // constantly called by thread (timer)
-// the intention is that ships move to the right, and then down once all ships in its row has moved
+// when one spaceships hits the screen border, ALL ships shifts 1 level down and moves the other direction
 //=============================================================================
 void Descent::moveSpaceships(bool isMovingRight)
 {
-	for (int i = currentActiveSpaceships-1; i >= 0; i--)
+
+	//pseudo code for this section
+
+	//are ships moving right?
+		//if yes, check for next position of every ship
+			//if any ship is reaching past the screen border, update true for shipsReadyToShift
+			//if not, update false for shipsReadyToShift
+		//if not, do the same for above, but for left side
+
+	//above segment is to verify if ships need to be shifted to the next row, or they just need to move in the same direction
+
+
+	//is shipsReadyToShift?
+		//if true, shift all ships downwards and change to opposite moving direction
+		//if false, move them all towards current direction
+	
+	if (isAllSpaceshipMovingRight)
+	{
+		//spaceships are CURRENTLY moving to the right
+		for (int i = 0; i < currentActiveSpaceships; i++)
+		{
+
+			//std::cout << "ship " << i + 1 << " initial x/y: " << array_spaceships[i].getX() << "/" << array_spaceships[i].getY() << std::endl;	//for some reason not having this line destroys the movement???
+
+			if ((array_spaceships[i].getX() + SPACESHIP_WIDTH) > GAME_WIDTH)
+			{
+				//ship is at edge of right wall, time to stop checking and change direction
+				isShipsReadyToShift = true;
+				break;
+			}
+			//else, ship moves as usual, continue iterating
+			else
+				isShipsReadyToShift = false;
+		}
+	}
+
+	else
+	{
+		//spaceships are CURRENTLY moving to the right
+		for (int i = 0; i < currentActiveSpaceships; i++)
+		{
+
+			//std::cout << "ship " << i + 1 << " initial x/y: " << array_spaceships[i].getX() << "/" << array_spaceships[i].getY() << std::endl; //for some reason not having this line destroys the movement???
+
+			if (array_spaceships[i].getX() < SPACESHIP_WIDTH)
+			{
+				//ship is at edge of left wall, time to stop checking and change direction
+				isShipsReadyToShift = true;
+				break;
+			}
+			//else, ship moves as usual, continue iterating
+			else
+				isShipsReadyToShift = false;
+		}
+	}
+
+	//now, every spaceship is checked if their position warrants moving the entire spaceship army downwards, or just towards its current direction
+
+	if (isShipsReadyToShift)		//ships ready to move downwards
+	{
+
+		isAllSpaceshipMovingRight = !isAllSpaceshipMovingRight;
+
+		for (int i = 0; i < currentActiveSpaceships; i++)
+		{
+
+			std::cout << "ship " << i + 1 << " x/y: " << array_spaceships[i].getX() << "/" << array_spaceships[i].getY() << std::endl;
+			//shifts everything downwards and changes direction
+			array_spaceships[i].setY(array_spaceships[i].getY() + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_HEIGHT);
+			array_spaceships[i].setIsMovingRight(isAllSpaceshipMovingRight);
+
+			std::cout << "ship " << i + 1 << " shifts down " << std::endl;
+			std::cout << "ship " << i + 1 << " x/y: " << array_spaceships[i].getX() << "/" << array_spaceships[i].getY() << std::endl;
+
+		}
+
+	}
+
+	else							//ships ready to move towards current direction
+	{
+		if (isAllSpaceshipMovingRight == true)
+		{
+			for (int i = 0; i < currentActiveSpaceships; i++)
+			{
+				array_spaceships[i].setX(array_spaceships[i].getX() + SPACESHIP_WIDTH); //ships moves its width horizontally to the right
+				Sleep(5);			//without this line spaceships will move unhindered, not sure why
+
+				//std::cout << "ship " << i + 1 << " moves right " << std::endl;	//without this code or Sleep(5) things move2fast
+			}
+		}
+
+		if (isAllSpaceshipMovingRight == false)
+		{
+			for (int i = 0; i < currentActiveSpaceships; i++)
+			{
+				array_spaceships[i].setX(array_spaceships[i].getX() - SPACESHIP_WIDTH); //ships moves its width horizontally to the left
+				Sleep(5);			//without this line spaceships will move unhindered, not sure why
+
+				//std::cout << "ship " << i + 1 << " moves left " << std::endl;		//without this code or Sleep(5) things move2fast
+			}
+			
+		}
+	}
+
+
+
+
+	/*for (int i = currentActiveSpaceships-1; i >= 0; i--)
 	{
 		//iterates through every existing spaceship (iterates backwards)
 		//individually shifts each spaceship to its current direction
 		//if spaceships hits the edge of the screen, it will be shifted downwards and will move to the other direction
 
-		//are ships moving right
-			//if yes, check for next position of every ship
-				//if  *one* ship is reaching right border, update true for shipsReadyToShift
-				//if not, update false for shipsReadyToShift
-			//if not, do the same for above, but for left side
-
-
-		//is shipsReadyToShift?
-			//if true, shift all ships downwards
-			//if false, move them all towards current direction
-
+		
 
 
 		if (isAllSpaceshipMovingRight) //is moving to the right
@@ -641,7 +745,7 @@ void Descent::moveSpaceships(bool isMovingRight)
 				{
 					std::cout << "GAME OVER" << std::endl;
 					break;
-				}*/
+				}
 
 			}
 				
@@ -679,15 +783,13 @@ void Descent::moveSpaceships(bool isMovingRight)
 				{
 					std::cout << "GAME OVER" << std::endl;
 					break;
-				}*/
+				}
 
 			}
 		}
 
-	}
+	}*/
 
-	//update the current general direction (either hanged or unchanged)
-	isAllSpaceshipMovingRight == array_spaceships[0].getIsMovingRight();
 }
 
 
@@ -709,8 +811,10 @@ void Descent::timer_start()
 		{
 			setSecondsPassed((clock() - timer) / (double)CLOCKS_PER_SEC);  //convert computer timer to real life seconds
 
-			if ((fmod(getSecondsPassed(), 1)) == 0)
-			{
+			if ((fmod(getSecondsPassed(), SECOND*gameTimeModifier)) == 0)
+			{	
+
+
 				currentInGameTime++;
 				
 				//std::cout << "in game seconds passed: = " << currentInGameTime << std::endl;
@@ -719,8 +823,6 @@ void Descent::timer_start()
 				moveSpaceships(isAllSpaceshipMovingRight);
 
 			}
-
-			
 
 		}
 

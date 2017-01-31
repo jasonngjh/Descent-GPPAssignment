@@ -7,7 +7,6 @@
 #include "game.h"
 #include "textureManager.h"
 #include "image.h"
-#include "object.h"
 #include "cannonball.h"
 #include "Player.h"
 #include "Spaceship.h"
@@ -41,7 +40,6 @@ private:
 	
 	TextureManager exampleTexture;
 	Image exampleImage;
-    Object exampleObject;
 	TextDX* pauseText;
 	TextDX* waveNumberText;
 	GameControl*	gameControl = new GameControl;
@@ -76,12 +74,18 @@ private:
 	int playerCount;//use this value to count 1 player or 2 player
 	int highestY;
 
+	//modifiers
+	int timeModifier; //value affects time - this value will multiply by 1 second to achieve new time
+	int speedModifier; //value affects speed - this value will be multiplied by speed values to achieve new speed
+
+
 	double secondsPassed;
 
 
 public:
 	int currentActiveSpaceships; //amt of spaceships currently alive (should be dynamically less or equal to maxActiveSpaceships)
-	bool isAllSpaceshipMovingRight;
+	bool isAllSpaceshipMovingRight;	//keeps track of ship direction
+	bool isShipsReadyToShift;		//keeps track of ship movement, for use in downwards movement
 
     // Constructor
 	Descent();
@@ -105,6 +109,12 @@ public:
 
 	double getSecondsPassed() { return secondsPassed; }
 	void setSecondsPassed(double seconds) { secondsPassed = seconds; }
+
+	int getTimeModifier() { return timeModifier; }
+	void setTimeModifier(int modifyingValue) { timeModifier = modifyingValue; }
+
+	int getSpeedModifier() { return speedModifier; }
+	void setSpeedModifier(int modifyingValue) { speedModifier = modifyingValue; }
 };
 
 #endif

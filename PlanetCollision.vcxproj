@@ -99,7 +99,6 @@
     <ClCompile Include="guicon.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="input.cpp" />
-    <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="shell.cpp" />
     <ClCompile Include="Spaceship.cpp" />
@@ -123,7 +122,6 @@
     <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="input.h" />
-    <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="powerup.h" />
     <ClInclude Include="shell.h" />

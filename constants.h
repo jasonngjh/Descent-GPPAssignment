@@ -46,27 +46,18 @@ const float MASS_PLANET = 5000.0;
 const float MASS_SPACE_SHIP = 5.0f;		//number subject to change
 const float MASS_PLAYER = 5.0f;			//number subject to change
 
-const int OBJECT_WIDTH = 16;
-const int OBJECT_HEIGHT = 16;
-const int OBJECT_TEXTURE_COLUMNS = 1;
-const int OBJECT_START_FRAME = 0;
-const int OBJECT_END_FRAME = 1;
-const float OBJECT_MASS = 300.0f;
-const float OBJECT_SPEED = 300.0f;
-const float OBJECT_ANIMATION_DELAY = 0.2f;
-
-
+//player(tank) variables
 const int PLAYER_WIDTH = 81;
 const int PLAYER_HEIGHT = 64;
 const int PLAYER_TEXTURE_COLUMNS = 4;
 const int PLAYER_START_FRAME = 0;
 const int PLAYER_END_FRAME = 3;
 const float PLAYER_MASS = 50.0f;				//number subject to change - idk what to put here
-//const float PLAYER_SPEED = 100.0f;			//player movement speed when going < or >
 const float PLAYER_ANIMATION_DELAY = 0.2f;		//note: make player animate only when moving and throwing
 const float PLAYER_BASE_STRENGTH = 25.0f;		//base strength, related to player throwing
 const float PLAYER_MAX_HEALTH = 100;			//for dynamic health values, should represent health as a number
 
+//cannonball variables
 const int CANNONBALL_WIDTH = 32;
 const int CANNONBALL_HEIGHT = 32;
 const int CANNONBALL_TEXTURE_COLUMNS = 1;
@@ -87,6 +78,7 @@ const int WORMHOLE_START_FRAME = 0;
 const int WORMHOLE_END_FRAME = 5;
 const float WORMHOLE_ANIMATION_DELAY = 0.1f;		//animation can look very cool
 
+//spaceship variables
 const int SPACESHIP_WIDTH = 58;
 const int SPACESHIP_HEIGHT = 32;
 const int SPACESHIP_TEXTURE_COLUMNS = 12;
@@ -102,19 +94,22 @@ const double SPACESHIP_CRITICAL_HEALTH_FACTOR = 0.25;
 const int HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 80;	//this affects how much ships can be created in a row, if values are too high will lead to weird spaceship orientation
 const int VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 20;	
 
-const int MAX_NO_OF_SPACESHIPS = 2; //number of spaceships allowed to exist
+//spaceship spawn variables
+const int MAX_NO_OF_SPACESHIPS = 60; //number of spaceships allowed to exist
 const int AMT_OF_SPACESHIPS_PER_ROW = 5; //number should not be less than GAME_WIDTH/(SPACESHIP_WIDTH + HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS)
-const int WAVE_1_SPACESHIPS_AMT_OF_ROWS = 8;
+const int WAVE_1_SPACESHIPS_AMT_OF_ROWS = 4;
 const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 6;
 
+//boss spaceship variables
 const int BOSS_SPACESHIP_WIDTH = 212;
 const int BOSS_SPACESHIP_HEIGHT = 265;
 const int BOSS_SPACESHIP_TEXTURE_COLUMNS = 3;
 const int BOSS_SPACESHIP_START_FRAME = 0;
 const int BOSS_SPACESHIP_END_FRAME = 2;
-const float BOSS_SPACESHIP_ANIMATION_DELAY = 0.0001f;
+const float BOSS_SPACESHIP_ANIMATION_DELAY = 1.0f;
 const int BOSS_SPACESHIP_STARTING_HEALTH = 10;
 
+//powerup variables
 const int POWERUP_WIDTH = 32;
 const int POWERUP_HEIGHT = 32;
 const int POWERUP_TEXTURE_COLUMNS = 1;
@@ -128,12 +123,16 @@ const double POWERUP_TIME_FAST_MULTIPLIER = 0.5; //the lower the number the fast
 const int POWERUP_TIME_FREEZE_DURATION = 10; //in seconds
 const int POWERUP_FORCE_MULTIPLIER = 2;
 
+//gameplay condition variables
 const int GROUND_LEVEL_HEIGHT = GAME_HEIGHT - GAME_HEIGHT / 10;			//no objects may go beyond this line, essentially means 'ground level'
-const int GAMEOVER_SPACESHIP_DISTANCE = GROUND_LEVEL_HEIGHT - 200;	//when spaceship reaches here, game over
+const int GAMEOVER_SPACESHIP_DISTANCE = GROUND_LEVEL_HEIGHT - 200;		//when spaceship reaches here, game over, boom
 const int SKY_LEVEL_DIVIDER = 78;
 
-//main menu frames
+//gameplay modifiers
+const int GAME_TIME_MODIFIER = 1;	//affects time counter. 
+const int SECOND = 1;				//an ingame second equals to 1
 
+//main menu frames
 const int MENU1_WIDTH = GAME_WIDTH;
 const int MENU1_HEIGHT = GAME_HEIGHT;
 const int MENU1_TEXTURE_COLUMNS = 0;
@@ -152,7 +151,7 @@ const int SMOKE_TEXTURE_COLS = 4;
 const int SMOKE_START_FRAME = 0;
 const int SMOKE_END_FRAME = 3;
 
-//shell
+//shell variables
 const int SHELL_WIDTH = 18;
 const int SHELL_HEIGHT = 7;
 const int SHELL_START_FRAME = 0;
@@ -196,9 +195,10 @@ const UCHAR LEFT_KEY = VK_LEFT;
 const UCHAR RIGHT_KEY = VK_RIGHT;
 const UCHAR TAB_KEY = VK_TAB;
 const UCHAR PAUSE_KEY = 0x50;
-const UCHAR O_KEY = 0x31;
-const UCHAR TW_KEY = 0x32;
-const UCHAR TH_KEY = 0x33;
+//note - might want to change the following to more obvious names
+const UCHAR O_KEY = 0x31;					//number 1
+const UCHAR TW_KEY = 0x32;					//number 2
+const UCHAR TH_KEY = 0x33;					//number 3
 
 enum hitWho{land,spaceShip,bossShip,player};
 
