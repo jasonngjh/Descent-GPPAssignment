@@ -135,6 +135,9 @@ void Descent::initialize(HWND hwnd)
 	smoke.setCurrentFrame(SMOKE_START_FRAME);
 	smoke.setVisible(false);
 
+	currentActiveSpaceships = 0;
+	isAllSpaceshipMovingRight = true;
+
 #pragma endregion
 
 	initializeTank();
@@ -582,7 +585,7 @@ void Descent::initializeTank()
 // constantly called by thread (timer)
 // the intention is that ships move to the right, and then down once all ships in its row has moved
 //=============================================================================
-void Descent::moveSpaceships()
+void Descent::moveSpaceships(bool isMovingRight)
 {
 	for (int i = currentActiveSpaceships-1; i >= 0; i--)
 	{
@@ -590,25 +593,41 @@ void Descent::moveSpaceships()
 		//individually shifts each spaceship to its current direction
 		//if spaceships hits the edge of the screen, it will be shifted downwards and will move to the other direction
 
-		if (array_spaceships[i].getIsMovingRight()) //is moving to the right
+		//are ships moving right
+			//if yes, check for next position of every ship
+				//if  *one* ship is reaching right border, update true for shipsReadyToShift
+				//if not, update false for shipsReadyToShift
+			//if not, do the same for above, but for left side
+
+
+		//is shipsReadyToShift?
+			//if true, shift all ships downwards
+			//if false, move them all towards current direction
+
+
+
+		if (isAllSpaceshipMovingRight) //is moving to the right
 		{
 			
 			if ((array_spaceships[i].getX() + SPACESHIP_WIDTH) > GAME_WIDTH)
 			{
 				for (int j = currentActiveSpaceships - 1; j >= 0; j--)
 				{
+
+					std::cout << "ship " << j+1 << " x/y: " << array_spaceships[i].getX() << "/" << array_spaceships[i].getY() << std::endl;
 					//shifts everything downwards and changes direction
 					array_spaceships[j].setY(array_spaceships[j].getY() + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_HEIGHT);
 					array_spaceships[j].setIsMovingRight(false);
 
-					std::cout << "ship " << j + 1 << " shifts down " << std::endl;
+					std::cout << "ship " << j+1 << " shifts down " << std::endl;
+					std::cout << "ship " << j+1 << " x/y: " << array_spaceships[i].getX() << "/" << array_spaceships[i].getY() << std::endl;
 
 				}
 			}
 
 			else
 			{
-
+				std::cout << "ship " << i+1 << " moving right" << std::endl;
 				array_spaceships[i].setX(array_spaceships[i].getX() + SPACESHIP_WIDTH); //ships moves its width horizontally to the right
 
 				/*std::cout << "ship changing direction to LEFT, moving down at x " << array_spaceships[i].getX() << std::endl;
@@ -640,13 +659,14 @@ void Descent::moveSpaceships()
 					array_spaceships[j].setY(array_spaceships[j].getY() + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_HEIGHT);
 					array_spaceships[j].setIsMovingRight(true);
 
-					std::cout << "ship " << j + 1 << " shifts down " << std::endl;
+					std::cout << "ship " << j+1 << " shifts down " << std::endl;
 
 				}
 			}
 				
 			else
 			{
+				std::cout << "ship " << i+1 << " moving left" << std::endl;
 				array_spaceships[i].setX(array_spaceships[i].getX() - SPACESHIP_WIDTH); //ships moves its width horizontally to the left
 
 				/*std::cout << "ship changing direction to RIGHT, moving down at x " << array_spaceships[i].getX() << std::endl;
@@ -665,6 +685,9 @@ void Descent::moveSpaceships()
 		}
 
 	}
+
+	//update the current general direction (either hanged or unchanged)
+	isAllSpaceshipMovingRight == array_spaceships[0].getIsMovingRight();
 }
 
 
@@ -690,10 +713,10 @@ void Descent::timer_start()
 			{
 				currentInGameTime++;
 				
-				std::cout << "in game seconds passed: = " << currentInGameTime << std::endl;
-				std::cout << currentInGameTime << " seconds has passed in-game. " << getSecondsPassed() << " second(s) has passed (in program)." << std::endl;
+				//std::cout << "in game seconds passed: = " << currentInGameTime << std::endl;
+				//std::cout << currentInGameTime << " seconds has passed in-game. " << getSecondsPassed() << " second(s) has passed (in program)." << std::endl;
 
-				moveSpaceships();
+				moveSpaceships(isAllSpaceshipMovingRight);
 
 			}
 

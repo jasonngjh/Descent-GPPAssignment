@@ -80,7 +80,8 @@ private:
 
 
 public:
-	int currentActiveSpaceships=0; //amt of spaceships currently alive (should be less or equal to maxActiveSpaceships)
+	int currentActiveSpaceships; //amt of spaceships currently alive (should be dynamically less or equal to maxActiveSpaceships)
+	bool isAllSpaceshipMovingRight;
 
     // Constructor
 	Descent();
@@ -99,7 +100,7 @@ public:
 
 	//other functions
 	void initializeTank();
-	void moveSpaceships();
+	void moveSpaceships(bool isMovingRight);
 	void timer_start();
 
 	double getSecondsPassed() { return secondsPassed; }
