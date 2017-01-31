@@ -3,7 +3,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 //#include statements for related classes here
-#include <stdio.h>
+//#include <stdio.h>
 #include "game.h"
 #include "textureManager.h"
 #include "image.h"
@@ -14,17 +14,22 @@
 #include "Boss_Spaceship.h"
 #include "shell.h"
 
-#include <windows.h>
-#include <conio.h>
-#include <vector>
 #include "guicon.h"
-#include <iostream>
-
 #include "gameControl.h"
 #include "waveControl.h"
 #include "textDX.h"
-#include <thread>
 #include "animation.h"
+
+#include <windows.h>
+#include <conio.h>
+#include <vector>
+#include <iostream>
+#include <thread>
+#include <functional>
+#include <ctime>
+#include <future>
+
+
 //=============================================================================
 // This class is the core of the game
 //=============================================================================
@@ -71,6 +76,9 @@ private:
 	int playerCount;//use this value to count 1 player or 2 player
 	int highestY;
 
+	double secondsPassed;
+
+
 public:
 	int currentActiveSpaceships=0; //amt of spaceships currently alive (should be less or equal to maxActiveSpaceships)
 
@@ -92,6 +100,10 @@ public:
 	//other functions
 	void initializeTank();
 	void moveSpaceships();
+	void timer_start();
+
+	double getSecondsPassed() { return secondsPassed; }
+	void setSecondsPassed(double seconds) { secondsPassed = seconds; }
 };
 
 #endif

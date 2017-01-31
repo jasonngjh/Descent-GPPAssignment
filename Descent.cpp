@@ -20,6 +20,7 @@ if 2 player, color code them red and blue for clarity
 
 #include "Descent.h"
 
+
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -170,8 +171,8 @@ void Descent::initialize(HWND hwnd)
 			else		
 			{
 				//this is true if current y can support more ships
-				//create spaceship at X position of game_width/width*i, current row
-				//x = (GAME_WIDTH / SPACESHIP_WIDTH)*(j+1) + (LENGTH_GAP_BETWEEN_SPACESHIPS*j);
+				//create ship at X position of game_width/width*i, current row
+
 				x = (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS*j);
 				std::cout << "Current x: " << x << "." << std::endl;
 			}
@@ -189,13 +190,28 @@ void Descent::initialize(HWND hwnd)
 			currentActiveSpaceships++;
 
 			std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
+
+			if (currentActiveSpaceships == maxActiveSpaceships)
+				break;
+
 		}
 		
-
+		if (currentActiveSpaceships == maxActiveSpaceships)
+			break;
 		
 	}
 
 #pragma endregion
+
+
+	//std::thread t(&Descent::playBGM, this); //for background music - make sure .h file has relevant method
+	//t.join();
+	
+	//std::clock_t start;
+	//start = std::clock();
+	
+	std::async(&Descent::timer_start, this); //run timer thread while main loop is contiuing
+
 
     return;
 }
@@ -296,7 +312,7 @@ void Descent::update()
 
 		 switch (waveState){
 			case WAVE_STATE::pauseWave:{
-											std::cout << "pause" << std::endl; 
+											//std::cout << "pause" << std::endl; 
 											if (input->isKeyDown(SPACE_KEY))
 												waveControl->setWaveState(WAVE_STATE::wave1);
 			 }break;
@@ -307,6 +323,7 @@ void Descent::update()
 										{
 											waveControl->setWaveState(WAVE_STATE::wave2);
 										}
+										
 										 
 			 }break;
 			 case WAVE_STATE::wave2:{//add wave 2 enemy behavior
@@ -567,35 +584,124 @@ void Descent::initializeTank()
 //=============================================================================
 void Descent::moveSpaceships()
 {
-	for (int i = 0; i < currentActiveSpaceships; i++)
+	for (int i = currentActiveSpaceships-1; i >= 0; i--)
 	{
-		//iterates through every existing spaceship
+		//iterates through every existing spaceship (iterates backwards)
 		//individually shifts each spaceship to its current direction
 		//if spaceships hits the edge of the screen, it will be shifted downwards and will move to the other direction
 
 		if (array_spaceships[i].getIsMovingRight()) //is moving to the right
 		{
 			
-			if ((array_spaceships[i].getX() + SPACESHIP_WIDTH) < GAME_WIDTH + HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS)
-				array_spaceships[i].setX(array_spaceships[i].getX() + SPACESHIP_WIDTH); //ships moves its width horizontally to the right
+			if ((array_spaceships[i].getX() + SPACESHIP_WIDTH) > GAME_WIDTH)
+			{
+				for (int j = currentActiveSpaceships - 1; j >= 0; j--)
+				{
+					//shifts everything downwards and changes direction
+					array_spaceships[j].setY(array_spaceships[j].getY() + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_HEIGHT);
+					array_spaceships[j].setIsMovingRight(false);
+
+					std::cout << "ship " << j + 1 << " shifts down " << std::endl;
+
+				}
+			}
+
 			else
 			{
-				array_spaceships[i].setY(array_spaceships[i].getY() + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS);	//ship shifts downwards
-				array_spaceships[i].setIsMovingRight(false);													//ship changes moving direction
+
+				array_spaceships[i].setX(array_spaceships[i].getX() + SPACESHIP_WIDTH); //ships moves its width horizontally to the right
+
+				/*std::cout << "ship changing direction to LEFT, moving down at x " << array_spaceships[i].getX() << std::endl;
+
+				array_spaceships[i].setY(array_spaceships[i].getY() + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_HEIGHT);	//ship shifts downwards
+
+				array_spaceships[i].setIsMovingRight(false);																		//ship changes moving direction
+
+				//if reach beyond y
+				if (array_spaceships[i].getY() > GAMEOVER_SPACESHIP_DISTANCE)
+				{
+					std::cout << "GAME OVER" << std::endl;
+					break;
+				}*/
+
 			}
 				
 		}
 
 		else //is moving left
 		{
-			if ((array_spaceships[i].getX() + SPACESHIP_WIDTH) > GAME_WIDTH + HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS)
-				array_spaceships[i].setX(array_spaceships[i].getX() - SPACESHIP_WIDTH); //ships moves its width horizontally to the left
+
+
+			if (array_spaceships[i].getX() < SPACESHIP_WIDTH)
+			{
+				for (int j = currentActiveSpaceships - 1; j >= 0; j--)
+				{
+					//shifts everything downwards and changes direction
+					array_spaceships[j].setY(array_spaceships[j].getY() + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_HEIGHT);
+					array_spaceships[j].setIsMovingRight(true);
+
+					std::cout << "ship " << j + 1 << " shifts down " << std::endl;
+
+				}
+			}
+				
 			else
 			{
-				array_spaceships[i].setY(array_spaceships[i].getY() + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS);//ship shifts downwards
+				array_spaceships[i].setX(array_spaceships[i].getX() - SPACESHIP_WIDTH); //ships moves its width horizontally to the left
+
+				/*std::cout << "ship changing direction to RIGHT, moving down at x " << array_spaceships[i].getX() << std::endl;
+
+				array_spaceships[i].setY(array_spaceships[i].getY() + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_HEIGHT);//ship shifts downwards
 				array_spaceships[i].setIsMovingRight(true);													//ship changes moving direction
+
+				//if reach beyond y
+				if (array_spaceships[i].getY() > GAMEOVER_SPACESHIP_DISTANCE)
+				{
+					std::cout << "GAME OVER" << std::endl;
+					break;
+				}*/
+
 			}
 		}
+
+	}
+}
+
+
+//=============================================================================
+// start and run timer
+//	using thread
+//=============================================================================
+void Descent::timer_start()
+{
+	//create timer
+	clock_t timer = clock();//start timer
+	int currentInGameTime = 0;		//this refers to in-game time
+
+	bool loop = true;
+	while (loop)
+	{
+
+		if (gameControl->getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
+		{
+			setSecondsPassed((clock() - timer) / (double)CLOCKS_PER_SEC);  //convert computer timer to real life seconds
+
+			if ((fmod(getSecondsPassed(), 1)) == 0)
+			{
+				currentInGameTime++;
+				
+				std::cout << "in game seconds passed: = " << currentInGameTime << std::endl;
+				std::cout << currentInGameTime << " seconds has passed in-game. " << getSecondsPassed() << " second(s) has passed (in program)." << std::endl;
+
+				moveSpaceships();
+
+			}
+
+			
+
+		}
+
+		
 
 	}
 }

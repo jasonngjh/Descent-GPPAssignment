@@ -102,9 +102,9 @@ const double SPACESHIP_CRITICAL_HEALTH_FACTOR = 0.25;
 const int HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 80;	//this affects how much ships can be created in a row, if values are too high will lead to weird spaceship orientation
 const int VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 20;	
 
-const int MAX_NO_OF_SPACESHIPS = 30; //number of spaceships allowed to exist
+const int MAX_NO_OF_SPACESHIPS = 2; //number of spaceships allowed to exist
 const int AMT_OF_SPACESHIPS_PER_ROW = 5; //number should not be less than GAME_WIDTH/(SPACESHIP_WIDTH + HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS)
-const int WAVE_1_SPACESHIPS_AMT_OF_ROWS = 4;
+const int WAVE_1_SPACESHIPS_AMT_OF_ROWS = 8;
 const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 6;
 
 const int BOSS_SPACESHIP_WIDTH = 212;
@@ -129,6 +129,7 @@ const int POWERUP_TIME_FREEZE_DURATION = 10; //in seconds
 const int POWERUP_FORCE_MULTIPLIER = 2;
 
 const int GROUND_LEVEL_HEIGHT = GAME_HEIGHT - GAME_HEIGHT / 10;			//no objects may go beyond this line, essentially means 'ground level'
+const int GAMEOVER_SPACESHIP_DISTANCE = GROUND_LEVEL_HEIGHT - 200;	//when spaceship reaches here, game over
 const int SKY_LEVEL_DIVIDER = 78;
 
 //main menu frames
