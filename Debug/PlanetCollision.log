@@ -1,9 +1,50 @@
-﻿Build started 01/02/2017 9:46:39 AM.
-     1>Project "C:\Users\NPStudent\Source\Repos\gppassignment230012017\PlanetCollision.vcxproj" on node 2 (Build target(s)).
-     1>Link:
-         PlanetCollision.vcxproj -> C:\Users\NPStudent\Source\Repos\gppassignment230012017\Debug\Throw Ball Game.exe
-     1>Done Building Project "C:\Users\NPStudent\Source\Repos\gppassignment230012017\PlanetCollision.vcxproj" (Build target(s)).
+﻿Build started 01/02/2017 11:42:09.
+     1>Project "D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\PlanetCollision.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\NPStudent\Source\Repos\gppassignment22 /I"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Boss_Spaceship.cpp Cannonball.cpp Descent.cpp Player.cpp Spaceship.cpp entity.cpp game.cpp graphics.cpp image.cpp input.cpp shell.cpp textDX.cpp textureManager.cpp winmain.cpp
+         Descent.cpp
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(145): warning C4244: 'argument' : conversion from 'const UINT' to 'float', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(210): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(211): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(435): warning C4018: '<' : signed/unsigned mismatch
+         Generating Code...
+         Compiling...
+         winmain.cpp
+         textureManager.cpp
+         textDX.cpp
+         shell.cpp
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\shell.cpp(31): warning C4244: '=' : conversion from 'const double' to 'float', possible loss of data
+         input.cpp
+         image.cpp
+         graphics.cpp
+         game.cpp
+         entity.cpp
+         Spaceship.cpp
+         Player.cpp
+         Cannonball.cpp
+         Boss_Spaceship.cpp
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\Debug\Throw Ball Game.exe" /NOLOGO /LIBPATH:"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Lib\x86" d3d9.lib d3dx9.lib winmm.lib xinput.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\Debug\Throw Ball Game.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\Debug\Throw Ball Game.lib" /MACHINE:X86 /SAFESEH:NO Debug\Boss_Spaceship.obj
+         Debug\Cannonball.obj
+         Debug\entity.obj
+         Debug\game.obj
+         Debug\gameControl.obj
+         Debug\graphics.obj
+         Debug\guicon.obj
+         Debug\image.obj
+         Debug\input.obj
+         Debug\Player.obj
+         Debug\shell.obj
+         Debug\Spaceship.obj
+         Debug\textDX.obj
+         Debug\Descent.obj
+         Debug\textureManager.obj
+         Debug\waveControl.obj
+         Debug\winmain.obj
+         PlanetCollision.vcxproj -> D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\Debug\Throw Ball Game.exe
+     1>Done Building Project "D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\PlanetCollision.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.06
+Time Elapsed 00:00:09.04
