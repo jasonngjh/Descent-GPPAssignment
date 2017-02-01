@@ -46,28 +46,23 @@ void Shell::draw()
 // typically called once per frame
 // frameTime is used to regulate the speed of movement and animation
 //=============================================================================
-void Shell::update(float frameTime, Image turret)
+void Shell::update(float frameTime, Player turret)
 {
 	//http://jsfiddle.net/LyM87/ cannonball physics
 	//if thrown
 	//spriteData.angle += frameTime * ShellNS::ROTATION_RATE;
-	distance = sqrt(pow(turret.getX() - spriteData.x, 2) + pow(turret.getY() - spriteData.y, 2));
-	directionX = (turret.getX() - spriteData.x)/distance;
-	directionY = (turret.getY() - spriteData.y)/distance;
 
+	//distance = sqrt(pow(turret.getX() - spriteData.x, 2) + pow(turret.getY() - spriteData.y, 2));
 
-	spriteData.x = spriteData.x + (turret.getX() - spriteData.x)*0.000001f;
-	spriteData.y = spriteData.y + (turret.getY() - spriteData.y)*0.000001f;
-	moving = true;
-	if (moving){
-		if (sqrt(pow(turret.getX() - spriteData.x, 2) + pow(turret.getY() - spriteData.y, 2)) <= distance)
-		{
+	thrust = 0.25;
+	tx = (turret.getX()+turret.getWidth()/4) - spriteData.x;
+	ty = (turret.getY()) - spriteData.y;
+	dist = sqrt(tx*tx + ty*ty);
+	velocity.x = (tx / dist) * thrust;
+	velocity.y = (ty / dist) * thrust;
 
-			spriteData.x = turret.getX();
-			spriteData.y = turret.getY();
-			moving = false;
-		}
-	}
+	spriteData.x += velocity.x;
+	spriteData.y += velocity.y;
 	if (spriteData.x > GAME_WIDTH - ShellNS::WIDTH*getScale())
 	{
 		// position at right screen edge

@@ -48,7 +48,6 @@ void Boss_Spaceship::draw()
 //=============================================================================
 void Boss_Spaceship::update(float frameTime)
 {
-	//shell.update(frameTime, turret);
 	Entity::update(frameTime);
 }
 

@@ -348,9 +348,10 @@ void Descent::update()
 										}
 			 }break;
 			 case WAVE_STATE::wave3:{//add boss spaceship behaviour
-										//std::cout << "wave 3" << std::endl;
-										shell.update(frameTime, turret);
+										
+										shell.update(frameTime, tank);
 										boss.update(frameTime);
+										std::cout << "wave 3" << std::endl;
 			 }break;
 								 
 		}
@@ -517,9 +518,8 @@ void Descent::render()
 								 case WAVE_STATE::wave3:{
 															
 															std::cout << "wave3" << std::endl;
-															boss.draw();
 															shell.draw();
-															//shell.draw();
+															boss.draw();
 								 }break;//draw boss wave stuff
 								 }
 								 

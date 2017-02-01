@@ -3,6 +3,7 @@
 
 #include "entity.h"
 #include "constants.h"
+#include "Player.h"
 #include <math.h>
 namespace ShellNS
 {
@@ -25,13 +26,14 @@ class Shell : public Entity
 {
 private:
 	bool moving;
-	float directionX, directionY,distance;
+	float drectionX, directionY,distance;
+	float tx, ty, dist,thrust;
 public:
 	Shell();
 
 	virtual void draw();
 	virtual bool initialize(Game *gamePtr, int width, int height, int ncols,
 		TextureManager *textureM);
-	void update(float frameTime,Image turret);
+	void update(float frameTime,Player turret);
 };
 #endif
