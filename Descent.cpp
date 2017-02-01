@@ -159,11 +159,11 @@ void Descent::initialize(HWND hwnd)
 	isAllSpaceshipMovingRight = true;
 	isShipsReadyToShift = false;
 
-	boss.setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
-	boss.setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
+	boss->setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
+	boss->setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
 	
-	shell.setX(boss.getX()+BOSS_SPACESHIP_WIDTH/2);
-	shell.setY(boss.getY()+BOSS_SPACESHIP_HEIGHT/2);
+	shell->setX(boss->getX()+BOSS_SPACESHIP_WIDTH/2);
+	shell->setY(boss->getY()+BOSS_SPACESHIP_HEIGHT/2);
 	
 #pragma endregion
 
@@ -358,7 +358,7 @@ void Descent::update()
 			 }break;
 			 case WAVE_STATE::wave2:{//add wave 2 enemy behavior
 
-										shell->update(frameTime, turret);
+										shell->update(frameTime, *turret);
 
 										std::cout << "wave 2" << std::endl;
 
@@ -542,7 +542,7 @@ void Descent::render()
 								 }break;//draw wave 2 stuff
 								 case WAVE_STATE::wave3:{
 															
-															shell.draw();
+															shell->draw();
 															//std::cout << "wave3" << std::endl;
 															boss->draw();
 								 }break;//draw boss wave stuff
@@ -644,7 +644,7 @@ void Descent::moveSpaceships(bool isMovingRight)
 
 			//std::cout << "ship " << i + 1 << " initial x/y: " << array_spaceships[i].getX() << "/" << array_spaceships[i].getY() << std::endl;	//for some reason not having this line destroys the movement???
 
-			if ((array_spaceships[i].getX() + SPACESHIP_WIDTH) > GAME_WIDTH)
+			if ((array_spaceships[i]->getX() + SPACESHIP_WIDTH) > GAME_WIDTH)
 			{
 				//ship is at edge of right wall, time to stop checking and change direction
 				isShipsReadyToShift = true;
@@ -664,7 +664,7 @@ void Descent::moveSpaceships(bool isMovingRight)
 
 			//std::cout << "ship " << i + 1 << " initial x/y: " << array_spaceships[i].getX() << "/" << array_spaceships[i].getY() << std::endl; //for some reason not having this line destroys the movement???
 
-			if (array_spaceships[i].getX() < SPACESHIP_WIDTH)
+			if (array_spaceships[i]->getX() < SPACESHIP_WIDTH)
 			{
 				//ship is at edge of left wall, time to stop checking and change direction
 				isShipsReadyToShift = true;
@@ -686,13 +686,13 @@ void Descent::moveSpaceships(bool isMovingRight)
 		for (int i = 0; i < currentActiveSpaceships; i++)
 		{
 
-			std::cout << "ship " << i + 1 << " x/y: " << array_spaceships[i].getX() << "/" << array_spaceships[i].getY() << std::endl;
+			std::cout << "ship " << i + 1 << " x/y: " << array_spaceships[i]->getX() << "/" << array_spaceships[i]->getY() << std::endl;
 			//shifts everything downwards and changes direction
-			array_spaceships[i].setY(array_spaceships[i].getY() + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_HEIGHT);
-			array_spaceships[i].setIsMovingRight(isAllSpaceshipMovingRight);
+			array_spaceships[i]->setY(array_spaceships[i]->getY() + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_HEIGHT);
+			array_spaceships[i]->setIsMovingRight(isAllSpaceshipMovingRight);
 
 			std::cout << "ship " << i + 1 << " shifts down " << std::endl;
-			std::cout << "ship " << i + 1 << " x/y: " << array_spaceships[i].getX() << "/" << array_spaceships[i].getY() << std::endl;
+			std::cout << "ship " << i + 1 << " x/y: " << array_spaceships[i]->getX() << "/" << array_spaceships[i]->getY() << std::endl;
 
 		}
 
@@ -704,7 +704,7 @@ void Descent::moveSpaceships(bool isMovingRight)
 		{
 			for (int i = 0; i < currentActiveSpaceships; i++)
 			{
-				array_spaceships[i].setX(array_spaceships[i].getX() + SPACESHIP_WIDTH); //ships moves its width horizontally to the right
+				array_spaceships[i]->setX(array_spaceships[i]->getX() + SPACESHIP_WIDTH); //ships moves its width horizontally to the right
 				Sleep(5);			//without this line spaceships will move unhindered, not sure why
 
 				//std::cout << "ship " << i + 1 << " moves right " << std::endl;	//without this code or Sleep(5) things move2fast
@@ -715,7 +715,7 @@ void Descent::moveSpaceships(bool isMovingRight)
 		{
 			for (int i = 0; i < currentActiveSpaceships; i++)
 			{
-				array_spaceships[i].setX(array_spaceships[i].getX() - SPACESHIP_WIDTH); //ships moves its width horizontally to the left
+				array_spaceships[i]->setX(array_spaceships[i]->getX() - SPACESHIP_WIDTH); //ships moves its width horizontally to the left
 				Sleep(5);			//without this line spaceships will move unhindered, not sure why
 
 				//std::cout << "ship " << i + 1 << " moves left " << std::endl;		//without this code or Sleep(5) things move2fast
