@@ -41,6 +41,7 @@ Descent::Descent()
 	tankTexture = new TextureManager();
 	turretTexture = new TextureManager();
 	smokeTexture = new TextureManager();
+	powerup_downSpeed_texture = new TextureManager();
 
 	//images
 	background = new Image();
@@ -138,6 +139,11 @@ void Descent::initialize(HWND hwnd)
 	if (!shell->initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, shellTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
 
+	if (!powerup_downSpeed_texture->initialize(graphics, POWERUP_DOWN_SPEED_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (down speed) texture"));
+	//if (!powerup_downSpeed->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_downSpeed_texture))
+	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (down speed) object"));
+
 	background->setFrames(BACKGROUND_START_FRAME,BACKGROUND_END_FRAME);
 	background->setCurrentFrame(BACKGROUND_START_FRAME);
 
@@ -158,6 +164,19 @@ void Descent::initialize(HWND hwnd)
 	currentActiveSpaceships = 0;
 	isAllSpaceshipMovingRight = true;
 	isShipsReadyToShift = false;
+
+	//loading powerup arrays
+
+	powerup_downSpeed = new Powerup();
+
+	if (!powerup_downSpeed->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_downSpeed_texture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (down speed) object"));
+
+	array_powerups_drawingSpace.push_back(powerup_downSpeed);
+	totalAmtOfPowerupVariety = array_powerups_drawingSpace.size();
+	std::cout << "total amount of loaded powerups: " << totalAmtOfPowerupVariety << std::endl;
+
+	//setting boss variables
 
 	boss->setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
 	boss->setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
@@ -204,7 +223,6 @@ void Descent::initialize(HWND hwnd)
 				//create ship at X position of game_width/width*i, current row
 
 				x = (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS*j);
-				std::cout << "Current x: " << x << "->" << std::endl;
 			}
 
 			spaceship->setX(x);
@@ -606,10 +624,10 @@ void Descent::initializeTank()
 
 //=============================================================================
 // moves all spaceships once
-// constantly called by thread (timer)
+// constantly called by thread (timer) every X seconds
 // when one spaceships hits the screen border, ALL ships shifts 1 level down and moves the other direction
 //=============================================================================
-void Descent::moveSpaceships(bool isMovingRight)
+void Descent::moveSpaceships()
 {
 
 	//pseudo code for this section
@@ -703,6 +721,16 @@ void Descent::moveSpaceships(bool isMovingRight)
 
 }
 
+//=============================================================================
+// spawns a power up
+// constantly called by thread (timer) every X seconds, or called when a spaceship is destroyed at a X chance
+// when one spaceships hits the screen border, ALL ships shifts 1 level down and moves the other direction
+//=============================================================================
+void Descent::spawnPowerup()
+{
+
+}
+
 
 //=============================================================================
 // start and run timer
@@ -730,13 +758,21 @@ void Descent::timer_start()
 				//std::cout << "in game seconds passed: = " << currentInGameTime << std::endl;
 				//std::cout << currentInGameTime << " seconds has passed in-game. " << getSecondsPassed() << " second(s) has passed (in program)." << std::endl;
 
-				moveSpaceships(isAllSpaceshipMovingRight);
+				moveSpaceships();
 
 			}
 
+			if ((fmod(getSecondsPassed(), POWERUP_SPAWN_FREQUENCY)) == 0)
+			{
+
+				//spawnPowerup();
+				std::cout << "spawning a powerup" << std::endl;
+
+			}
+
+
 		}
 
-		
 
 	}
 }

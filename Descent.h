@@ -10,6 +10,7 @@
 #include "cannonball.h"
 #include "Player.h"
 #include "Spaceship.h"
+#include "powerup.h"
 #include "Boss_Spaceship.h"
 #include "shell.h"
 
@@ -55,6 +56,7 @@ private:
 	TextureManager* tankTexture;
 	TextureManager* turretTexture;
 	TextureManager* smokeTexture;
+	TextureManager* powerup_downSpeed_texture;
 
 	Image* background;
 	Image* ground;
@@ -66,7 +68,10 @@ private:
 	int waveNumber=1;
 	Player* tank;
 	Shell* shell;
+	Powerup* powerup_downSpeed;
 	std::vector<Spaceship*> array_spaceships;
+	std::vector<Powerup*> array_powerups_drawingSpace;	//the vector where all different types of powerups are initialized
+	std::vector<Powerup*> array_powerups;
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
 	
 	int playerCount;//use this value to count 1 player or 2 player
@@ -82,6 +87,9 @@ private:
 
 public:
 	int currentActiveSpaceships; //amt of spaceships currently alive (should be dynamically less or equal to maxActiveSpaceships)
+	int currentActivePowerups;	//amt of powerups currently in the game as objects (NOT the ones in effect)
+	int totalAmtOfPowerupVariety;	//for use with array_powerups_drawingSpace, keeps track of amount of hard-coded powerup effects
+
 	bool isAllSpaceshipMovingRight;	//keeps track of ship direction
 	bool isShipsReadyToShift;		//keeps track of ship movement, for use in downwards movement
 
@@ -102,7 +110,9 @@ public:
 
 	//other functions
 	void initializeTank();
-	void moveSpaceships(bool isMovingRight);
+	void moveSpaceships();
+	void spawnPowerup();
+
 	void timer_start();
 
 	double getSecondsPassed() { return secondsPassed; }
@@ -113,6 +123,8 @@ public:
 
 	int getSpeedModifier() { return speedModifier; }
 	void setSpeedModifier(int modifyingValue) { speedModifier = modifyingValue; }
+
+
 };
 
 #endif

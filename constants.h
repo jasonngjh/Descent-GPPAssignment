@@ -110,20 +110,25 @@ const float BOSS_SPACESHIP_ANIMATION_DELAY = 1.0f;
 const int BOSS_SPACESHIP_STARTING_HEALTH = 10;
 
 //powerup variables
-const int POWERUP_WIDTH = 32;
-const int POWERUP_HEIGHT = 32;
+const int POWERUP_WIDTH = 16;
+const int POWERUP_HEIGHT = 16;
 const int POWERUP_TEXTURE_COLUMNS = 1;
 const int POWERUP_START_FRAME = 0;
 const int POWERUP_END_FRAME = 1;
 const float POWERUP_ANIMATION_DELAY = 0.1f;		//passively animates
+const int POWERUP_SPAWN_CHANCE = 25;			//in percentage, spawn chance when a spaceship is destroyed
+const int POWERUP_SPAWN_FREQUENCY = 5;			//in seconds, value depicts if powerup spawns every X seconds
 
 //individual powerup effect values
 const double POWERUP_TIME_SLOW_MULTIPLER = 2; //the bigger the number the slower it gets
+const int POWERUP_TIME_SLOW_DURATION = 10;
 const double POWERUP_TIME_FAST_MULTIPLIER = 0.5; //the lower the number the faster it gets (past 0.5 it gets weird)
+const int POWERUP_TIME_STOP_DURATION = 5;
 const int POWERUP_TIME_FREEZE_DURATION = 10; //in seconds
-const int POWERUP_FORCE_MULTIPLIER = 2;
+const int POWERUP_FORCE_MULTIPLIER = 3;
+const int POWERUP_HEALTH_RESTORE_VALUE = 5;
 
-//gameplay condition variables
+//gameplay condition variables (affected by powerups, otherwise they generally stays the same)
 const int GROUND_LEVEL_HEIGHT = GAME_HEIGHT - GAME_HEIGHT / 10;			//no objects may go beyond this line, essentially means 'ground level'
 const int GAMEOVER_SPACESHIP_DISTANCE = GROUND_LEVEL_HEIGHT - 200;		//when spaceship reaches here, game over, boom
 const int SKY_LEVEL_DIVIDER = 78;
@@ -183,6 +188,7 @@ const char BKGRND_IMAGE[] = "images\\background.png";
 const char TURRET_IMAGE[] = "images\\turret.png";
 const char SMOKE_IMAGE[] = "images\\smoke.png";
 const char SHELL_IMAGE[] = "images\\shell.png";
+const char POWERUP_DOWN_SPEED_IMAGE[] = "images\\powerup_downspeed.png";
 
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
