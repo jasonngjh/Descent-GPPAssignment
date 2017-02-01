@@ -182,10 +182,10 @@ void Cannonball::hit(hitWho target)
 {
 	if (target == land)
 	{
-		spriteData.y = GAME_HEIGHT - 80;//change value to where ur land is changes
+		spriteData.y = GROUND_LEVEL_HEIGHT-CANNONBALL_HEIGHT/2;
 		velocity.y = 0.0;
 		velocity.x = 0.0;
-
+		damageLeft = 5;
 	}
 	if (target == spaceShip)
 	{

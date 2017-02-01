@@ -59,7 +59,6 @@ private:
 	Cannonball cannonball;
 	Spaceship enemy_spaceship;	//only one for now, testing only
 	Image menu1;
-	//Boss_Spaceship boss;
 	Boss_Spaceship boss;
 	int waveNumber=1;
 	Player tank;

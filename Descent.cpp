@@ -125,6 +125,11 @@ void Descent::initialize(HWND hwnd)
 	if (!smoke.initialize(graphics, SMOKE_WIDTH, SMOKE_HEIGHT, SMOKE_TEXTURE_COLS, &smokeTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing smoke"));
 
+	boss.setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
+	boss.setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
+	boss.setX(GAME_WIDTH / 2);
+	boss.setY(0);
+
 	background.setFrames(BACKGROUND_START_FRAME,BACKGROUND_END_FRAME);
 	background.setCurrentFrame(BACKGROUND_START_FRAME);
 
@@ -147,6 +152,10 @@ void Descent::initialize(HWND hwnd)
 	smoke.setFrames(SMOKE_START_FRAME,SMOKE_END_FRAME);
 	smoke.setCurrentFrame(SMOKE_START_FRAME);
 	smoke.setVisible(false);
+
+
+	shell.setX(boss.getX()+BOSS_SPACESHIP_WIDTH/2);
+	shell.setY(boss.getY()+BOSS_SPACESHIP_HEIGHT/2);
 
 	initializeTank();
 
@@ -202,9 +211,10 @@ void Descent::initialize(HWND hwnd)
 			std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
 		}
 		if (!shellTexture.initialize(graphics, SHELL_IMAGE))
-			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell texture"));
-		if (!shell.initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, &shellTexture))
-			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
+	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell texture"));
+	if (!shell.initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, &shellTexture))
+	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
+		
 
 		
 	}
@@ -249,19 +259,16 @@ void Descent::update()
 	case GENERAL_STATE::game:{
 		background.update(frameTime);
 		cannonball.update(frameTime);
-		enemy_spaceship.update(frameTime);
+		//enemy_spaceship.update(frameTime);
 		tank.update(frameTime);
 		smoke.update(frameTime);
-
-		if (currentActiveSpaceships > 0)
+		
+		if (cannonball.getY() == GROUND_LEVEL_HEIGHT)
 		{
-			//endlessly loop update for each zombie until no more zombies
-			for (int i = 0; i < currentActiveSpaceships; i++)
-			{
-				//std::cout << "looping spaceship" << std::endl;
-				array_spaceships[i].update(frameTime);
-			}
+			cannonball.hit(land);
 		}
+
+		
 
 	// checkpoints: player health = 0 -> change to end game screen
 	// if boss die -> change to end game screen
@@ -316,7 +323,15 @@ void Descent::update()
 			 }break;
 			 case WAVE_STATE::wave1:{//add wave 1 behaviors
 										//std::cout << "wave 1" << std::endl;
-										enemy_spaceship.update(frameTime);
+										if (currentActiveSpaceships > 0)
+										{
+											//endlessly loop update for each zombie until no more zombies
+											for (int i = 0; i < currentActiveSpaceships; i++)
+											{
+												//std::cout << "looping spaceship" << std::endl;
+												array_spaceships[i].update(frameTime);
+											}
+										}
 										if (input->wasKeyPressed(TW_KEY))
 										{
 											waveControl->setWaveState(WAVE_STATE::wave2);
@@ -324,10 +339,9 @@ void Descent::update()
 										 
 			 }break;
 			 case WAVE_STATE::wave2:{//add wave 2 enemy behavior
-
-										shell.update(frameTime);
+										
+										
 										std::cout << "wave 2" << std::endl;
-
 										if (input->wasKeyPressed(TH_KEY))
 										{
 											waveControl->setWaveState(WAVE_STATE::wave3);
@@ -335,10 +349,7 @@ void Descent::update()
 			 }break;
 			 case WAVE_STATE::wave3:{//add boss spaceship behaviour
 										//std::cout << "wave 3" << std::endl;
-										boss.setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
-										boss.setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
-										boss.setX(GAME_WIDTH / 4);
-										boss.setY(GAME_HEIGHT / 4);
+										shell.update(frameTime, turret);
 										boss.update(frameTime);
 			 }break;
 								 
@@ -390,6 +401,7 @@ void Descent::collisions()
 		ship1.bounce(collisionVector, planet);
 		ship1.damage(PLANET);
 	}*/
+
 
 	if (cannonball.collidesWith(boss, collisionVector))
 	{
@@ -497,15 +509,17 @@ void Descent::render()
 														//	std::cout << "wave1" << std::endl;
 								 }break;//draw wave 3 stuff
 								 case WAVE_STATE::wave2:{
-															std::cout << "shell draw" << std::endl;
-															shell.draw();
+															//std::cout << "shell draw" << std::endl;
+															
 															//std::cout << "wave2" << std::endl;
 
 								 }break;//draw wave 2 stuff
 								 case WAVE_STATE::wave3:{
 															
-															//std::cout << "wave3" << std::endl;
+															std::cout << "wave3" << std::endl;
 															boss.draw();
+															shell.draw();
+															//shell.draw();
 								 }break;//draw boss wave stuff
 								 }
 								 
