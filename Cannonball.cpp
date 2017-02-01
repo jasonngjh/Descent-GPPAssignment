@@ -197,7 +197,7 @@ void Cannonball::hit(hitWho target)
 		spriteData.y = GROUND;//change value to where ur land is changes
 		velocity.y = 0.0;
 		velocity.x = 0.0;
-
+		damageLeft = 5;
 	}
 	if (target == spaceShip)
 	{

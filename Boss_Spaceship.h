@@ -5,6 +5,7 @@
 #include "entity.h"
 #include "Spaceship.h"
 #include "constants.h"
+#include "shell.h"
 
 namespace Boss_SpaceshipNS
 {
@@ -34,7 +35,8 @@ private:
 	bool isAlive = true;
 	bool hasFiredWeapon = false; //may remove this, use this to check if spaceship has fired on player in the last X seconds
 	int health; //counted in small numbers, represents amount of times spaceship can get hit again, maybe can use different animation frames to indicate damage
-
+	Shell shell;
+	Image turret;
 public:
 	// constructor
 	Boss_Spaceship();
@@ -52,5 +54,5 @@ public:
 	//any other relevant methods here
 
 };
-#endif
 
+#endif
