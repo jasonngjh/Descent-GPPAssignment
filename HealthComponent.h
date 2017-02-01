@@ -15,6 +15,7 @@ public:
 	HealthComponent();
 
 	//any other relevant methods here
+	void setHealth();
 
 };
 #endif
