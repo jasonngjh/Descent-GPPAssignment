@@ -29,6 +29,7 @@ bool Shell::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM)
 {
 	spriteData.angle = PI / 2;
+	spriteData.scale=3.0;
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
 }
 
@@ -45,13 +46,28 @@ void Shell::draw()
 // typically called once per frame
 // frameTime is used to regulate the speed of movement and animation
 //=============================================================================
-void Shell::update(float frameTime)
+void Shell::update(float frameTime, Image turret)
 {
 	//http://jsfiddle.net/LyM87/ cannonball physics
 	//if thrown
 	//spriteData.angle += frameTime * ShellNS::ROTATION_RATE;
+	distance = sqrt(pow(turret.getX() - spriteData.x, 2) + pow(turret.getY() - spriteData.y, 2));
+	directionX = (turret.getX() - spriteData.x)/distance;
+	directionY = (turret.getY() - spriteData.y)/distance;
 
-	
+
+	spriteData.x = spriteData.x + (turret.getX() - spriteData.x)*0.000001f;
+	spriteData.y = spriteData.y + (turret.getY() - spriteData.y)*0.000001f;
+	moving = true;
+	if (moving){
+		if (sqrt(pow(turret.getX() - spriteData.x, 2) + pow(turret.getY() - spriteData.y, 2)) <= distance)
+		{
+
+			spriteData.x = turret.getX();
+			spriteData.y = turret.getY();
+			moving = false;
+		}
+	}
 	if (spriteData.x > GAME_WIDTH - ShellNS::WIDTH*getScale())
 	{
 		// position at right screen edge

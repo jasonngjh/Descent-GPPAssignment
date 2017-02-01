@@ -41,7 +41,7 @@ private:
 	float speed;						// X pixels per second
 	int tankAngle;
 	bool tankDirection;
-	HealthComponent* health;
+	//HealthComponent* health;
 
 public:
 	// constructor

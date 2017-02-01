@@ -3,7 +3,7 @@
 
 #include "entity.h"
 #include "constants.h"
-
+#include <math.h>
 namespace ShellNS
 {
 	const int WIDTH = SHELL_WIDTH;
@@ -24,13 +24,14 @@ namespace ShellNS
 class Shell : public Entity
 {
 private:
-
+	bool moving;
+	float directionX, directionY,distance;
 public:
 	Shell();
 
 	virtual void draw();
 	virtual bool initialize(Game *gamePtr, int width, int height, int ncols,
 		TextureManager *textureM);
-	void update(float frameTime);
+	void update(float frameTime,Image turret);
 };
 #endif
