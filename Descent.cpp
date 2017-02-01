@@ -811,7 +811,7 @@ void Descent::timer_start()
 		{
 			setSecondsPassed((clock() - timer) / (double)CLOCKS_PER_SEC);  //convert computer timer to real life seconds
 
-			if ((fmod(getSecondsPassed(), SECOND*gameTimeModifier)) == 0)
+			if ((fmod(getSecondsPassed(), SECOND*timeModifier)) == 0)
 			{	
 
 

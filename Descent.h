@@ -75,8 +75,8 @@ private:
 	int highestY;
 
 	//modifiers
-	int timeModifier; //value affects time - this value will multiply by 1 second to achieve new time
-	int speedModifier; //value affects speed - this value will be multiplied by speed values to achieve new speed
+	int timeModifier = GAME_BASE_TIME_MODIFIER; //Default value is 1, value affects time - this value will multiply by 1 second to achieve new time
+	int speedModifier = GAME_BASE_SPEED_MODIFIER; //Default value is 1, value affects speed - this value will be multiplied by speed values to achieve new speed
 
 
 	double secondsPassed;

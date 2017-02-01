@@ -129,7 +129,8 @@ const int GAMEOVER_SPACESHIP_DISTANCE = GROUND_LEVEL_HEIGHT - 200;		//when space
 const int SKY_LEVEL_DIVIDER = 78;
 
 //gameplay modifiers
-const int GAME_TIME_MODIFIER = 1;	//affects time counter. 
+const int GAME_BASE_TIME_MODIFIER = 1;	//Base value for time modifier. affects time counter. 
+const int GAME_BASE_SPEED_MODIFIER = 1; //Base value for speed modifier, affects speed (for powerups)
 const int SECOND = 1;				//an ingame second equals to 1
 
 //main menu frames
