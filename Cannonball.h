@@ -7,6 +7,9 @@
 #include "entity.h"
 #include "constants.h"
 #include "Player.h"
+#include <iostream>
+#include <future>
+#include <math.h>
 
 namespace CannonballNS
 {
@@ -37,9 +40,10 @@ private:
 	int		playerNumber;		//which player is holding the Cannonball 
 	int		damageLeft;
 	int		distance, time;
-	Player	tank;
+	Player *tank;
 	bool	onGround;
 	float	timeHold;
+	float	speed;
 
 public:
 	// constructor
@@ -64,9 +68,9 @@ public:
 			playerNumber = 0;
 		
 	}
-	void getTank(Player tank);
-	
-	//any other relevant methods here
+	void getTank(Player* tank);
+	void playerCannonball();
+	void checkForHold();
 
 };
 #endif

@@ -22,6 +22,10 @@ Cannonball::Cannonball() : Entity()
 	collisionType = entityNS::CIRCLE;
 	onGround = true;
 	timeHold = 1.0;
+	time = 5;
+
+	Image::setScale(0.5);
+	//Image::setVisible(false);
 }
 
 //=============================================================================
@@ -29,7 +33,7 @@ Cannonball::Cannonball() : Entity()
 //=============================================================================
 Cannonball::~Cannonball()
 {
-
+	SAFE_DELETE(tank);
 }
 
 //=============================================================================
@@ -58,109 +62,21 @@ void Cannonball::draw()
 //=============================================================================
 void Cannonball::update(float frameTime)
 {
-	//http://jsfiddle.net/LyM87/ cannonball physics
 	//if thrown
-	//spriteData.angle += frameTime * CannonballNS::ROTATION_RATE;
 	velocity.y += GRAVITY*frameTime;
 	spriteData.x += frameTime * velocity.x;
 	spriteData.y += frameTime * velocity.y;
 	
-	if (input->isKeyDown(SPACE_KEY))
+	//if player one 
+	if (input->wasKeyPressed(SPACE_KEY))
 	{
-		if (onGround)
-		{
-			onGround = false;
+		//std::async(&Cannonball::checkForHold,this);
+		playerCannonball();
+	}
 
-			switch (tank.getTankAngle())
-			{
-			case 20:
-				if (tank.getTankDirection()){ // if facing right of screen
-					spriteData.x = tank.getX() + 55.0f;
-					spriteData.y = tank.getY() - 15.0f;
-				}
-				else{ //else face left
-					spriteData.x = tank.getX() + 63.0f;
-					spriteData.y = tank.getY() - 15.0f;
-				}
-				velocity.y = -100.0;
-				velocity.x = 200.0;
-				break;
-			case 40:
-				if (tank.getTankDirection()){
-					spriteData.x = tank.getX() + 55.0f;
-					spriteData.y = tank.getY() - 23.0f;
-				}
-				else{
-					spriteData.x = tank.getX() + 63.0f;
-					spriteData.y = tank.getY() - 23.0f;
-				}
-				velocity.y = -200.0;
-				velocity.x = 200.0f;
-				break;
-			case 60:
-				if (tank.getTankDirection()){
-					spriteData.x = tank.getX() + 45.0f;
-					spriteData.y = tank.getY() - 31.0f;
-				}
-				else{
-					spriteData.x = tank.getX() + 55.0f;
-					spriteData.y = tank.getY() - 31.0f;
-				}
-				velocity.y = -300.0;
-				velocity.x = 200.0f;
-				break;
-
-			case 90:
-				if (tank.getTankDirection()){
-					spriteData.x = tank.getX() + 27.0f;
-					spriteData.y = tank.getY() - 33.0f;
-				}
-				else{
-					spriteData.x = tank.getX() + 37.0f;
-					spriteData.y = tank.getY() - 33.0f;
-				}
-				velocity.y = -400.0;
-				velocity.x = 0.0;
-				break;
-
-			case 120:
-				if (tank.getTankDirection()){
-					spriteData.x = tank.getX() + 12.0f;
-					spriteData.y = tank.getY() - 31.0f;
-				}
-				else{
-					spriteData.x = tank.getX() + 21.0f;
-					spriteData.y = tank.getY() - 31.0f;
-				}
-				velocity.y = -300.0;
-				velocity.x = -200.0f;
-				break;
-			case 140:
-				if (tank.getTankDirection()){
-					spriteData.x = tank.getX() + 7.0f;
-					spriteData.y = tank.getY() - 23.0f;
-				}
-				else{
-					spriteData.x = tank.getX() + 17.0f;
-					spriteData.y = tank.getY() - 23.0f;
-				}
-				velocity.y = -200.0;
-				velocity.x = -200.0f;
-				break;
-			case 160:
-				if (tank.getTankDirection()){
-					spriteData.x = tank.getX() + 0.0f;
-					spriteData.y = tank.getY() - 15.0f;
-				}
-				else{
-					spriteData.x = tank.getX() + 14.0f;
-					spriteData.y = tank.getY() - 15.0f;
-				}
-				velocity.y = -100.0;
-				velocity.x = -200.0;
-				break;
-			}
-		}	
+	if (spriteData.y > GROUND)
+	{
+		hit(land);
 	}
 
 	if (spriteData.x > GAME_WIDTH - CannonballNS::WIDTH*getScale())
@@ -194,6 +110,7 @@ void Cannonball::hit(hitWho target)
 	if (target == land)
 	{
 		onGround = true;
+		//Image::setVisible(false);
 		spriteData.y = GROUND;//change value to where ur land is changes
 		velocity.y = 0.0;
 		velocity.x = 0.0;
@@ -219,7 +136,126 @@ void Cannonball::hit(hitWho target)
 // setTankAngle
 // set the tank angle
 //=============================================================================
-void Cannonball::getTank(Player t)
+void Cannonball::getTank(Player* t)
 {
 	tank = t;
+}
+
+//=============================================================================
+// playerCannonball()
+// encapsulate the method to for firing the ball based on which player
+//=============================================================================
+void Cannonball::playerCannonball()
+{
+	if (onGround)
+	{
+		onGround = false;
+		Image::setVisible(true);
+		switch (tank->getTankAngle())
+		{
+		case 20:
+			if (tank->getTankDirection()){ // if facing right of screen
+				spriteData.x = tank->getX() + 55.0f;
+				spriteData.y = tank->getY() - 15.0f;
+			}
+			else{ //else face left
+				spriteData.x = tank->getX() + 63.0f;
+				spriteData.y = tank->getY() - 15.0f;
+			}
+			velocity.x = GAME_WIDTH / time;
+			velocity.y = tan(0.45) * velocity.x;
+			std::cout << velocity.x << std::endl;
+			std::cout << velocity.y << std::endl;
+			break;
+		case 40:
+			if (tank->getTankDirection()){
+				spriteData.x = tank->getX() + 55.0f;
+				spriteData.y = tank->getY() - 23.0f;
+			}
+			else{
+				spriteData.x = tank->getX() + 63.0f;
+				spriteData.y = tank->getY() - 23.0f;
+			}
+			velocity.y = -200.0;
+			velocity.x = 200.0f;
+			break;
+		case 60:
+			if (tank->getTankDirection()){
+				spriteData.x = tank->getX() + 45.0f;
+				spriteData.y = tank->getY() - 31.0f;
+			}
+			else{
+				spriteData.x = tank->getX() + 55.0f;
+				spriteData.y = tank->getY() - 31.0f;
+			}
+			velocity.y = -300.0;
+			velocity.x = 200.0f;
+			break;
+
+		case 90:
+			if (tank->getTankDirection()){
+				spriteData.x = tank->getX() + 27.0f;
+				spriteData.y = tank->getY() - 33.0f;
+			}
+			else{
+				spriteData.x = tank->getX() + 37.0f;
+				spriteData.y = tank->getY() - 33.0f;
+			}
+			velocity.y = -400.0;
+			velocity.x = 0.0;
+			break;
+
+		case 120:
+			if (tank->getTankDirection()){
+				spriteData.x = tank->getX() + 12.0f;
+				spriteData.y = tank->getY() - 31.0f;
+			}
+			else{
+				spriteData.x = tank->getX() + 21.0f;
+				spriteData.y = tank->getY() - 31.0f;
+			}
+			velocity.y = -300.0;
+			velocity.x = -200.0f;
+			break;
+		case 140:
+			if (tank->getTankDirection()){
+				spriteData.x = tank->getX() + 7.0f;
+				spriteData.y = tank->getY() - 23.0f;
+			}
+			else{
+				spriteData.x = tank->getX() + 17.0f;
+				spriteData.y = tank->getY() - 23.0f;
+			}
+			velocity.y = -200.0;
+			velocity.x = -200.0f;
+			break;
+		case 160:
+			if (tank->getTankDirection()){
+				spriteData.x = tank->getX() + 0.0f;
+				spriteData.y = tank->getY() - 15.0f;
+			}
+			else{
+				spriteData.x = tank->getX() + 14.0f;
+				spriteData.y = tank->getY() - 15.0f;
+			}
+			velocity.y = -100.0;
+			velocity.x = -200.0;
+			break;
+		}
+	}
+}
+
+//=============================================================================
+// checkForHold()
+// calculate how long the player has been holding the fire key
+//=============================================================================
+void Cannonball::checkForHold()
+{
+	std::cout << "checking for hold" << std::endl;
+	int counter = 0;
+	while (input->isKeyDown(SPACE_KEY))
+	{
+		std::cout << "HOLDING" << std::endl;
+	}
+	
 }

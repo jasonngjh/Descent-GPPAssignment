@@ -173,16 +173,16 @@ const int BACKGROUND_END_FRAME = 3;
 
 // graphic images
 const char EXAMPLE_OBJECT_IMAGE[] = "images\\[PLACEHOLDER].jpg";
-const char GROUND_TILESET_IMAGE[] = "images\\ground_tile.png";
-const char CANNONBALL_IMAGE[] = "images\\cannonball.png";
-const char SPACESHIP_IMAGE[] = "images\\spaceship.png";
-const char MENU1_IMAGE[] = "images\\menu1.png";
-const char BOSS_SPACESHIP_IMAGE[] = "images\\boss_spaceship.png";
-const char TANK_IMAGE[] = "images\\tank.png";
-const char BKGRND_IMAGE[] = "images\\background.png";
-const char TURRET_IMAGE[] = "images\\turret.png";
-const char SMOKE_IMAGE[] = "images\\smoke.png";
-const char SHELL_IMAGE[] = "images\\shell.png";
+const char GROUND_TILESET_IMAGE[] = "resources\\images\\ground_tile.png";
+const char CANNONBALL_IMAGE[] = "resources\\images\\cannonball.png";
+const char SPACESHIP_IMAGE[] = "resources\\images\\spaceship.png";
+const char MENU1_IMAGE[] = "resources\\images\\menu1.png";
+const char BOSS_SPACESHIP_IMAGE[] = "resources\\images\\boss_spaceship.png";
+const char TANK_IMAGE[] = "resources\\images\\tank.png";
+const char BKGRND_IMAGE[] = "resources\\images\\background.png";
+const char TURRET_IMAGE[] = "resources\\images\\turret.png";
+const char SMOKE_IMAGE[] = "resources\\images\\smoke.png";
+const char SHELL_IMAGE[] = "resources\\images\\shell.png";
 
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used

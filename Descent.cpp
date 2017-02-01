@@ -63,7 +63,6 @@ Descent::~Descent()
 {
 	SAFE_DELETE(pauseText);
 	SAFE_DELETE(waveNumberText);
-	deleteAll();
     releaseAll();           // call onLostDevice() for every graphics item
 }
 
@@ -144,9 +143,6 @@ void Descent::initialize(HWND hwnd)
 	ground->setX(0);
 	ground->setScale(GAME_WIDTH / ground->getWidth());
 	ground->setY((int)GROUND_LEVEL_HEIGHT);		//sets ground to 3/4 of game width
-
-	cannonball->setScale(0.5);
-	cannonball->setVisible(false);
 
 	enemy_spaceship->setFrames(SpaceshipNS::START_FRAME, SpaceshipNS::END_FRAME);
 	enemy_spaceship->setCurrentFrame(SpaceshipNS::START_FRAME);
@@ -280,10 +276,7 @@ void Descent::update()
 
 	case GENERAL_STATE::game:{
 		background->update(frameTime);
-		cannonball->update(frameTime);
-		enemy_spaceship->update(frameTime);
 		tank->update(frameTime);
-		//smoke->update(frameTime);
 
 		if (currentActiveSpaceships > 0)
 		{
@@ -329,16 +322,10 @@ void Descent::update()
 		}
 		if (input->isKeyDown(SPACE_KEY))
 		{
-			cannonball->getTank(*tank);
-			cannonball->setVisible(true);
+			cannonball->getTank(tank);
+		}
 
-		}
-		
-		if (cannonball->getY() > GROUND)
-		{
-			//delete(cannonball);
-			cannonball->hit(land);
-		}
+		cannonball->update(frameTime);
 
 		 switch (waveState){
 			case WAVE_STATE::pauseWave:{
@@ -439,30 +426,19 @@ void Descent::collisions()
 
 	for (int i = 0; i < array_spaceships.size(); i++)
 	{
-		//Zombie zombie = zombieArray[i];
-		// if collision between bullet and zombies
 		if (cannonball->collidesWith(*array_spaceships[i], collisionVector))
 		{
-
-			if (!cannonball->getActive())
-			{
-				//do nothing
-			}
-			else
+			if (cannonball->getActive())
 			{
 				cannonball->hit(spaceShip);
 				//actual damage code
-
 				//calculate damage from cannonball
-				
 				int forcePower = 20;// cannonball.getDamageLeft();	//if unavailable, use 3
 
 
 				array_spaceships[i]->setHealth(array_spaceships[i]->getHealth() - forcePower);	//decreases health
 				std::cout << "Spaceship " << i << " took " << forcePower << " damage." << std::endl;
 				std::cout << array_spaceships[i]->getHealth() << " health left " << std::endl;
-
-				
 
 				std::cout << "Cannonball has " << cannonball->getDamageLeft() << " power left " << std::endl;
 
@@ -476,6 +452,7 @@ void Descent::collisions()
 					//simple destruction (not intended for actual game)
 					array_spaceships[i]->setVisible(false);
 					std::cout << "Spaceship " << i << " is kill" << std::endl;
+					delete array_spaceships[i];
 					array_spaceships.erase(array_spaceships.begin() + i);
 					currentActiveSpaceships--;
 				}
