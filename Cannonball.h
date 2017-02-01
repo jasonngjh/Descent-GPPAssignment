@@ -10,9 +10,7 @@
 
 namespace CannonballNS
 {
-
 	//PERMANENT VALUES, ANYTHING YOU DECLARE HERE IS NOT MEANT TO BE MANIPULATED DURING THE GAME
-
 	const int WIDTH = CANNONBALL_WIDTH;							//IMAGE WIDTH            
 	const int HEIGHT = CANNONBALL_HEIGHT;						// image height
 	const float ROTATION_RATE = (float)PI;				// spin at x radians per second
@@ -37,14 +35,18 @@ class Cannonball : public Entity
 private:
 	bool    shieldOn;
 	int		playerNumber;		//which player is holding the Cannonball 
-	int damageLeft;
-	int distance, time;
-	Player tank;
-	bool onGround;
-	
+	int		damageLeft;
+	int		distance, time;
+	Player	tank;
+	bool	onGround;
+	float	timeHold;
+
 public:
 	// constructor
 	Cannonball();
+
+	// destructor
+	virtual ~Cannonball();
 
 	// inherited member functions
 	virtual void draw();
@@ -52,7 +54,7 @@ public:
 		TextureManager *textureM);
 	void update(float frameTime);
 	void hit(hitWho);
-	int getDamageLeft();
+	int getDamageLeft(){ return damageLeft; }
 	void setCannonballIsHeld(int playerNo)
 	{
 

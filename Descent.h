@@ -3,28 +3,32 @@
 #define WIN32_LEAN_AND_MEAN
 
 //#include statements for related classes here
-#include <stdio.h>
+//#include <stdio.h>
 #include "game.h"
 #include "textureManager.h"
 #include "image.h"
-#include "object.h"
 #include "cannonball.h"
 #include "Player.h"
 #include "Spaceship.h"
 #include "Boss_Spaceship.h"
 #include "shell.h"
 
-#include <windows.h>
-#include <conio.h>
-#include <vector>
 #include "guicon.h"
-#include <iostream>
-
 #include "gameControl.h"
 #include "waveControl.h"
 #include "textDX.h"
-#include <thread>
 #include "animation.h"
+
+#include <windows.h>
+#include <conio.h>
+#include <vector>
+#include <iostream>
+#include <thread>
+#include <functional>
+#include <ctime>
+#include <future>
+
+
 //=============================================================================
 // This class is the core of the game
 //=============================================================================
@@ -36,42 +40,50 @@ private:
 	
 	TextureManager exampleTexture;
 	Image exampleImage;
-    Object exampleObject;
 	TextDX* pauseText;
 	TextDX* waveNumberText;
-	GameControl*	gameControl = new GameControl;
-	WaveControl*	waveControl = new WaveControl;
+	GameControl*	gameControl;
+	WaveControl*	waveControl;
 
-	TextureManager shellTexture;
-	TextureManager bossTexture;
-	TextureManager backgroundTexture;
-	TextureManager groundTexture;
-	TextureManager cannonballTexture;
-	TextureManager spaceshipTexture;
-	TextureManager menu1Texture;
-	TextureManager tankTexture;
-	TextureManager turretTexture;
-	TextureManager smokeTexture;
+	TextureManager* shellTexture;
+	TextureManager* bossTexture;
+	TextureManager* backgroundTexture;
+	TextureManager* groundTexture;
+	TextureManager* cannonballTexture;
+	TextureManager* spaceshipTexture;
+	TextureManager* menu1Texture;
+	TextureManager* tankTexture;
+	TextureManager* turretTexture;
+	TextureManager* smokeTexture;
 
-	Image background;
-	Image ground;
-	Image smoke;
-	Cannonball cannonball;
-	Spaceship enemy_spaceship;	//only one for now, testing only
-	Image menu1;
-	Boss_Spaceship boss;
+	Image* background;
+	Image* ground;
+	Image* menu1;
+	Image* turret;
+	Cannonball* cannonball;
+	Spaceship* enemy_spaceship;	//only one for now, testing only
+	Boss_Spaceship* boss;
 	int waveNumber=1;
-	Player tank;
-	Image turret;
-	Shell shell;
-	std::vector<Spaceship> spaceshipArray;
-	std::vector<Spaceship> array_spaceships;
+	Player* tank;
+	Shell* shell;
+	std::vector<Spaceship*> array_spaceships;
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
 	
 	int playerCount;//use this value to count 1 player or 2 player
+	int highestY;
+
+	//modifiers
+	int timeModifier = GAME_BASE_TIME_MODIFIER; //Default value is 1, value affects time - this value will multiply by 1 second to achieve new time
+	int speedModifier = GAME_BASE_SPEED_MODIFIER; //Default value is 1, value affects speed - this value will be multiplied by speed values to achieve new speed
+
+
+	double secondsPassed;
+
 
 public:
-	int currentActiveSpaceships=0; //amt of spaceships currently alive (should be less or equal to maxActiveSpaceships)
+	int currentActiveSpaceships; //amt of spaceships currently alive (should be dynamically less or equal to maxActiveSpaceships)
+	bool isAllSpaceshipMovingRight;	//keeps track of ship direction
+	bool isShipsReadyToShift;		//keeps track of ship movement, for use in downwards movement
 
     // Constructor
 	Descent();
@@ -90,6 +102,17 @@ public:
 
 	//other functions
 	void initializeTank();
+	void moveSpaceships(bool isMovingRight);
+	void timer_start();
+
+	double getSecondsPassed() { return secondsPassed; }
+	void setSecondsPassed(double seconds) { secondsPassed = seconds; }
+
+	int getTimeModifier() { return timeModifier; }
+	void setTimeModifier(int modifyingValue) { timeModifier = modifyingValue; }
+
+	int getSpeedModifier() { return speedModifier; }
+	void setSpeedModifier(int modifyingValue) { speedModifier = modifyingValue; }
 };
 
 #endif
