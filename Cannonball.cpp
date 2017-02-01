@@ -20,6 +20,16 @@ Cannonball::Cannonball() : Entity()
 	radius = CannonballNS::WIDTH / 2.0;
 	mass = CannonballNS::MASS;
 	collisionType = entityNS::CIRCLE;
+	onGround = true;
+	timeHold = 1.0;
+}
+
+//=============================================================================
+// destructor
+//=============================================================================
+Cannonball::~Cannonball()
+{
+
 }
 
 //=============================================================================
@@ -52,103 +62,105 @@ void Cannonball::update(float frameTime)
 	//if thrown
 	//spriteData.angle += frameTime * CannonballNS::ROTATION_RATE;
 	velocity.y += GRAVITY*frameTime;
-	//spriteData.y += frameTime*velocity.y;
-	//spriteData.x += frameTime*velocity.x;
 	spriteData.x += frameTime * velocity.x;
 	spriteData.y += frameTime * velocity.y;
-
+	
 	if (input->isKeyDown(SPACE_KEY))
 	{
-		switch (tank.getTankAngle())
+		if (onGround)
 		{
-		case 20: 
-			if (tank.getTankDirection()){ // if facing right of screen
-				spriteData.x = tank.getX() + 55.0f;
-				spriteData.y = tank.getY() - 15.0f;
-			}
-			else{ //else face left
-				spriteData.x = tank.getX() + 63.0f;
-				spriteData.y = tank.getY() - 15.0f;
-			}
-				velocity.y = -100.0;
-				velocity.x = 200.0f;
-			break;
-		case 40: 
-			if (tank.getTankDirection()){
-				spriteData.x = tank.getX() + 55.0f;
-				spriteData.y = tank.getY() - 23.0f;
-			}
-			else{
-				spriteData.x = tank.getX() + 63.0f;
-				spriteData.y = tank.getY() - 23.0f;
-			}
-				 velocity.y = -200.0;
-				 velocity.x = 200.0f;
-			break;
-		case 60: 
-			if (tank.getTankDirection()){
-				spriteData.x = tank.getX() + 45.0f;
-				spriteData.y = tank.getY() - 31.0f;
-			}
-			else{
-				spriteData.x = tank.getX() + 55.0f;
-				spriteData.y = tank.getY() - 31.0f;
-			}
-				 velocity.y = -300.0;
-				 velocity.x = 200.0f;
-			break;
+			onGround = false;
 
-		case 90: 
-			if (tank.getTankDirection()){
-				spriteData.x = tank.getX() + 27.0f;
-				spriteData.y = tank.getY() - 33.0f;
-			}
-			else{
-				spriteData.x = tank.getX() + 37.0f;
-				spriteData.y = tank.getY() - 33.0f;
-			}
+			switch (tank.getTankAngle())
+			{
+			case 20:
+				if (tank.getTankDirection()){ // if facing right of screen
+					spriteData.x = tank.getX() + 55.0f;
+					spriteData.y = tank.getY() - 15.0f;
+				}
+				else{ //else face left
+					spriteData.x = tank.getX() + 63.0f;
+					spriteData.y = tank.getY() - 15.0f;
+				}
+				velocity.y = -100.0;
+				velocity.x = 200.0;
+				break;
+			case 40:
+				if (tank.getTankDirection()){
+					spriteData.x = tank.getX() + 55.0f;
+					spriteData.y = tank.getY() - 23.0f;
+				}
+				else{
+					spriteData.x = tank.getX() + 63.0f;
+					spriteData.y = tank.getY() - 23.0f;
+				}
+				velocity.y = -200.0;
+				velocity.x = 200.0f;
+				break;
+			case 60:
+				if (tank.getTankDirection()){
+					spriteData.x = tank.getX() + 45.0f;
+					spriteData.y = tank.getY() - 31.0f;
+				}
+				else{
+					spriteData.x = tank.getX() + 55.0f;
+					spriteData.y = tank.getY() - 31.0f;
+				}
+				velocity.y = -300.0;
+				velocity.x = 200.0f;
+				break;
+
+			case 90:
+				if (tank.getTankDirection()){
+					spriteData.x = tank.getX() + 27.0f;
+					spriteData.y = tank.getY() - 33.0f;
+				}
+				else{
+					spriteData.x = tank.getX() + 37.0f;
+					spriteData.y = tank.getY() - 33.0f;
+				}
 				velocity.y = -400.0;
 				velocity.x = 0.0;
-			break;
+				break;
 
-		case 120: 
-			if (tank.getTankDirection()){
-				spriteData.x = tank.getX() + 12.0f;
-				spriteData.y = tank.getY() - 31.0f;
-			}
-			else{
-				spriteData.x = tank.getX() + 21.0f;
-				spriteData.y = tank.getY() - 31.0f;
-			}
+			case 120:
+				if (tank.getTankDirection()){
+					spriteData.x = tank.getX() + 12.0f;
+					spriteData.y = tank.getY() - 31.0f;
+				}
+				else{
+					spriteData.x = tank.getX() + 21.0f;
+					spriteData.y = tank.getY() - 31.0f;
+				}
 				velocity.y = -300.0;
 				velocity.x = -200.0f;
-			break;
-		case 140: 
-			if (tank.getTankDirection()){
-				spriteData.x = tank.getX() + 7.0f;
-				spriteData.y = tank.getY() - 23.0f;
-			}
-			else{
-				spriteData.x = tank.getX() + 17.0f;
-				spriteData.y = tank.getY() - 23.0f;
-			}
+				break;
+			case 140:
+				if (tank.getTankDirection()){
+					spriteData.x = tank.getX() + 7.0f;
+					spriteData.y = tank.getY() - 23.0f;
+				}
+				else{
+					spriteData.x = tank.getX() + 17.0f;
+					spriteData.y = tank.getY() - 23.0f;
+				}
 				velocity.y = -200.0;
 				velocity.x = -200.0f;
-			break;
-		case 160: 
-			if (tank.getTankDirection()){
-				spriteData.x = tank.getX() + 0.0f;
-				spriteData.y = tank.getY() - 15.0f;
-			}
-			else{
-				spriteData.x = tank.getX() + 14.0f;
-				spriteData.y = tank.getY() - 15.0f;
-			}
+				break;
+			case 160:
+				if (tank.getTankDirection()){
+					spriteData.x = tank.getX() + 0.0f;
+					spriteData.y = tank.getY() - 15.0f;
+				}
+				else{
+					spriteData.x = tank.getX() + 14.0f;
+					spriteData.y = tank.getY() - 15.0f;
+				}
 				velocity.y = -100.0;
 				velocity.x = -200.0;
-			break;
-		}
-			
+				break;
+			}
+		}	
 	}
 
 	if (spriteData.x > GAME_WIDTH - CannonballNS::WIDTH*getScale())
@@ -177,12 +189,12 @@ void Cannonball::update(float frameTime)
 
 	
 }
-int Cannonball::getDamageLeft(){ return damageLeft; }
 void Cannonball::hit(hitWho target)
 {
 	if (target == land)
 	{
-		spriteData.y = GAME_HEIGHT - 80;//change value to where ur land is changes
+		onGround = true;
+		spriteData.y = GROUND;//change value to where ur land is changes
 		velocity.y = 0.0;
 		velocity.x = 0.0;
 

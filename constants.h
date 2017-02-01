@@ -129,6 +129,7 @@ const int POWERUP_FORCE_MULTIPLIER = 2;
 
 const int GROUND_LEVEL_HEIGHT = GAME_HEIGHT - GAME_HEIGHT / 10;			//no objects may go beyond this line, essentially means 'ground level'
 const int SKY_LEVEL_DIVIDER = 78;
+const int GROUND = 560;
 
 //main menu frames
 

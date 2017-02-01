@@ -28,7 +28,7 @@ Shell::Shell() : Entity()
 bool Shell::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM)
 {
-	spriteData.angle = PI / 2;
+	spriteData.angle = (float)PI / 2;
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
 }
 
