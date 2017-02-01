@@ -42,33 +42,31 @@ private:
 	Image exampleImage;
 	TextDX* pauseText;
 	TextDX* waveNumberText;
-	GameControl*	gameControl = new GameControl;
-	WaveControl*	waveControl = new WaveControl;
+	GameControl*	gameControl;
+	WaveControl*	waveControl;
 
-	TextureManager shellTexture;
-	TextureManager bossTexture;
-	TextureManager backgroundTexture;
-	TextureManager groundTexture;
-	TextureManager cannonballTexture;
-	TextureManager spaceshipTexture;
-	TextureManager menu1Texture;
-	TextureManager tankTexture;
-	TextureManager turretTexture;
-	TextureManager smokeTexture;
+	TextureManager* shellTexture;
+	TextureManager* bossTexture;
+	TextureManager* backgroundTexture;
+	TextureManager* groundTexture;
+	TextureManager* cannonballTexture;
+	TextureManager* spaceshipTexture;
+	TextureManager* menu1Texture;
+	TextureManager* tankTexture;
+	TextureManager* turretTexture;
+	TextureManager* smokeTexture;
 
-	Image background;
-	Image ground;
-	Image smoke;
-	Cannonball cannonball;
-	Spaceship enemy_spaceship;	//only one for now, testing only
-	Image menu1;
-	//Boss_Spaceship boss;
-	Boss_Spaceship boss;
+	Image* background;
+	Image* ground;
+	Image* menu1;
+	Image* turret;
+	Cannonball* cannonball;
+	Spaceship* enemy_spaceship;	//only one for now, testing only
+	Boss_Spaceship* boss;
 	int waveNumber=1;
-	Player tank;
-	Image turret;
-	Shell shell;
-	std::vector<Spaceship> array_spaceships;
+	Player* tank;
+	Shell* shell;
+	std::vector<Spaceship*> array_spaceships;
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
 	
 	int playerCount;//use this value to count 1 player or 2 player
