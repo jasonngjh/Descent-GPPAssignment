@@ -663,13 +663,13 @@ void Descent::moveSpaceships(bool isMovingRight)
 		for (int i = 0; i < currentActiveSpaceships; i++)
 		{
 
-			std::cout << "ship " << i + 1 << " x/y: " << array_spaceships[i]->getX() << "/" << array_spaceships[i]->getY() << std::endl;
+			//std::cout << "ship " << i + 1 << " x/y: " << array_spaceships[i]->getX() << "/" << array_spaceships[i]->getY() << std::endl;
 			//shifts everything downwards and changes direction
 			array_spaceships[i]->setY(array_spaceships[i]->getY() + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_HEIGHT);
 			array_spaceships[i]->setIsMovingRight(isAllSpaceshipMovingRight);
 
-			std::cout << "ship " << i + 1 << " shifts down " << std::endl;
-			std::cout << "ship " << i + 1 << " x/y: " << array_spaceships[i]->getX() << "/" << array_spaceships[i]->getY() << std::endl;
+			//std::cout << "ship " << i + 1 << " shifts down " << std::endl;
+			//std::cout << "ship " << i + 1 << " x/y: " << array_spaceships[i]->getX() << "/" << array_spaceships[i]->getY() << std::endl;
 
 		}
 
@@ -816,10 +816,7 @@ void Descent::timer_start()
 
 			if ((fmod(getSecondsPassed(), SECOND*timeModifier)) == 0)
 			{	
-
-
 				currentInGameTime++;
-				
 				//std::cout << "in game seconds passed: = " << currentInGameTime << std::endl;
 				//std::cout << currentInGameTime << " seconds has passed in-game. " << getSecondsPassed() << " second(s) has passed (in program)." << std::endl;
 

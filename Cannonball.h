@@ -10,6 +10,7 @@
 #include <iostream>
 #include <future>
 #include <math.h>
+#include <ctime>
 
 namespace CannonballNS
 {
@@ -44,6 +45,8 @@ private:
 	bool	onGround;
 	float	timeHold;
 	float	speed;
+	bool	boolKeyHold = true;
+	bool	isCharging = false;
 
 public:
 	// constructor
@@ -69,7 +72,7 @@ public:
 		
 	}
 	void getTank(Player* tank);
-	void playerCannonball();
+	void playerCannonball(double initialVelocity);
 	void checkForHold();
 
 };
