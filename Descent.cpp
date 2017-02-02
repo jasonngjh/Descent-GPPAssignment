@@ -42,6 +42,7 @@ Descent::Descent()
 	turretTexture = new TextureManager();
 	smokeTexture = new TextureManager();
 	powerup_downSpeed_texture = new TextureManager();
+	powerup_restoreHealth_texture = new TextureManager();
 
 	//images
 	background = new Image();
@@ -77,6 +78,8 @@ void Descent::initialize(HWND hwnd)
     Game::initialize(hwnd); // throws GameError
 
 	std::cout << "initialising game" << std::endl;
+
+	srand(time(NULL));		//seeds the RNG
 	
 #pragma region Initialize Assets
 
@@ -141,8 +144,9 @@ void Descent::initialize(HWND hwnd)
 
 	if (!powerup_downSpeed_texture->initialize(graphics, POWERUP_DOWN_SPEED_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (down speed) texture"));
-	//if (!powerup_downSpeed->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_downSpeed_texture))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (down speed) object"));
+
+	if (!powerup_restoreHealth_texture->initialize(graphics, POWERUP_RESTORE_HEALTH_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (restore health) texture"));
 
 	background->setFrames(BACKGROUND_START_FRAME,BACKGROUND_END_FRAME);
 	background->setCurrentFrame(BACKGROUND_START_FRAME);
@@ -172,7 +176,14 @@ void Descent::initialize(HWND hwnd)
 	if (!powerup_downSpeed->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_downSpeed_texture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (down speed) object"));
 
+	powerup_restoreHealth = new Powerup();
+
+	if (!powerup_restoreHealth->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_restoreHealth_texture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (restore health) object"));
+
 	array_powerups_drawingSpace.push_back(powerup_downSpeed);
+	array_powerups_drawingSpace.push_back(powerup_restoreHealth);
+
 	totalAmtOfPowerupVariety = array_powerups_drawingSpace.size();
 	std::cout << "total amount of loaded powerups: " << totalAmtOfPowerupVariety << std::endl;
 
@@ -703,7 +714,7 @@ void Descent::moveSpaceships()
 		{
 			for (int i = 0; i < currentActiveSpaceships; i++)
 			{
-				array_spaceships[i]->setX(array_spaceships[i]->getX() + SPACESHIP_WIDTH); //ships moves its width horizontally to the right
+				array_spaceships[i]->setX(array_spaceships[i]->getX() + SPACESHIP_MOVEMENT_DISTANCE); //ships moves its width horizontally to the right
 				Sleep(5);			//without this line spaceships will move unhindered, not sure why
 			}
 		}
@@ -712,7 +723,7 @@ void Descent::moveSpaceships()
 		{
 			for (int i = 0; i < currentActiveSpaceships; i++)
 			{
-				array_spaceships[i]->setX(array_spaceships[i]->getX() - SPACESHIP_WIDTH); //ships moves its width horizontally to the left
+				array_spaceships[i]->setX(array_spaceships[i]->getX() - SPACESHIP_MOVEMENT_DISTANCE); //ships moves its width horizontally to the left
 				Sleep(5);			//without this line spaceships will move unhindered, not sure why
 			}
 			
@@ -728,6 +739,19 @@ void Descent::moveSpaceships()
 //=============================================================================
 void Descent::spawnPowerup()
 {
+	//get random seed based on amount of possible powerups
+
+	
+	int randomPowerupIndex;
+
+	randomPowerupIndex = (rand() % totalAmtOfPowerupVariety);
+
+	Powerup* powerup = array_powerups_drawingSpace[randomPowerupIndex];
+	//take powerup from drawing space and add to actual powerup array
+	array_powerups.push_back(powerup);
+	currentActivePowerups++;
+
+	std::cout << "powerup index : " << randomPowerupIndex << " spawned" << std::endl;
 
 }
 
@@ -764,15 +788,11 @@ void Descent::timer_start()
 
 			if ((fmod(getSecondsPassed(), POWERUP_SPAWN_FREQUENCY)) == 0)
 			{
-
-				//spawnPowerup();
 				std::cout << "spawning a powerup" << std::endl;
-
+				spawnPowerup();
 			}
 
-
 		}
-
 
 	}
 }

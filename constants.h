@@ -90,6 +90,7 @@ const float SPACESHIP_MASS = 50.0f;				//number subject to change - idk what to 
 const float SPACESHIP_SPEED = 50.0f;				
 const float SPACESHIP_ANIMATION_DELAY = 0.1f;		//passively animates
 const int SPACESHIP_STARTING_HEALTH = 5;
+const int SPACESHIP_MOVEMENT_DISTANCE = 29;
 const double SPACESHIP_CRITICAL_HEALTH_FACTOR = 0.25;
 const int HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 80;	//this affects how much ships can be created in a row, if values are too high will lead to weird spaceship orientation
 const int VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 20;	
@@ -117,7 +118,7 @@ const int POWERUP_START_FRAME = 0;
 const int POWERUP_END_FRAME = 1;
 const float POWERUP_ANIMATION_DELAY = 0.1f;		//passively animates
 const int POWERUP_SPAWN_CHANCE = 25;			//in percentage, spawn chance when a spaceship is destroyed
-const int POWERUP_SPAWN_FREQUENCY = 5;			//in seconds, value depicts if powerup spawns every X seconds
+const int POWERUP_SPAWN_FREQUENCY = 1;			//in seconds, value depicts if powerup spawns every X seconds
 
 //individual powerup effect values
 const double POWERUP_TIME_SLOW_MULTIPLER = 2; //the bigger the number the slower it gets
@@ -189,6 +190,7 @@ const char TURRET_IMAGE[] = "images\\turret.png";
 const char SMOKE_IMAGE[] = "images\\smoke.png";
 const char SHELL_IMAGE[] = "images\\shell.png";
 const char POWERUP_DOWN_SPEED_IMAGE[] = "images\\powerup_downspeed.png";
+const char POWERUP_RESTORE_HEALTH_IMAGE[] = "images\\powerup_restoreHealth.png";
 
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used

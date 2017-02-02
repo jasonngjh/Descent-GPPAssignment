@@ -57,6 +57,7 @@ private:
 	TextureManager* turretTexture;
 	TextureManager* smokeTexture;
 	TextureManager* powerup_downSpeed_texture;
+	TextureManager* powerup_restoreHealth_texture;
 
 	Image* background;
 	Image* ground;
@@ -69,6 +70,7 @@ private:
 	Player* tank;
 	Shell* shell;
 	Powerup* powerup_downSpeed;
+	Powerup* powerup_restoreHealth;
 	std::vector<Spaceship*> array_spaceships;
 	std::vector<Powerup*> array_powerups_drawingSpace;	//the vector where all different types of powerups are initialized
 	std::vector<Powerup*> array_powerups;
