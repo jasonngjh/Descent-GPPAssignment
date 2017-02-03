@@ -319,6 +319,14 @@ void Descent::update()
 			}
 		}
 
+		if (currentActivePowerups > 0)
+		{
+			for (int i = 0; i < currentActivePowerups; i++)
+			{
+				array_powerups[i]->update(frameTime);
+			}
+		}
+
 	// checkpoints: player health = 0 -> change to end game screen
 	// if boss die -> change to end game screen
 	// if esc(quit pressed) -> change to end game screen
@@ -543,6 +551,11 @@ void Descent::render()
 								 {
 									 array_spaceships[i]->draw();
 								 }
+
+								 for (int i = 0; i < currentActivePowerups; i++)
+								 {
+									 array_powerups[i]->draw();
+								 }
 								 
 								 switch (waveControl->getWaveState())
 								 {
@@ -592,6 +605,8 @@ void Descent::releaseAll()
 	tankTexture->onLostDevice();
 	turretTexture->onLostDevice();
 	smokeTexture->onLostDevice();
+	powerup_downSpeed_texture->onLostDevice();
+	powerup_restoreHealth_texture->onLostDevice();
     Game::releaseAll();
     return;
 }
@@ -610,6 +625,8 @@ void Descent::resetAll()
 	tankTexture->onResetDevice();
 	turretTexture->onResetDevice();
 	smokeTexture->onResetDevice();
+	powerup_downSpeed_texture->onResetDevice();
+	powerup_restoreHealth_texture->onResetDevice();
     Game::resetAll();
     return;
 }
@@ -746,8 +763,11 @@ void Descent::spawnPowerup()
 
 	randomPowerupIndex = (rand() % totalAmtOfPowerupVariety);
 
-	Powerup* powerup = array_powerups_drawingSpace[randomPowerupIndex];
+	Powerup* powerup = new Powerup();
+	powerup = array_powerups_drawingSpace[randomPowerupIndex];
 	//take powerup from drawing space and add to actual powerup array
+	powerup->setX(400);
+	powerup->setY(400);
 	array_powerups.push_back(powerup);
 	currentActivePowerups++;
 

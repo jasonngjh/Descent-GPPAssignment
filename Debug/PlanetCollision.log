@@ -1,14 +1,7 @@
-﻿Build started 02/02/2017 03:14:50.
+﻿Build started 03/02/2017 02:37:45.
      1>Project "D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\PlanetCollision.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\NPStudent\Source\Repos\gppassignment22 /I"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Descent.cpp gameControl.cpp waveControl.cpp
-         Descent.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(82): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(155): warning C4244: 'argument' : conversion from 'const UINT' to 'float', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(239): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(240): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(464): warning C4018: '<' : signed/unsigned mismatch
-         Generating Code...
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\NPStudent\Source\Repos\gppassignment22 /I"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt gameControl.cpp waveControl.cpp
          Skipping... (no relevant changes detected)
          waveControl.cpp
          gameControl.cpp
@@ -36,4 +29,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.88
+Time Elapsed 00:00:00.24
