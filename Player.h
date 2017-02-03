@@ -5,6 +5,7 @@
 #include "entity.h"
 #include "constants.h"
 #include "HealthComponent.h"
+#include "Audio.h"
 
 namespace PlayerNS
 {
@@ -34,7 +35,6 @@ private:
 	
 	float baseStrength;
 	bool	isHoldingCannonball = false;
-
 	bool	isAlive = true;
 	float maxHealth;
 	int health;
@@ -42,6 +42,7 @@ private:
 	int tankAngle;
 	bool tankDirection;
 	//HealthComponent* health;
+	Audio	audio;
 
 public:
 	// constructor

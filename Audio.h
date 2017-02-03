@@ -4,27 +4,29 @@
 
 #include <SFML/Audio.hpp>
 #include "constants.h"
+#include <iostream>
 
-sf::SoundBuffer bgmBuffer;
-sf::Sound bgm;
 
-void playBGM()
+class Audio
 {
-	if (!bgmBuffer.loadFromFile("resources/music/backgroundmusic.wav"))
-		return;
-	bgm.setBuffer(bgmBuffer);
-	bgm.setLoop(true);
-	bgm.play();
-}
+private:
+	sf::SoundBuffer* bgmBuffer;
+	sf::Sound bgm;
+	sf::SoundBuffer* tankBuffer;
+	sf::SoundBuffer spaceshipBuffer;
+	sf::Sound spaceship;
 
-void stopBGM()
-{
-	bgm.pause();
-}
+public:
+	//constructor
+	Audio();
 
-void playSound()
-{
-	
-}
+	//destructor
+	~Audio();
+
+	//additional methods here
+	void playBGM();
+	void stopBGM();
+	void playTankSounds(std::string);
+};
 
 #endif

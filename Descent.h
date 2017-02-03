@@ -27,7 +27,7 @@
 #include <functional>
 #include <ctime>
 #include <future>
-
+#include "Audio.h"
 
 //=============================================================================
 // This class is the core of the game
@@ -77,6 +77,8 @@ private:
 	int speedModifier = GAME_BASE_SPEED_MODIFIER; //Default value is 1, value affects speed - this value will be multiplied by speed values to achieve new speed
 
 	double secondsPassed;
+
+	Audio* audio;
 
 public:
 	int currentActiveSpaceships; //amt of spaceships currently alive (should be dynamically less or equal to maxActiveSpaceships)

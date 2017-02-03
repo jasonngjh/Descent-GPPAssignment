@@ -182,7 +182,6 @@ void Cannonball::playerCannonball(double time)
 		}
 		velocity.x = initialVelocity * (float)cos(0.349066);
 		velocity.y = initialVelocity * (float)sin(0.349066) * GRAVITY;
-		Entity::setVelocity
 		std::cout << velocity.x << std::endl;
 		std::cout << velocity.y << std::endl;
 		break;

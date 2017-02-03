@@ -91,6 +91,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Boss_Spaceship.cpp" />
     <ClCompile Include="Cannonball.cpp" />
     <ClCompile Include="entity.cpp" />

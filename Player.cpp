@@ -71,6 +71,7 @@ void Player::update(float frameTime)
 
 	if (input->isKeyDown(LEFT_KEY))
 	{
+		//audio.playTankSounds("resources/music/tankMoving.wav");
 		spriteData.flipHorizontal = false;
 		tankDirection = false;
 		spriteData.x -= frameTime * speed;

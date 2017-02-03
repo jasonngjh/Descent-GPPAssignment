@@ -54,6 +54,9 @@ Descent::Descent()
 	boss = new Boss_Spaceship();
 	tank = new Player();
 	shell = new Shell();
+
+	//audio
+	audio = new Audio();
 }
 
 //=============================================================================
@@ -139,6 +142,8 @@ void Descent::initialize(HWND hwnd)
 
 	background->setFrames(BACKGROUND_START_FRAME,BACKGROUND_END_FRAME);
 	background->setCurrentFrame(BACKGROUND_START_FRAME);
+
+	audio->playBGM();
 
 	ground->setX(0);
 	ground->setScale(GAME_WIDTH / ground->getWidth());
