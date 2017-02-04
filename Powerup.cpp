@@ -79,7 +79,7 @@ void Powerup::powerup_timer_start()
 	//create timer
 	clock_t timer1 = clock();//start timer
 
-	std::cout << "beginning countdown" << std::endl;
+	//std::cout << "beginning countdown" << std::endl;
 
 	bool loop = true;
 	while (loop)
@@ -89,7 +89,7 @@ void Powerup::powerup_timer_start()
 
 		if ((fmod(getSecondsPassed(), SECOND) == 0))
 		{
-			std::cout << "current powerup time is " << getSecondsPassed() << std::endl;
+			//std::cout << "current powerup time is " << getSecondsPassed() << std::endl;
 		}
 			
 
@@ -102,7 +102,7 @@ void Powerup::powerup_timer_start()
 		else if ((fmod(getSecondsPassed(), POWERUP_OBJECT_DURATION) == 0))
 		{
 			active = false;	//this triggers the kill command in Descent.cpp
-			std::cout << "powerup is kill" << std::endl;
+			//std::cout << "powerup is kill" << std::endl;
 			loop = false;
 		}
 

@@ -20,7 +20,7 @@ Player::Player() : Entity()
 	radius = PlayerNS::WIDTH / 2.0;
 	mass = PlayerNS::MASS;
 	collisionType = entityNS::CIRCLE;
-	speed = 100.0f;
+	speed = PLAYER_BASE_SPEED;
 	tankAngle = 90;
 	tankDirection = false;
 }

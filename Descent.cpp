@@ -308,6 +308,7 @@ void Descent::initialize(HWND hwnd)
 	//t.join();
 	
 	std::async(&Descent::timer_start, this); //run timer thread while main loop is contiuing
+
     return;
 }
 
@@ -728,16 +729,37 @@ void Descent::applyPowerupEffect(int powerupCode)
 	case POWERUP_TIME_SLOW_CODE:
 	{
 							//apply effect for time slow 
-
+							mciSendString("play resources\\music\\powerup_timeSlow_soundeffect.wav", NULL, 0, NULL);
+							std::async(&Descent::applyPowerupEffect_timeSlow, this);
+							//add to score
 	}
 
 	case POWERUP_RESTORE_HEALTH_CODE:
 	{
+							mciSendString("play resources\\music\\powerup_restoreHealth_soundeffect.wav", NULL, 0, NULL);
+							//for one player only
+
+							if (tank->getHealth() < PLAYER_MAX_HEALTH)
+							{
+								tank->setHealth(tank->getHealth() + POWERUP_RESTORE_HEALTH_VALUE);
+								
+								if (tank->getHealth() > PLAYER_MAX_HEALTH)
+									tank->setHealth(PLAYER_MAX_HEALTH);
+							}
+							
+							
+							//for multiple players
+								//duplicate code for 2nd player (assuming both players are alive)
+
+							//add to score
 
 	}
 
 	case POWERUP_INCREASE_TANK_SPEED_CODE:
 	{
+							mciSendString("play resources\\music\\powerup_increaseTankSpeed_soundeffect.wav", NULL, 0, NULL);
+							
+							std::async(&Descent::applyPowerupEffect_increaseTankSpeed, this);
 
 	}
 
@@ -763,9 +785,82 @@ void Descent::applyPowerupEffect(int powerupCode)
 
 void Descent::applyPowerupEffect_timeSlow()
 {
-	//keep track of currentTime at start of thread, save as startingTime
-	//continously track every second 
-	//when current time is startingTime + duration, end method
+
+	timeModifier = POWERUP_TIME_SLOW_MULTIPLER;
+
+	std::cout << "Time modified to " << timeModifier << " times slower " << std::endl;
+
+	clock_t timer = clock();//start timer
+
+	bool loop = true;
+	while (loop)
+	{
+
+		if (gameControl->getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
+		{
+			setSecondsPassed((clock() - timer) / (double)CLOCKS_PER_SEC);  //convert computer timer to real life seconds
+
+			if ((fmod(getSecondsPassed(), SECOND) == 0))
+			{
+				std::cout << "time counting down - " << getSecondsPassed() << std::endl;
+			}
+
+			
+
+			if ((fmod(getSecondsPassed(), POWERUP_TIME_SLOW_DURATION)) == 0)
+			{
+
+				timeModifier = GAME_BASE_TIME_MODIFIER;	//reset back to normal
+				std::cout << "time set back to - " << timeModifier << std::endl;
+				loop = false;	//breaks the loop, stops thread
+
+			}
+
+		}
+
+	}
+
+}
+
+void Descent::applyPowerupEffect_increaseTankSpeed()
+{
+
+	std::cout << "Speed increased from " << tank->getSpeed();
+
+	tank->setSpeed(tank->getSpeed()*POWERUP_INCREASE_TANK_SPEED_FACTOR);
+
+	std::cout << " to " << tank->getSpeed() << std::endl;
+
+	clock_t timer2 = clock();//start timer
+
+	bool loop = true;
+	while (loop)
+	{
+
+		if (gameControl->getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
+		{
+			setSecondsPassed((clock() - timer2) / (double)CLOCKS_PER_SEC);  //convert computer timer to real life seconds
+
+			if ((fmod(getSecondsPassed(), SECOND) == 0))
+			{
+				std::cout << "Speed Increase for tank, time counting down - " << getSecondsPassed() << std::endl;
+			}
+
+
+
+			if ((fmod(getSecondsPassed(), POWERUP_INCREASE_TANK_SPEED_DURATION)) == 0)
+			{
+
+				tank->setSpeed(PLAYER_BASE_SPEED);	//reset speed back to base value
+				std::cout << "speed set back to - " << tank->getSpeed() << std::endl;
+				loop = false;	//breaks the loop, stops thread
+
+			}
+
+		}
+
+	}
+
 }
 
 #pragma endregion
@@ -892,8 +987,8 @@ void Descent::spawnPowerup()
 	currentActivePowerups++;
 	array_powerups[currentActivePowerups - 1]->beginExpireCountdown();
 
-	std::cout << "powerup index : " << randomPowerupIndex << " spawned" << std::endl;
-	std::cout << "current amount of powerups: " << currentActivePowerups << std::endl;
+	//std::cout << "powerup index : " << randomPowerupIndex << " spawned" << std::endl;
+	//std::cout << "current amount of powerups: " << currentActivePowerups << std::endl;
 
 }
 
@@ -907,6 +1002,8 @@ void Descent::timer_start()
 {
 	//create timer
 	clock_t timer = clock();//start timer
+
+	setSecondsPassed(getSecondsPassed() + 1);
 
 	bool loop = true;
 	while (loop)
@@ -928,8 +1025,9 @@ void Descent::timer_start()
 
 			if ((fmod(getSecondsPassed(), POWERUP_SPAWN_FREQUENCY)) == 0 && currentActivePowerups < MAX_NO_OF_POWERUPS)
 			{	//check if every X seconds has passed and there is enough powerups in the game 
-				std::cout << "spawning a powerup" << std::endl;
 				spawnPowerup();
+				applyPowerupEffect(3);
+				//applyPowerupEffect(1);
 			}
 
 		}

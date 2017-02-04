@@ -56,6 +56,7 @@ const int PLAYER_END_FRAME = 3;
 const float PLAYER_MASS = 50.0f;				//number subject to change - idk what to put here
 const float PLAYER_ANIMATION_DELAY = 0.2f;		//note: make player animate only when moving and throwing
 const float PLAYER_BASE_STRENGTH = 25.0f;		//base strength, related to player throwing
+const float PLAYER_BASE_SPEED = 100.0f;
 const float PLAYER_MAX_HEALTH = 100;			//for dynamic health values, should represent health as a number
 
 //cannonball variables
@@ -121,7 +122,7 @@ const float POWERUP_ANIMATION_DELAY = 0.25f;
 const float POWERUP_ROTATION_RATE = (float)PI;
 const int POWERUP_MOVEMENT_SPEED = 100;
 const int POWERUP_SPAWN_CHANCE = 25;			//in percentage, spawn chance when a spaceship is destroyed
-const int POWERUP_SPAWN_FREQUENCY = 1;			//in seconds, value depicts if powerup spawns every X seconds
+const int POWERUP_SPAWN_FREQUENCY = 10;			//in seconds, value depicts if powerup spawns every X seconds
 const int POWERUP_SPAWN_HEIGHT = GAME_WIDTH / 2;
 const int MAX_NO_OF_POWERUPS = 6;
 const int POWERUP_OBJECT_DURATION = 5;		//how long the powerup stays as an ingame object before expiring
@@ -136,8 +137,8 @@ const int POWERUP_TIME_SLOW_CODE = 1;
 const int POWERUP_RESTORE_HEALTH_VALUE = 5;
 const int POWERUP_RESTORE_HEALTH_CODE = 2;
 
-const double POWERUP_INCREASE_TANK_SPEED_FACTOR = 0.5; //the lower the number the faster it gets (past 0.5 it gets weird)
-const int POWERUP_INCREASE_TANK_SPEED_DURATION = 15;
+const double POWERUP_INCREASE_TANK_SPEED_FACTOR = 2; //the higher the number the faster (too high = too fast)
+const int POWERUP_INCREASE_TANK_SPEED_DURATION = 9;
 const int POWERUP_INCREASE_TANK_SPEED_CODE = 3;
 
 const int POWERUP_TIME_LOCK_DURATION = 10; //in seconds
