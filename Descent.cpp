@@ -41,8 +41,13 @@ Descent::Descent()
 	tankTexture = new TextureManager();
 	turretTexture = new TextureManager();
 	smokeTexture = new TextureManager();
-	powerup_downSpeed_texture = new TextureManager();
+
+	powerup_timeSlow_texture = new TextureManager();
 	powerup_restoreHealth_texture = new TextureManager();
+	powerup_increaseTankSpeed_texture = new TextureManager();
+	powerup_timeLock_texture = new TextureManager();
+	powerup_maxPower_texture = new TextureManager();
+	powerup_passerbyTank_texture = new TextureManager();
 
 	//images
 	background = new Image();
@@ -142,11 +147,23 @@ void Descent::initialize(HWND hwnd)
 	if (!shell->initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, shellTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
 
-	if (!powerup_downSpeed_texture->initialize(graphics, POWERUP_DOWN_SPEED_IMAGE))
+	if (!powerup_timeSlow_texture->initialize(graphics, POWERUP_TIME_SLOW_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (down speed) texture"));
 
 	if (!powerup_restoreHealth_texture->initialize(graphics, POWERUP_RESTORE_HEALTH_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (restore health) texture"));
+
+	if (!powerup_increaseTankSpeed_texture->initialize(graphics, POWERUP_INCREASE_TANK_SPEED_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (increase tank speed) texture"));
+
+	if (!powerup_timeLock_texture->initialize(graphics, POWERUP_TIME_LOCK_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (time lock) texture"));
+
+	if (!powerup_maxPower_texture->initialize(graphics, POWERUP_MAX_POWER_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (max power) texture"));
+
+	if (!powerup_passerbyTank_texture->initialize(graphics, POWERUP_PASSERBY_TANK_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (passerby tank) texture"));
 
 	background->setFrames(BACKGROUND_START_FRAME,BACKGROUND_END_FRAME);
 	background->setCurrentFrame(BACKGROUND_START_FRAME);
@@ -169,24 +186,6 @@ void Descent::initialize(HWND hwnd)
 	isAllSpaceshipMovingRight = true;
 	isShipsReadyToShift = false;
 
-	//loading powerup arrays
-
-	powerup_downSpeed = new Powerup();
-
-	if (!powerup_downSpeed->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_downSpeed_texture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (down speed) object"));
-
-	powerup_restoreHealth = new Powerup();
-
-	if (!powerup_restoreHealth->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_restoreHealth_texture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (restore health) object"));
-
-	array_powerups_drawingSpace.push_back(powerup_downSpeed);
-	array_powerups_drawingSpace.push_back(powerup_restoreHealth);
-
-	totalAmtOfPowerupVariety = array_powerups_drawingSpace.size();
-	std::cout << "total amount of loaded powerups: " << totalAmtOfPowerupVariety << std::endl;
-
 	//setting boss variables
 
 	boss->setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
@@ -195,6 +194,48 @@ void Descent::initialize(HWND hwnd)
 	shell->setX(boss->getX()+BOSS_SPACESHIP_WIDTH/2);
 	shell->setY(boss->getY()+BOSS_SPACESHIP_HEIGHT/2);
 	
+#pragma endregion
+
+#pragma region Initialize Powerups Drawing Space
+	//loading powerups
+
+	powerup_timeSlow = new Powerup();
+	powerup_restoreHealth = new Powerup();
+	powerup_increaseTankSpeed = new Powerup();
+	powerup_timeLock = new Powerup();
+	powerup_maxPower = new Powerup();
+	powerup_passerbyTank = new Powerup();
+
+	if (!powerup_timeSlow->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_timeSlow_texture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (down speed) object"));
+
+	if (!powerup_restoreHealth->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_restoreHealth_texture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (restore health) object"));
+
+	if (!powerup_increaseTankSpeed->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_increaseTankSpeed_texture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (increase tank speed) object"));
+
+	if (!powerup_timeLock->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_timeLock_texture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (time lock) object"));
+
+	if (!powerup_maxPower->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_maxPower_texture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (max power) object"));
+
+	if (!powerup_passerbyTank->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_passerbyTank_texture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (passerby tank) object"));
+
+	array_powerups_drawingSpace.push_back(powerup_timeSlow);
+	array_powerups_drawingSpace.push_back(powerup_restoreHealth);
+	array_powerups_drawingSpace.push_back(powerup_increaseTankSpeed);
+	array_powerups_drawingSpace.push_back(powerup_timeLock);
+	array_powerups_drawingSpace.push_back(powerup_maxPower);
+	array_powerups_drawingSpace.push_back(powerup_passerbyTank);
+
+	totalAmtOfPowerupVariety = array_powerups_drawingSpace.size();
+	std::cout << "total amount of loaded powerups: " << totalAmtOfPowerupVariety << std::endl;
+
+	currentActivePowerups = 0;
+
 #pragma endregion
 
 	initializeTank();
@@ -267,7 +308,6 @@ void Descent::initialize(HWND hwnd)
 	//t.join();
 	
 	std::async(&Descent::timer_start, this); //run timer thread while main loop is contiuing
-
     return;
 }
 
@@ -323,7 +363,21 @@ void Descent::update()
 		{
 			for (int i = 0; i < currentActivePowerups; i++)
 			{
-				array_powerups[i]->update(frameTime);
+				
+				if (!array_powerups[i]->getActive())
+				{
+					array_powerups[i]->setVisible(false);
+					std::cout << "Powerup " << i+1 << " expired" << std::endl;
+					delete array_powerups[i];
+					array_powerups.erase(array_powerups.begin() + i);
+					currentActivePowerups--;
+				}
+
+				else
+				{
+					array_powerups[i]->update(frameTime);
+				}
+
 			}
 		}
 
@@ -605,8 +659,13 @@ void Descent::releaseAll()
 	tankTexture->onLostDevice();
 	turretTexture->onLostDevice();
 	smokeTexture->onLostDevice();
-	powerup_downSpeed_texture->onLostDevice();
+	powerup_timeSlow_texture->onLostDevice();
 	powerup_restoreHealth_texture->onLostDevice();
+	powerup_increaseTankSpeed_texture->onLostDevice();
+	powerup_timeLock_texture->onLostDevice();
+	powerup_maxPower_texture->onLostDevice();
+	powerup_passerbyTank_texture->onLostDevice();
+
     Game::releaseAll();
     return;
 }
@@ -625,8 +684,13 @@ void Descent::resetAll()
 	tankTexture->onResetDevice();
 	turretTexture->onResetDevice();
 	smokeTexture->onResetDevice();
-	powerup_downSpeed_texture->onResetDevice();
+	powerup_timeSlow_texture->onResetDevice();
 	powerup_restoreHealth_texture->onResetDevice();
+	powerup_increaseTankSpeed_texture->onResetDevice();
+	powerup_timeLock_texture->onResetDevice();
+	powerup_maxPower_texture->onResetDevice();
+	powerup_passerbyTank_texture->onResetDevice();
+
     Game::resetAll();
     return;
 }
@@ -649,6 +713,62 @@ void Descent::initializeTank()
 	cannonball->setX(tank->getX());
 	cannonball->setY(tank->getY());
 }
+
+//=============================================================================
+// applies a picked-up powerup's effect on the game
+// called when the player tank collides with a powerup
+// pickup's code allows for corresponding effect to take place
+// most of this section is hard coded
+//=============================================================================
+void Descent::applyPowerupEffect(int powerupCode)
+{
+	switch (powerupCode)
+	{
+
+	case POWERUP_TIME_SLOW_CODE:
+	{
+							//apply effect for time slow 
+
+	}
+
+	case POWERUP_RESTORE_HEALTH_CODE:
+	{
+
+	}
+
+	case POWERUP_INCREASE_TANK_SPEED_CODE:
+	{
+
+	}
+
+	case POWERUP_TIME_LOCK_CODE:
+	{
+
+	}
+
+	case POWERUP_MAX_POWER_CODE:
+	{
+
+	}
+
+	case POWERUP_TANK_ASSIST_CODE:
+	{
+
+	}
+
+	}
+}
+
+#pragma region Powerup Effects here
+
+void Descent::applyPowerupEffect_timeSlow()
+{
+	//keep track of currentTime at start of thread, save as startingTime
+	//continously track every second 
+	//when current time is startingTime + duration, end method
+}
+
+#pragma endregion
 
 //=============================================================================
 // moves all spaceships once
@@ -756,35 +876,37 @@ void Descent::moveSpaceships()
 //=============================================================================
 void Descent::spawnPowerup()
 {
+
 	//get random seed based on amount of possible powerups
 
 	
-	int randomPowerupIndex;
+	int randomPowerupIndex = (rand() % totalAmtOfPowerupVariety);
+	int randomPowerupXPosition = (rand() % GAME_WIDTH - POWERUP_WIDTH);	// for x position of powerup
 
-	randomPowerupIndex = (rand() % totalAmtOfPowerupVariety);
-
-	Powerup* powerup = new Powerup();
-	powerup = array_powerups_drawingSpace[randomPowerupIndex];
+	Powerup* powerup = new Powerup(*array_powerups_drawingSpace[randomPowerupIndex]);		//this deep copies the drawingSpace object into the actual array
 	//take powerup from drawing space and add to actual powerup array
-	powerup->setX(400);
-	powerup->setY(400);
+	powerup->setX(randomPowerupXPosition);
+	powerup->setY(POWERUP_SPAWN_HEIGHT);
+
 	array_powerups.push_back(powerup);
 	currentActivePowerups++;
+	array_powerups[currentActivePowerups - 1]->beginExpireCountdown();
 
 	std::cout << "powerup index : " << randomPowerupIndex << " spawned" << std::endl;
+	std::cout << "current amount of powerups: " << currentActivePowerups << std::endl;
 
 }
 
 
 //=============================================================================
 // start and run timer
+// this timer is for the main game
 //	using thread
 //=============================================================================
 void Descent::timer_start()
 {
 	//create timer
 	clock_t timer = clock();//start timer
-	int currentInGameTime = 0;		//this refers to in-game time
 
 	bool loop = true;
 	while (loop)
@@ -797,8 +919,6 @@ void Descent::timer_start()
 			if ((fmod(getSecondsPassed(), SECOND*timeModifier)) == 0)
 			{	
 
-				currentInGameTime++;		//adds towards in-game seconds
-				
 				//std::cout << "in game seconds passed: = " << currentInGameTime << std::endl;
 				//std::cout << currentInGameTime << " seconds has passed in-game. " << getSecondsPassed() << " second(s) has passed (in program)." << std::endl;
 
@@ -806,8 +926,8 @@ void Descent::timer_start()
 
 			}
 
-			if ((fmod(getSecondsPassed(), POWERUP_SPAWN_FREQUENCY)) == 0)
-			{
+			if ((fmod(getSecondsPassed(), POWERUP_SPAWN_FREQUENCY)) == 0 && currentActivePowerups < MAX_NO_OF_POWERUPS)
+			{	//check if every X seconds has passed and there is enough powerups in the game 
 				std::cout << "spawning a powerup" << std::endl;
 				spawnPowerup();
 			}
@@ -816,3 +936,5 @@ void Descent::timer_start()
 
 	}
 }
+
+

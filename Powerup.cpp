@@ -47,8 +47,66 @@ void Powerup::draw()
 //=============================================================================
 void Powerup::update(float frameTime)
 {
-	//shell.update(frameTime, turret);
 	Entity::update(frameTime);
+
+	//rotate 
+	//fall downwards if Y is less than ground level
+	//if not, don't fall, just rotate
+
+	spriteData.angle += frameTime * PowerupNS::ROTATION_RATE;  // rotates the powerup
+
+	if (spriteData.y + POWERUP_HEIGHT < GROUND_LEVEL_HEIGHT)
+		spriteData.y += frameTime * POWERUP_MOVEMENT_SPEED;         // move powerup along Y
+
+	
 }
 
-//additional methods here
+//=============================================================================
+// start and runs timer thread
+//=============================================================================
+void Powerup::beginExpireCountdown()
+{
+	std::async(&Powerup::powerup_timer_start, this);
+}
+
+//=============================================================================
+// start and run timer
+// to track each individual powerup
+//	using thread
+//=============================================================================
+void Powerup::powerup_timer_start()
+{
+	//create timer
+	clock_t timer1 = clock();//start timer
+
+	std::cout << "beginning countdown" << std::endl;
+
+	bool loop = true;
+	while (loop)
+	{
+
+		setSecondsPassed((clock() - timer1) / (double)CLOCKS_PER_SEC);  //convert computer timer to real life seconds
+
+		if ((fmod(getSecondsPassed(), SECOND) == 0))
+		{
+			std::cout << "current powerup time is " << getSecondsPassed() << std::endl;
+		}
+			
+
+		if ((fmod(getSecondsPassed(), POWERUP_START_BLINKING_TIME_MARK) == 0))
+		{
+			endFrame = POWERUP_BLINKING_END_FRAME;
+		}
+
+
+		else if ((fmod(getSecondsPassed(), POWERUP_OBJECT_DURATION) == 0))
+		{
+			active = false;	//this triggers the kill command in Descent.cpp
+			std::cout << "powerup is kill" << std::endl;
+			loop = false;
+		}
+
+		
+
+	}
+}

@@ -8,6 +8,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <windows.h>
+#include <string>
 
 //-----------------------------------------------
 // Useful macros
@@ -111,23 +112,51 @@ const float BOSS_SPACESHIP_ANIMATION_DELAY = 1.0f;
 const int BOSS_SPACESHIP_STARTING_HEALTH = 10;
 
 //powerup variables
-const int POWERUP_WIDTH = 16;
-const int POWERUP_HEIGHT = 16;
-const int POWERUP_TEXTURE_COLUMNS = 1;
+const int POWERUP_WIDTH = 36;
+const int POWERUP_HEIGHT = 36;
+const int POWERUP_TEXTURE_COLUMNS = 2;
 const int POWERUP_START_FRAME = 0;
-const int POWERUP_END_FRAME = 1;
-const float POWERUP_ANIMATION_DELAY = 0.1f;		//passively animates
+const int POWERUP_END_FRAME = 0;
+const float POWERUP_ANIMATION_DELAY = 0.25f;
+const float POWERUP_ROTATION_RATE = (float)PI;
+const int POWERUP_MOVEMENT_SPEED = 100;
 const int POWERUP_SPAWN_CHANCE = 25;			//in percentage, spawn chance when a spaceship is destroyed
 const int POWERUP_SPAWN_FREQUENCY = 1;			//in seconds, value depicts if powerup spawns every X seconds
+const int POWERUP_SPAWN_HEIGHT = GAME_WIDTH / 2;
+const int MAX_NO_OF_POWERUPS = 6;
+const int POWERUP_OBJECT_DURATION = 5;		//how long the powerup stays as an ingame object before expiring
+const int POWERUP_BLINKING_END_FRAME = 1;	
+const int POWERUP_START_BLINKING_TIME_MARK = 3;	//at what secondsPassed does the powerup starts blinking to show it is close to expiring
 
 //individual powerup effect values
 const double POWERUP_TIME_SLOW_MULTIPLER = 2; //the bigger the number the slower it gets
 const int POWERUP_TIME_SLOW_DURATION = 10;
-const double POWERUP_TIME_FAST_MULTIPLIER = 0.5; //the lower the number the faster it gets (past 0.5 it gets weird)
-const int POWERUP_TIME_STOP_DURATION = 5;
-const int POWERUP_TIME_FREEZE_DURATION = 10; //in seconds
-const int POWERUP_FORCE_MULTIPLIER = 3;
-const int POWERUP_HEALTH_RESTORE_VALUE = 5;
+const int POWERUP_TIME_SLOW_CODE = 1;
+
+const int POWERUP_RESTORE_HEALTH_VALUE = 5;
+const int POWERUP_RESTORE_HEALTH_CODE = 2;
+
+const double POWERUP_INCREASE_TANK_SPEED_FACTOR = 0.5; //the lower the number the faster it gets (past 0.5 it gets weird)
+const int POWERUP_INCREASE_TANK_SPEED_DURATION = 15;
+const int POWERUP_INCREASE_TANK_SPEED_CODE = 3;
+
+const int POWERUP_TIME_LOCK_DURATION = 10; //in seconds
+const int POWERUP_TIME_LOCK_CODE = 4;
+
+const int POWERUP_MAX_POWER_DURATION = 10;
+const int POWERUP_MAX_POWER_CODE = 5;
+
+const int POWERUP_TANK_ASSIST_DURATION = 10;			//spawns an allied tank that moves across X at ground level and periodically shoots weak bullets at spaceships, cannot be destroyed but is temporary
+const int POWERUP_TANK_ASSIST_CODE = 6;
+
+//helpful turret variables
+const int PASSERBY_TANK_WIDTH = 64;
+const int PASSERBY_TANK_HEIGHT = 64;
+const int PASSERBY_TANK_TEXTURE_COLUMNS = 2;
+const int PASSERBY_TANK_START_FRAME = 0;
+const int PASSERBY_TANK_END_FRAME = 1;
+
+const float PASSERBY_TANK_ANIMATION_DELAY = 0.2f;				
 
 //gameplay condition variables (affected by powerups, otherwise they generally stays the same)
 const int GROUND_LEVEL_HEIGHT = GAME_HEIGHT - GAME_HEIGHT / 10;			//no objects may go beyond this line, essentially means 'ground level'
@@ -178,19 +207,23 @@ const int BACKGROUND_START_FRAME = 0;
 const int BACKGROUND_END_FRAME = 3;
 
 // graphic images
-const char EXAMPLE_OBJECT_IMAGE[] = "images\\[PLACEHOLDER].jpg";
-const char GROUND_TILESET_IMAGE[] = "images\\ground_tile.png";
-const char CANNONBALL_IMAGE[] = "images\\cannonball.png";
-const char SPACESHIP_IMAGE[] = "images\\spaceship.png";
-const char MENU1_IMAGE[] = "images\\menu1.png";
-const char BOSS_SPACESHIP_IMAGE[] = "images\\boss_spaceship.png";
-const char TANK_IMAGE[] = "images\\tank.png";
-const char BKGRND_IMAGE[] = "images\\background.png";
-const char TURRET_IMAGE[] = "images\\turret.png";
-const char SMOKE_IMAGE[] = "images\\smoke.png";
-const char SHELL_IMAGE[] = "images\\shell.png";
-const char POWERUP_DOWN_SPEED_IMAGE[] = "images\\powerup_downspeed.png";
-const char POWERUP_RESTORE_HEALTH_IMAGE[] = "images\\powerup_restoreHealth.png";
+const char GROUND_TILESET_IMAGE[] = "resources\\images\\ground_tile.png";
+const char CANNONBALL_IMAGE[] = "resources\\images\\cannonball.png";
+const char SPACESHIP_IMAGE[] = "resources\\images\\spaceship.png";
+const char MENU1_IMAGE[] = "resources\\images\\menu1.png";
+const char BOSS_SPACESHIP_IMAGE[] = "resources\\images\\boss_spaceship.png";
+const char TANK_IMAGE[] = "resources\\images\\tank.png";
+const char BKGRND_IMAGE[] = "resources\\images\\background.png";
+const char TURRET_IMAGE[] = "resources\\images\\turret.png";
+const char SMOKE_IMAGE[] = "resources\\images\\smoke.png";
+const char SHELL_IMAGE[] = "resources\\images\\shell.png";
+
+const char POWERUP_TIME_SLOW_IMAGE[] = "resources\\images\\powerup_timeSlow.png";
+const char POWERUP_RESTORE_HEALTH_IMAGE[] = "resources\\images\\powerup_restoreHealth.png";
+const char POWERUP_INCREASE_TANK_SPEED_IMAGE[] = "resources\\images\\powerup_increaseSpeed.png";	//does not yet exist
+const char POWERUP_TIME_LOCK_IMAGE[] = "resources\\images\\powerup_timeLock.png";
+const char POWERUP_MAX_POWER_IMAGE[] = "resources\\images\\powerup_maxPower.png";
+const char POWERUP_PASSERBY_TANK_IMAGE[] = "resources\\images\\powerup_passerbyTank.png";
 
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used

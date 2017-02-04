@@ -28,6 +28,7 @@
 #include <functional>
 #include <ctime>
 #include <future>
+#include <string>
 
 
 //=============================================================================
@@ -56,25 +57,39 @@ private:
 	TextureManager* tankTexture;
 	TextureManager* turretTexture;
 	TextureManager* smokeTexture;
-	TextureManager* powerup_downSpeed_texture;
+
+	TextureManager* powerup_timeSlow_texture;
 	TextureManager* powerup_restoreHealth_texture;
+	TextureManager* powerup_increaseTankSpeed_texture;
+	TextureManager* powerup_timeLock_texture;
+	TextureManager* powerup_maxPower_texture;
+	TextureManager* powerup_passerbyTank_texture;
 
 	Image* background;
 	Image* ground;
 	Image* menu1;
 	Image* turret;
+
 	Cannonball* cannonball;
 	Spaceship* enemy_spaceship;	//only one for now, testing only
 	Boss_Spaceship* boss;
 	int waveNumber=1;
 	Player* tank;
 	Shell* shell;
-	Powerup* powerup_downSpeed;
+
+	Powerup* powerup_timeSlow;
 	Powerup* powerup_restoreHealth;
+	Powerup* powerup_increaseTankSpeed;
+	Powerup* powerup_timeLock;
+	Powerup* powerup_maxPower;
+	Powerup* powerup_passerbyTank;
+
 	std::vector<Spaceship*> array_spaceships;
 	std::vector<Powerup*> array_powerups_drawingSpace;	//the vector where all different types of powerups are initialized
 	std::vector<Powerup*> array_powerups;
+
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
+	const int maxActivePowerups = MAX_NO_OF_POWERUPS;
 	
 	int playerCount;//use this value to count 1 player or 2 player
 	int highestY;
@@ -82,7 +97,6 @@ private:
 	//modifiers
 	int timeModifier = GAME_BASE_TIME_MODIFIER; //Default value is 1, value affects time - this value will multiply by 1 second to achieve new time
 	int speedModifier = GAME_BASE_SPEED_MODIFIER; //Default value is 1, value affects speed - this value will be multiplied by speed values to achieve new speed
-
 
 	double secondsPassed;
 
@@ -116,6 +130,7 @@ public:
 	void spawnPowerup();
 
 	void timer_start();
+	void powerup_timer_start();
 
 	double getSecondsPassed() { return secondsPassed; }
 	void setSecondsPassed(double seconds) { secondsPassed = seconds; }
@@ -126,6 +141,13 @@ public:
 	int getSpeedModifier() { return speedModifier; }
 	void setSpeedModifier(int modifyingValue) { speedModifier = modifyingValue; }
 
+	void applyPowerupEffect(int powerupCode);
+
+	void applyPowerupEffect_timeSlow();
+	void applyPowerupEffect_increaseTankSpeed();
+	void applyPowerupEffect_timeLock();
+	void applyPowerupEffect_maxPower();
+	void applyPowerupEffect_tankAssist();
 
 };
 
