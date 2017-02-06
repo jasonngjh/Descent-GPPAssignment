@@ -161,9 +161,10 @@ void Descent::initialize(HWND hwnd)
 
 	boss->setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
 	boss->setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
-	
-	shell->setX(boss->getX()+BOSS_SPACESHIP_WIDTH/2);
-	shell->setY(boss->getY()+BOSS_SPACESHIP_HEIGHT/2);
+	boss->setX(GAME_WIDTH / 4);
+	boss->setY(GAME_HEIGHT/5);
+
+
 	
 #pragma endregion
 
@@ -358,7 +359,7 @@ void Descent::update()
 			 }break;
 			 case WAVE_STATE::wave2:{//add wave 2 enemy behavior
 
-										shell->update(frameTime, *turret);
+										
 
 										std::cout << "wave 2" << std::endl;
 
@@ -369,12 +370,17 @@ void Descent::update()
 			 }break;
 			 case WAVE_STATE::wave3:{//add boss spaceship behaviour
 										//std::cout << "wave 3" << std::endl;
-										
-										boss->setX(GAME_WIDTH / 4);
-										boss->setY(GAME_HEIGHT / 4);
+
 										boss->update(frameTime);
 
+										shell->update(frameTime, *tank);
+
 										std::cout << "BOSS BATTA " << std::endl;
+
+										if ((fmod(currentInGameTime,10)==0)&&(shell->getActive() == false))
+										{
+											resetShellPos();
+										}
 
 			 }break;
 								 
@@ -426,6 +432,13 @@ void Descent::collisions()
 		ship1.bounce(collisionVector, planet);
 		ship1.damage(PLANET);
 	}*/
+	if (shell->collidesWith(*tank, collisionVector))
+	{
+			
+			std::cout << "collide with tank liao" << std::endl;
+			shell->setActive(false);
+			std::cout << "can u see dis" << std::endl;
+	}
 
 	if (cannonball->collidesWith(*boss, collisionVector))
 	{
@@ -536,13 +549,22 @@ void Descent::render()
 								 }break;//draw wave 3 stuff
 								 case WAVE_STATE::wave2:{
 															std::cout << "shell draw" << std::endl;
-															shell->draw();
 															//std::cout << "wave2" << std::endl;
 
 								 }break;//draw wave 2 stuff
 								 case WAVE_STATE::wave3:{
 															
-															shell->draw();
+															//std::cout << "draw shell" << std::endl;
+															//if (currentInGameTime%5==0)
+															//{
+																std::cout << currentInGameTime << std::endl;
+																if (shell->getActive()){
+																	shell->draw();
+																}
+											
+
+															//}
+															
 															//std::cout << "wave3" << std::endl;
 															boss->draw();
 								 }break;//draw boss wave stuff
@@ -705,7 +727,7 @@ void Descent::moveSpaceships(bool isMovingRight)
 			for (int i = 0; i < currentActiveSpaceships; i++)
 			{
 				array_spaceships[i]->setX(array_spaceships[i]->getX() + SPACESHIP_WIDTH); //ships moves its width horizontally to the right
-				Sleep(5);			//without this line spaceships will move unhindered, not sure why
+				Sleep(10);			//without this line spaceships will move unhindered, not sure why
 
 				//std::cout << "ship " << i + 1 << " moves right " << std::endl;	//without this code or Sleep(5) things move2fast
 			}
@@ -827,7 +849,7 @@ void Descent::timer_start()
 {
 	//create timer
 	clock_t timer = clock();//start timer
-	int currentInGameTime = 0;		//this refers to in-game time
+	currentInGameTime = 0;		//this refers to in-game time
 
 	bool loop = true;
 	while (loop)
@@ -855,4 +877,15 @@ void Descent::timer_start()
 		
 
 	}
+}
+
+void Descent::resetShellPos()
+{
+	shell->setActive(true);
+	//if (!shellTexture->initialize(graphics, SHELL_IMAGE))
+		//throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell texture"));
+	if (!shell->initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, shellTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
+	shell->setX(boss->getX() + BOSS_SPACESHIP_WIDTH / 2);
+	shell->setY(boss->getY() + BOSS_SPACESHIP_HEIGHT / 2);
 }

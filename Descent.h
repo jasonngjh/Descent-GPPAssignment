@@ -32,6 +32,29 @@
 //=============================================================================
 // This class is the core of the game
 //=============================================================================
+template < typename T > class SP
+{
+private:
+	T*    pData; // Generic pointer to be stored
+public:
+	SP(T* pValue) : pData(pValue)
+	{
+	}
+	~SP()
+	{
+		delete pData;
+	}
+
+	T& operator* ()
+	{
+		return *pData;
+	}
+
+	T* operator-> ()
+	{
+		return pData;
+	}
+};
 class Descent : public Game
 {
 private:
@@ -66,6 +89,7 @@ private:
 	int waveNumber=1;
 	Player* tank;
 	Shell* shell;
+	Shell shell1;
 	std::vector<Spaceship*> array_spaceships;
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
 	
@@ -76,8 +100,9 @@ private:
 	int timeModifier = GAME_BASE_TIME_MODIFIER; //Default value is 1, value affects time - this value will multiply by 1 second to achieve new time
 	int speedModifier = GAME_BASE_SPEED_MODIFIER; //Default value is 1, value affects speed - this value will be multiplied by speed values to achieve new speed
 
-
+	bool missileFire=true;
 	double secondsPassed;
+	int currentInGameTime;
 
 
 public:
@@ -99,11 +124,13 @@ public:
     void render();      // "
     void releaseAll();
     void resetAll();
+	
 
 	//other functions
 	void initializeTank();
 	void moveSpaceships(bool isMovingRight);
 	void timer_start();
+	void resetShellPos();
 
 	double getSecondsPassed() { return secondsPassed; }
 	void setSecondsPassed(double seconds) { secondsPassed = seconds; }

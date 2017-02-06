@@ -25,6 +25,7 @@ namespace ShellNS
 class Shell : public Entity
 {
 private:
+	bool exist=true;
 	bool moving;
 	float drectionX, directionY,distance;
 	float tx, ty, dist,thrust;
@@ -35,5 +36,7 @@ public:
 	virtual bool initialize(Game *gamePtr, int width, int height, int ncols,
 		TextureManager *textureM);
 	void update(float frameTime,Player turret);
+
+
 };
 #endif
