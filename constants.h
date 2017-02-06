@@ -163,6 +163,7 @@ const float SHELL_MASS = 5.0f;
 const float SHELL_BASE_SPEED = 5.0f;
 const float SHELL_ANIMATION_DELAY = 0.0f;
 const int SHELL_DAMAGE = 10;
+const int SHELL_SPAWNCOUNTER = 10;
 
 //background frames
 const int BACKGROUND_WIDTH = 540;

@@ -32,29 +32,8 @@
 //=============================================================================
 // This class is the core of the game
 //=============================================================================
-template < typename T > class SP
-{
-private:
-	T*    pData; // Generic pointer to be stored
-public:
-	SP(T* pValue) : pData(pValue)
-	{
-	}
-	~SP()
-	{
-		delete pData;
-	}
 
-	T& operator* ()
-	{
-		return *pData;
-	}
 
-	T* operator-> ()
-	{
-		return pData;
-	}
-};
 class Descent : public Game
 {
 private:
@@ -67,6 +46,7 @@ private:
 	TextDX* waveNumberText;
 	GameControl*	gameControl;
 	WaveControl*	waveControl;
+	GENERAL_STATE currentState;
 
 	TextureManager* shellTexture;
 	TextureManager* bossTexture;
@@ -84,12 +64,12 @@ private:
 	Image* menu1;
 	Image* turret;
 	Cannonball* cannonball;
-	Spaceship* enemy_spaceship;	//only one for now, testing only
 	Boss_Spaceship* boss;
 	int waveNumber=1;
 	Player* tank;
 	Shell* shell;
 	Shell shell1;
+	bool initAlready = true;
 	std::vector<Spaceship*> array_spaceships;
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
 	

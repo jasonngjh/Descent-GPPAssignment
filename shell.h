@@ -25,10 +25,10 @@ namespace ShellNS
 class Shell : public Entity
 {
 private:
-	bool exist=true;
 	bool moving;
 	float drectionX, directionY,distance;
 	float tx, ty, dist,thrust;
+
 public:
 	Shell();
 

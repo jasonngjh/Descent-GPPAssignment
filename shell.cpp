@@ -28,6 +28,9 @@ Shell::Shell() : Entity()
 bool Shell::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM)
 {
+	
+
+	//crosshair.setLoop(false);
 	spriteData.angle = PI / 2;
 	spriteData.scale=3.0;
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
@@ -38,7 +41,7 @@ bool Shell::initialize(Game *gamePtr, int width, int height, int ncols,
 //=============================================================================
 void Shell::draw()
 {
-	Image::draw();              // draw ship
+		Image::draw();              // draw ship
 }
 
 //=============================================================================
@@ -86,6 +89,7 @@ void Shell::update(float frameTime, Player turret)
 		spriteData.y = 0;                       // position at top screen edge
 		velocity.y = -velocity.y;               // reverse Y direction
 	}
+	//crosshair.setCurrentFrame(ShellNS::CROSSHAIR_START_FRAME);
 
 
 }

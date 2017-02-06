@@ -50,7 +50,6 @@ Descent::Descent()
 
 	//entities
 	cannonball = new Cannonball();
-	enemy_spaceship = new Spaceship();
 	boss = new Boss_Spaceship();
 	tank = new Player();
 	shell = new Shell();
@@ -74,69 +73,139 @@ Descent::~Descent()
 void Descent::initialize(HWND hwnd)
 {
     Game::initialize(hwnd); // throws GameError
-
+	if (dxFont.initialize(graphics, gameNS::POINT_SIZE, false, false, gameNS::FONT) == false)
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Failed to initialize DirectX font."));
 	std::cout << "initialising game" << std::endl;
 	
 #pragma region Initialize Assets
 
-	//object and texture initialization
+
+								if (!menu1Texture->initialize(graphics, MENU1_IMAGE))
+									throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu texture"));
+								if (!menu1->initialize(graphics, MENU1_WIDTH, MENU1_HEIGHT, 2, menu1Texture))
+									throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu"));
+
+									 if (waveNumberText->initialize(graphics, 62, true, false, "Invasion2000") == false)
+										 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing DirectX font"));
+
+									 if (!groundTexture->initialize(graphics, GROUND_TILESET_IMAGE))
+										 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ground texture"));
+
+									 if (!cannonballTexture->initialize(graphics, CANNONBALL_IMAGE))
+										 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Cannonball texture"));
+
+									 if (!spaceshipTexture->initialize(graphics, SPACESHIP_IMAGE))
+										 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship texture"));
+
+
+									 if (!tankTexture->initialize(graphics, TANK_IMAGE))
+										 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank texture"));
+
+									 if (!backgroundTexture->initialize(graphics, BKGRND_IMAGE))
+										 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing background texture"));
+
+									 if (!ground->initialize(graphics, 0, 0, 0, groundTexture))
+										 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ground tiles"));
+
+									 if (!cannonball->initialize(this, CannonballNS::WIDTH, CannonballNS::HEIGHT, CannonballNS::TEXTURE_COLS, cannonballTexture))
+										 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Cannonball game object"));
+
+									 if (!tank->initialize(this, PlayerNS::WIDTH, PlayerNS::HEIGHT, PlayerNS::TEXTURE_COLS, tankTexture))
+										 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank"));
+
+									 if (!turretTexture->initialize(graphics, TURRET_IMAGE))
+										 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing turret texture"));
+									 if (!turret->initialize(graphics, TURRET_WIDTH, TURRET_HEIGHT, TURRET_TEXTURE_COLUMNS, turretTexture))
+										 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing turret"));
+
+									 if (!background->initialize(graphics, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, BACKGROUND_TEXTURE_COLS, backgroundTexture))
+										 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising background"));
+									
+
+									 if (!smokeTexture->initialize(graphics, SMOKE_IMAGE))
+										 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing smoke texture"));
+									 if (!shellTexture->initialize(graphics, SHELL_IMAGE))
+											 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell texture"));
+									if (!bossTexture->initialize(graphics, BOSS_SPACESHIP_IMAGE))
+											 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss texture"));
+										
+									 
+									 
+
+#pragma region Spawn Spaceships
+																//place inside game state wave 1 when created
+
+																int x = 0;	//starting position of first spaceship is a unit length away the left side of the screen
+																int y = 0;					//to be manipulated in first for loop
+
+																//wave one
+																std::cout << "GAME WIDTH DIVIDED BY SHIP WIDTH (spaceships per row):" << GAME_WIDTH / (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS) << std::endl;
+
+																for (int i = 0; i < WAVE_1_SPACESHIPS_AMT_OF_ROWS; i++)
+																{
+																	//this for loop spawns at Y
+																	y += SPACESHIP_HEIGHT + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//multipled by 2 so rows are one unit height away from each other
+
+																	for (int j = 0; j < GAME_WIDTH / (SPACESHIP_WIDTH); j++)
+																	{
+																		Spaceship* spaceship = new Spaceship();
+
+																		//check if current Y can support game_width/spaceship_width amount of ships
+
+																		if (x + ((HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_WIDTH)) > GAME_WIDTH - HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS || j >= AMT_OF_SPACESHIPS_PER_ROW)
+																		{
+																			//if current ship's X is more than game width, shift to next Y, keep current i counter
+
+																			x = HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//ship starts as first ship in a new row
+																			break;	//means that previous row can no longer support any more spaceships without clipping, breaks and starts new row (Y)
+																		}
+
+																		else
+																		{
+																			//this is true if current y can support more ships
+																			//create ship at X position of game_width/width*i, current row
+
+																			x = (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS*j);
+																			std::cout << "Current x: " << x << "->" << std::endl;
+																		}
+
+																		spaceship->setX(x);
+																		spaceship->setY(y);
+																		spaceship->setHealth(SPACESHIP_STARTING_HEALTH);
+
+																		if (!spaceship->initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, spaceshipTexture))
+																			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
+
+																		array_spaceships.push_back(spaceship);
+																		std::cout << "Adding spaceship at row " << i + 1 << "(no. " << j + 1 << " in row) for wave one at x: " << spaceship->getX() << " y: " << spaceship->getY() << "." << std::endl;
+
+																		currentActiveSpaceships++;
+
+																		std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
+
+																		if (currentActiveSpaceships == maxActiveSpaceships)
+																			break;
+
+																	}
+
+																	if (currentActiveSpaceships == maxActiveSpaceships)
+																		break;
+
+																}
+
+#pragma endregion
+									
+
+									
+
+									
+
+			
+
 
 	if (!pauseText->initialize(graphics, 62, true, false, "Arial"))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing DirectX font"));
-	if (waveNumberText->initialize(graphics, 62, true, false, "Invasion2000") == false)
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing DirectX font"));
-
-	if (!groundTexture->initialize(graphics, GROUND_TILESET_IMAGE))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ground texture"));
-
-	if (!cannonballTexture->initialize(graphics, CANNONBALL_IMAGE))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Cannonball texture"));
-
-	if (!spaceshipTexture->initialize(graphics, SPACESHIP_IMAGE))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship texture"));
-	if (!menu1Texture->initialize(graphics, MENU1_IMAGE))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu texture"));
-
-	if (!tankTexture->initialize(graphics, TANK_IMAGE))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank texture"));
-
-	if (!backgroundTexture->initialize(graphics, BKGRND_IMAGE))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing background texture"));
 	
-	if (!ground->initialize(graphics, 0, 0, 0, groundTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ground tiles"));
-
-	if (!cannonball->initialize(this, CannonballNS::WIDTH, CannonballNS::HEIGHT, CannonballNS::TEXTURE_COLS, cannonballTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Cannonball game object"));
-
-	if (!enemy_spaceship->initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, spaceshipTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
-	
-	if (!menu1->initialize(graphics,MENU1_WIDTH, MENU1_HEIGHT, 2, menu1Texture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu"));
-
-	if (!tank->initialize(this,PlayerNS::WIDTH, PlayerNS::HEIGHT, PlayerNS::TEXTURE_COLS, tankTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank"));
-
-	if (!turretTexture->initialize(graphics, TURRET_IMAGE))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing turret texture"));
-	if (!turret->initialize(graphics, TURRET_WIDTH, TURRET_HEIGHT, TURRET_TEXTURE_COLUMNS, turretTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing turret"));
-
-	if (!background->initialize(graphics, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, BACKGROUND_TEXTURE_COLS, backgroundTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR,"Error initialising background"));
-	if (!bossTexture->initialize(graphics, BOSS_SPACESHIP_IMAGE))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss texture"));
-	if (!boss->initialize(this, Boss_SpaceshipNS::WIDTH, Boss_SpaceshipNS::HEIGHT, Boss_SpaceshipNS::TEXTURE_COLS, bossTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss game object"));
-
-	if (!smokeTexture->initialize(graphics, SMOKE_IMAGE))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing smoke texture"));
-
-	if (!shellTexture->initialize(graphics, SHELL_IMAGE))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell texture"));
-	if (!shell->initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, shellTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
 
 	background->setFrames(BACKGROUND_START_FRAME,BACKGROUND_END_FRAME);
 	background->setCurrentFrame(BACKGROUND_START_FRAME);
@@ -148,91 +217,25 @@ void Descent::initialize(HWND hwnd)
 	cannonball->setScale(0.5);
 	cannonball->setVisible(false);
 
-	enemy_spaceship->setFrames(SpaceshipNS::START_FRAME, SpaceshipNS::END_FRAME);
-	enemy_spaceship->setCurrentFrame(SpaceshipNS::START_FRAME);
-	enemy_spaceship->setX(1);
-	enemy_spaceship->setY(1);
-	enemy_spaceship->setHealth(2); //for testing only
-	enemy_spaceship->setIsAtCritical(true);
-
+	boss->setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
+	boss->setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
+	boss->setX(GAME_WIDTH / 4);
+	boss->setY(GAME_HEIGHT / 5);
 	currentActiveSpaceships = 0;
 	isAllSpaceshipMovingRight = true;
 	isShipsReadyToShift = false;
 
-	boss->setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
-	boss->setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
-	boss->setX(GAME_WIDTH / 4);
-	boss->setY(GAME_HEIGHT/5);
 
 
+	shell->setX(boss->getX() + BOSS_SPACESHIP_WIDTH / 2);
+	shell->setY(boss->getY() + BOSS_SPACESHIP_HEIGHT / 2);
 	
 #pragma endregion
 
 	initializeTank();
 
 	std::cout << "initialising spaceship array" << std::endl;
-#pragma region Spawn Spaceships
-	//place inside game state wave 1 when created
 
-	int x = 0;	//starting position of first spaceship is a unit length away the left side of the screen
-	int y = 0;					//to be manipulated in first for loop
-
-	//wave one
-	std::cout << "GAME WIDTH DIVIDED BY SHIP WIDTH (spaceships per row):" << GAME_WIDTH / (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS) << std::endl;
-
-	for (int i = 0; i < WAVE_1_SPACESHIPS_AMT_OF_ROWS; i++)
-	{
-		//this for loop spawns at Y
-		y += SPACESHIP_HEIGHT+VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//multipled by 2 so rows are one unit height away from each other
-
-		for (int j = 0; j < GAME_WIDTH/(SPACESHIP_WIDTH); j++)
-		{
-			Spaceship* spaceship = new Spaceship();
-
-			//check if current Y can support game_width/spaceship_width amount of ships
-
-			if (x + ((HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS+SPACESHIP_WIDTH)) > GAME_WIDTH-HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS || j >= AMT_OF_SPACESHIPS_PER_ROW)
-			{
-				//if current ship's X is more than game width, shift to next Y, keep current i counter
-
-				x = HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//ship starts as first ship in a new row
-				break;	//means that previous row can no longer support any more spaceships without clipping, breaks and starts new row (Y)
-			}
-
-			else		
-			{
-				//this is true if current y can support more ships
-				//create ship at X position of game_width/width*i, current row
-
-				x = (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS*j);
-				std::cout << "Current x: " << x << "->" << std::endl;
-			}
-
-			spaceship->setX(x);
-			spaceship->setY(y);
-			spaceship->setHealth(SPACESHIP_STARTING_HEALTH);
-
-			if (!spaceship->initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, spaceshipTexture))
-				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
-
-			array_spaceships.push_back(spaceship);
-			std::cout << "Adding spaceship at row " << i + 1 << "(no. " << j+1 << " in row) for wave one at x: " << spaceship->getX() << " y: " << spaceship->getY() << "." << std::endl;
-
-			currentActiveSpaceships++;
-
-			std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
-
-			if (currentActiveSpaceships == maxActiveSpaceships)
-				break;
-
-		}
-		
-		if (currentActiveSpaceships == maxActiveSpaceships)
-			break;
-		
-	}
-
-#pragma endregion
 
 
 	//std::thread t(&Descent::playBGM, this); //for background music - make sure .h file has relevant method
@@ -252,6 +255,7 @@ void Descent::initialize(HWND hwnd)
 //=============================================================================
 void Descent::update()
 {
+	
 	//exampleObject.update(frameTime);
 	//other update mechanics here
 
@@ -282,7 +286,6 @@ void Descent::update()
 	case GENERAL_STATE::game:{
 		background->update(frameTime);
 		cannonball->update(frameTime);
-		enemy_spaceship->update(frameTime);
 		tank->update(frameTime);
 		//smoke->update(frameTime);
 
@@ -347,9 +350,8 @@ void Descent::update()
 											if (input->isKeyDown(SPACE_KEY))
 												waveControl->setWaveState(WAVE_STATE::wave1);
 			 }break;
-			 case WAVE_STATE::wave1:{//add wave 1 behaviors
-										//std::cout << "wave 1" << std::endl;
-										enemy_spaceship->update(frameTime);
+			 case WAVE_STATE::wave1:{
+										
 										if (input->wasKeyPressed(TW_KEY))
 										{
 											waveControl->setWaveState(WAVE_STATE::wave2);
@@ -368,16 +370,25 @@ void Descent::update()
 											waveControl->setWaveState(WAVE_STATE::wave3);
 										}
 			 }break;
-			 case WAVE_STATE::wave3:{//add boss spaceship behaviour
-										//std::cout << "wave 3" << std::endl;
-
+			 case WAVE_STATE::wave3:{
+										if (initAlready)
+										{
+											std::cout << "Initialising boss" << std::endl;
+											if (!boss->initialize(this, Boss_SpaceshipNS::WIDTH, Boss_SpaceshipNS::HEIGHT, Boss_SpaceshipNS::TEXTURE_COLS, bossTexture))
+												throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss game object"));
+											if (!shell->initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, shellTexture))
+												throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
+											
+											initAlready = false;
+											boss->setActive(true);
+										}
 										boss->update(frameTime);
 
 										shell->update(frameTime, *tank);
 
 										std::cout << "BOSS BATTA " << std::endl;
 
-										if ((fmod(currentInGameTime,10)==0)&&(shell->getActive() == false))
+										if ((fmod(currentInGameTime,SHELL_SPAWNCOUNTER)==0)&&(shell->getActive() == false))
 										{
 											resetShellPos();
 										}
@@ -432,6 +443,7 @@ void Descent::collisions()
 		ship1.bounce(collisionVector, planet);
 		ship1.damage(PLANET);
 	}*/
+	
 	if (shell->collidesWith(*tank, collisionVector))
 	{
 			
@@ -447,7 +459,9 @@ void Descent::collisions()
 			//std::cout << cannonball->getDamageLeft() + "COLLIDE BOSSSHIP" << std::endl;
 		
 		cannonball->hit(bossShip);
-		
+		boss->setHealth((boss->getHealth() - cannonball->getDamageLeft()));
+		boss->setVisible(false);
+		std::cout << "Boss HP Left:" <<(int)boss->getHealth()<< std::endl;
 	}	
 
 	for (int i = 0; i < array_spaceships.size(); i++)
@@ -514,7 +528,10 @@ void Descent::collisions()
 //=============================================================================
 void Descent::render()
 {
+	const int BUF_SIZE = 20;
+	static char buffer[BUF_SIZE];
     graphics->spriteBegin();                // begin drawing sprites
+	
 	switch (gameControl->getGeneralState())
 	{
 	case GENERAL_STATE::menu :{
@@ -524,18 +541,21 @@ void Descent::render()
 								//draw instructions
 	}break;
 	case GENERAL_STATE::game:{
+								
+								 dxFont.setFontColor(gameNS::FONT_COLOR);
+								 
+
 								 background->draw();
 								 ground->draw();                   // add the object to the scene
+								 _snprintf_s(buffer, BUF_SIZE, "Seconds Passed %d ", (int)getSecondsPassed());
+								 dxFont.print(buffer, GAME_WIDTH - 200, GAME_HEIGHT - 50);
 								 cannonball->draw();					//in real game, Cannonball should be drawn later, when wormhole appears
-								// enemy_spaceship->draw();
+								
 								 turret->draw();
 								 tank->draw();
 								// smoke->draw();
 								 
-								 for (int i = 0; i < currentActiveSpaceships; i++)
-								 {
-									 array_spaceships[i]->draw();
-								 }
+								
 								 
 								 switch (waveControl->getWaveState())
 								 {
@@ -544,20 +564,23 @@ void Descent::render()
 																
 								 }break;
 								 case WAVE_STATE::wave1:{
-															enemy_spaceship->draw(); 
+															for (int i = 0; i < currentActiveSpaceships; i++)
+															{
+																array_spaceships[i]->draw();
+															}
 														//	std::cout << "wave1" << std::endl;
 								 }break;//draw wave 3 stuff
 								 case WAVE_STATE::wave2:{
-															std::cout << "shell draw" << std::endl;
+
 															//std::cout << "wave2" << std::endl;
 
 								 }break;//draw wave 2 stuff
 								 case WAVE_STATE::wave3:{
-															
+															boss->draw();
 															//std::cout << "draw shell" << std::endl;
 															//if (currentInGameTime%5==0)
 															//{
-																std::cout << currentInGameTime << std::endl;
+																
 																if (shell->getActive()){
 																	shell->draw();
 																}
@@ -566,7 +589,7 @@ void Descent::render()
 															//}
 															
 															//std::cout << "wave3" << std::endl;
-															boss->draw();
+															
 								 }break;//draw boss wave stuff
 								 }
 								 

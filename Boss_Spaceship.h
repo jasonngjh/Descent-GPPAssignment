@@ -21,7 +21,6 @@ namespace Boss_SpaceshipNS
 	const int   START_FRAME = BOSS_SPACESHIP_START_FRAME;			//which frame to start
 	const int   END_FRAME = BOSS_SPACESHIP_END_FRAME;				//which frame to end
 	const float ANIMATION_DELAY = BOSS_SPACESHIP_ANIMATION_DELAY;   // time between frames
-
 	//DERIVED PERMANENT VALUES
 	const int X = GAME_WIDTH / 2 - WIDTH / 2;				// location on screen
 	const int Y = GAME_HEIGHT / 2 - HEIGHT / 2;
@@ -34,7 +33,7 @@ class Boss_Spaceship : public Entity
 private:
 	bool isAlive = true;
 	bool hasFiredWeapon = false; //may remove this, use this to check if spaceship has fired on player in the last X seconds
-	int health; //counted in small numbers, represents amount of times spaceship can get hit again, maybe can use different animation frames to indicate damage
+	int health=4;
 	Shell shell;
 	Image turret;
 public:
