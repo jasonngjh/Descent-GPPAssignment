@@ -1,54 +1,55 @@
-﻿Build started 06/02/2017 02:59:45.
+﻿Build started 06/02/2017 05:31:20.
      1>Project "D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\PlanetCollision.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\NPStudent\Source\Repos\gppassignment22 /I"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Descent.cpp gameControl.cpp waveControl.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\NPStudent\Source\Repos\gppassignment22 /I"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Assist_Tank.cpp Assist_Tank_bullet.cpp Boss_Spaceship.cpp Cannonball.cpp entity.cpp game.cpp gameControl.cpp graphics.cpp image.cpp input.cpp Player.cpp Powerup.cpp shell.cpp Spaceship.cpp Spaceship_bullet.cpp textDX.cpp Descent.cpp textureManager.cpp waveControl.cpp winmain.cpp
          Descent.cpp
      1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(93): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
      1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(183): warning C4244: 'argument' : conversion from 'const UINT' to 'float', possible loss of data
      1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(211): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
      1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(305): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
      1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(306): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(889): warning C4244: '=' : conversion from 'const double' to 'int', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(900): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(939): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(962): warning C4244: 'argument' : conversion from 'const double' to 'float', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(969): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1021): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1072): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1112): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1121): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1134): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1303): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1314): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1315): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(894): warning C4244: '=' : conversion from 'const double' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(905): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(944): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(967): warning C4244: 'argument' : conversion from 'const double' to 'float', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(974): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1026): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1077): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1117): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1126): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1139): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1308): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1319): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1320): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1410): error C2374: 'generatedChance' : redefinition; multiple initialization
+                 d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1402) : see declaration of 'generatedChance'
+         Spaceship_bullet.cpp
+         Generating Code...
+         Compiling...
+         winmain.cpp
+         textureManager.cpp
+         textDX.cpp
+         Spaceship.cpp
+         shell.cpp
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\shell.cpp(31): warning C4244: '=' : conversion from 'const double' to 'float', possible loss of data
+         Powerup.cpp
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\powerup.cpp(84): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+         Player.cpp
+         input.cpp
+         image.cpp
+         graphics.cpp
+         game.cpp
+         entity.cpp
+         Cannonball.cpp
+         Boss_Spaceship.cpp
+         Assist_Tank_bullet.cpp
+         Assist_Tank.cpp
          Generating Code...
          Skipping... (no relevant changes detected)
          waveControl.cpp
          gameControl.cpp
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\Debug\Throw Ball Game.exe" /NOLOGO /LIBPATH:"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Lib\x86" d3d9.lib d3dx9.lib winmm.lib xinput.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\Debug\Throw Ball Game.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\Debug\Throw Ball Game.lib" /MACHINE:X86 /SAFESEH:NO Debug\Assist_Tank.obj
-         Debug\Assist_Tank_bullet.obj
-         Debug\Boss_Spaceship.obj
-         Debug\Cannonball.obj
-         Debug\entity.obj
-         Debug\game.obj
-         Debug\gameControl.obj
-         Debug\graphics.obj
-         Debug\guicon.obj
-         Debug\image.obj
-         Debug\input.obj
-         Debug\Player.obj
-         Debug\Powerup.obj
-         Debug\shell.obj
-         Debug\Spaceship.obj
-         Debug\textDX.obj
-         Debug\Descent.obj
-         Debug\textureManager.obj
-         Debug\waveControl.obj
-         Debug\winmain.obj
-         PlanetCollision.vcxproj -> D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\Debug\Throw Ball Game.exe
-     1>Done Building Project "D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\PlanetCollision.vcxproj" (Build target(s)).
+     1>Done Building Project "D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\PlanetCollision.vcxproj" (Build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:01.85
+Time Elapsed 00:00:11.33

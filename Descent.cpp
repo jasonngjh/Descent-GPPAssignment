@@ -538,6 +538,8 @@ void Descent::update()
 											waveControl->setWaveState(WAVE_STATE::wave2);
 										}
 										
+										//simple spaceship bullet shooting
+
 										 
 			 }break;
 			 case WAVE_STATE::wave2:{//add wave 2 enemy behavior
@@ -550,6 +552,9 @@ void Descent::update()
 										{
 											waveControl->setWaveState(WAVE_STATE::wave3);
 										}
+
+										//advanced spaceship shooting
+
 			 }break;
 			 case WAVE_STATE::wave3:{//add boss spaceship behaviour
 										//std::cout << "wave 3" << std::endl;
@@ -1357,29 +1362,66 @@ void Descent::timer_start()
 			//if game state wave 1
 			//fmod wave 1 speed shooting chance
 
-			if ((fmod(getSecondsPassed(), SPACESHIP_ATTACK_FREQUENCY)) == 0)
-			{
+			if (waveControl->getWaveState() == WAVE_STATE::wave1
+				&& (fmod(getSecondsPassed(), SPACESHIP_ATTACK_FREQUENCY)) == 0)
+			{	//if wave is wave 1, start simple spaceship shooting
 
 				for (int i = 0; i < currentActiveSpaceships; i++)
 				{
+					//run for loop that iterates through every spaceship
+					//for each spaceship, check and compare seed
+					//if chance not hit, ignore
+					//if chance hit, 
+
 					double generatedChance = rand() % 100;
 					if (WAVE_1_SPACESHIPS_FIRE_CHANCE >= generatedChance)	//pew!
 					{
-
+						std::cout << "Spaceship has decided to shoot " << std::endl;
+						
+						//create bullet
+						//set bullet to target X
+							//where x is player position at time of firing
+						//set and calculate bullet degree to relevant X
+						//set bullet active, let update take care of movment
 					}
 				}
 
-				//run for loop that iterates through every spaceship
+			}
+
+			if (waveControl->getWaveState() == WAVE_STATE::wave2
+				&& (fmod(getSecondsPassed(), SPACESHIP_ATTACK_FREQUENCY)) == 0)
+			{	//if wave is wave 1, start simple spaceship shooting
+
+				for (int i = 0; i < currentActiveSpaceships; i++)
+				{
+					//run for loop that iterates through every spaceship
 					//for each spaceship, check and compare seed
-						//if chance not hit, ignore
-						//if chance hit, 
+					//if chance not hit, ignore
+					//if chance hit, 
+
+					double generatedChance = rand() % 100;
+					if (WAVE_2_SPACESHIPS_FIRE_CHANCE >= generatedChance)	//pew!
+					{
+						std::cout << "Spaceship has decided to shoot " << std::endl;
+
+						//SIMPLE SHOOTING
+					}
+
+					double generatedChance = rand() % 100;
+					if (WAVE_2_SPACESHIPS_FIRE_INTELLIGENT_CHANCE >= generatedChance)	//pew!
+					{
+						std::cout << "Spaceship has decided to shoot " << std::endl;
+
+						//ADVANCED SHOOTING
+						//read from AI to calculate possible player position
+					}
+
+				}
+
 			}
 
 			if ((fmod(getSecondsPassed(), POWERUP_SPAWN_FREQUENCY)) == 0 && currentActivePowerups < MAX_NO_OF_POWERUPS && !isPowerupInProgress)
-			{	//check if every X seconds has passed and there is enough powerups in the game
 				spawnPowerup();
-
-			}
 
 		}
 

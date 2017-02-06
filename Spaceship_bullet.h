@@ -10,13 +10,13 @@ namespace Spaceship_bullet_NS
 
 	//PERMANENT VALUES, ANYTHING YOU DECLARE HERE IS NOT MEANT TO BE MANIPULATED DURING THE GAME
 
-	const int WIDTH = Spaceship_BULLET_WIDTH;							//IMAGE WIDTH            
-	const int HEIGHT = Spaceship_BULLET_HEIGHT;						// image height
-	const int   TEXTURE_COLS = Spaceship_BULLET_TEXTURE_COLUMNS;      // texture has x columns
-	const int   START_FRAME = Spaceship_BULLET_START_FRAME;			//which frame to start
-	const int   END_FRAME = Spaceship_BULLET_END_FRAME;				//which frame to end
-	const float ANIMATION_DELAY = Spaceship_BULLET_ANIMATION_DELAY;   // time between frames
-	const int BULLET_DAMAGE = Spaceship_BULLET_DAMAGE;
+	const int WIDTH = SPACESHIP_BULLET_WIDTH;							//IMAGE WIDTH            
+	const int HEIGHT = SPACESHIP_BULLET_HEIGHT;						// image height
+	const int   TEXTURE_COLS = SPACESHIP_BULLET_TEXTURE_COLUMNS;      // texture has x columns
+	const int   START_FRAME = SPACESHIP_BULLET_START_FRAME;			//which frame to start
+	const int   END_FRAME = SPACESHIP_BULLET_END_FRAME;				//which frame to end
+	const float ANIMATION_DELAY = SPACESHIP_BULLET_ANIMATION_DELAY;   // time between frames
+	const int BULLET_DAMAGE = SPACESHIP_BULLET_DAMAGE;
 
 	//DERIVED PERMANENT VALUES
 	const int X = GAME_WIDTH / 2 - WIDTH / 2;				// location on screen

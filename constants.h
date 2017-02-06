@@ -123,7 +123,7 @@ const int WAVE_2_SPACESHIPS_HEALTH = 7;
 
 const double WAVE_1_SPACESHIPS_FIRE_CHANCE = 0.02;		//measured in percentages
 const double WAVE_2_SPACESHIPS_FIRE_CHANCE = 0.04;		//measured in percentages
-
+const double WAVE_2_SPACESHIPS_FIRE_INTELLIGENT_CHANCE = 0.02;
 
 //boss spaceship variables
 const int BOSS_SPACESHIP_WIDTH = 212;
