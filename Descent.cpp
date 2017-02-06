@@ -41,12 +41,16 @@ Descent::Descent()
 	tankTexture = new TextureManager();
 	turretTexture = new TextureManager();
 	smokeTexture = new TextureManager();
+	pauseTexture = new TextureManager();
+	instructionTexture = new TextureManager();
 
 	//images
 	background = new Image();
 	ground = new Image();
 	menu1 = new Image();
 	turret = new Image();
+	pause = new Image();
+	instructionScreen = new Image();
 
 	//entities
 	cannonball = new Cannonball();
@@ -55,8 +59,6 @@ Descent::Descent()
 	tank = new Player();
 	shell = new Shell();
 
-	//audio
-	audio = new Audio();
 }
 
 //=============================================================================
@@ -64,9 +66,29 @@ Descent::Descent()
 //=============================================================================
 Descent::~Descent()
 {
+	releaseAll();           // call onLostDevice() for every graphics item
 	SAFE_DELETE(pauseText);
 	SAFE_DELETE(waveNumberText);
-    releaseAll();           // call onLostDevice() for every graphics item
+	delete gameControl;
+	//delete waveControl;
+	delete background;
+	delete ground;
+	delete menu1;
+	delete instructionScreen;
+	delete turret;
+	delete pause;
+	delete cannonball;
+	delete enemy_spaceship;
+	delete boss;
+	delete shell;
+	for (Spaceship* spaceShip : array_spaceships)
+	{
+		delete spaceShip;
+	}
+	for (Audio* a : audio)
+	{
+		delete a;
+	}
 }
 
 //=============================================================================
@@ -85,7 +107,7 @@ void Descent::initialize(HWND hwnd)
 
 	if (!pauseText->initialize(graphics, 62, true, false, "Arial"))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing DirectX font"));
-	if (waveNumberText->initialize(graphics, 62, true, false, "Invasion2000") == false)
+	if (waveNumberText->initialize(graphics, 62, true, false,"Invasion2000") == false)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing DirectX font"));
 
 	if (!groundTexture->initialize(graphics, GROUND_TILESET_IMAGE))
@@ -98,24 +120,32 @@ void Descent::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship texture"));
 	if (!menu1Texture->initialize(graphics, MENU1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu texture"));
+	if (!pauseTexture->initialize(graphics, PAUSE_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pause texture"));
 
 	if (!tankTexture->initialize(graphics, TANK_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank texture"));
 
+	if (!cannonball->initialize(this, CannonballNS::WIDTH, CannonballNS::HEIGHT, CannonballNS::TEXTURE_COLS, cannonballTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Cannonball game object"));
+
 	if (!backgroundTexture->initialize(graphics, BKGRND_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing background texture"));
+
+	if (!instructionTexture->initialize(graphics, INSTRUCTION_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing instruction texture"));
 	
 	if (!ground->initialize(graphics, 0, 0, 0, groundTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ground tiles"));
-
-	if (!cannonball->initialize(this, CannonballNS::WIDTH, CannonballNS::HEIGHT, CannonballNS::TEXTURE_COLS, cannonballTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Cannonball game object"));
 
 	if (!enemy_spaceship->initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, spaceshipTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
 	
 	if (!menu1->initialize(graphics,MENU1_WIDTH, MENU1_HEIGHT, 2, menu1Texture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu"));
+
+	if (!pause->initialize(graphics, PAUSE_WIDTH, PAUSE_HEIGHT, 2, pauseTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pause screen"));
 
 	if (!tank->initialize(this,PlayerNS::WIDTH, PlayerNS::HEIGHT, PlayerNS::TEXTURE_COLS, tankTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank"));
@@ -127,6 +157,10 @@ void Descent::initialize(HWND hwnd)
 
 	if (!background->initialize(graphics, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, BACKGROUND_TEXTURE_COLS, backgroundTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error initialising background"));
+
+	if (!instructionScreen->initialize(graphics, INSTRUCTIONS_WIDTH, INSTRUCTIONS_HEIGHT, INSTRUCTIONS_TEXTURE_COLUMNS, instructionTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing instruction screen"));
+
 	if (!bossTexture->initialize(graphics, BOSS_SPACESHIP_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss texture"));
 	if (!boss->initialize(this, Boss_SpaceshipNS::WIDTH, Boss_SpaceshipNS::HEIGHT, Boss_SpaceshipNS::TEXTURE_COLS, bossTexture))
@@ -143,10 +177,12 @@ void Descent::initialize(HWND hwnd)
 	background->setFrames(BACKGROUND_START_FRAME,BACKGROUND_END_FRAME);
 	background->setCurrentFrame(BACKGROUND_START_FRAME);
 
-	audio->playBGM();
+	loadAllAudio();
+	audio[0]->setLoop(true); // background music
+	audio[0]->play();
 
 	ground->setX(0);
-	ground->setScale(GAME_WIDTH / ground->getWidth());
+	ground->setScale((float)(GAME_WIDTH / ground->getWidth()));
 	ground->setY((int)GROUND_LEVEL_HEIGHT);		//sets ground to 3/4 of game width
 
 	enemy_spaceship->setFrames(SpaceshipNS::START_FRAME, SpaceshipNS::END_FRAME);
@@ -208,8 +244,8 @@ void Descent::initialize(HWND hwnd)
 				std::cout << "Current x: " << x << "->" << std::endl;
 			}
 
-			spaceship->setX(x);
-			spaceship->setY(y);
+			spaceship->setX((float)x);
+			spaceship->setY((float)y);
 			spaceship->setHealth(SPACESHIP_STARTING_HEALTH);
 
 			if (!spaceship->initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, spaceshipTexture))
@@ -222,24 +258,16 @@ void Descent::initialize(HWND hwnd)
 
 			std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
 
-			if (currentActiveSpaceships == maxActiveSpaceships)
+			if (currentActiveSpaceships == MAX_NO_OF_SPACESHIPS)
 				break;
-
 		}
 		
-		if (currentActiveSpaceships == maxActiveSpaceships)
+		if (currentActiveSpaceships == MAX_NO_OF_SPACESHIPS)
 			break;
 		
 	}
 
 #pragma endregion
-
-
-	//std::thread t(&Descent::playBGM, this); //for background music - make sure .h file has relevant method
-	//t.join();
-	
-	//std::clock_t start;
-	//start = std::clock();
 	
 	std::async(&Descent::timer_start, this); //run timer thread while main loop is contiuing
 
@@ -268,14 +296,15 @@ void Descent::update()
 			menu1->setCurrentFrame(MENU1_START_FRAME);
 			playerCount = 1;
 		}
-		if (input->isKeyDown(ENTER_KEY)){
+		if (input->wasKeyPressed(ENTER_KEY)){
 			gameControl->setGeneralState(GENERAL_STATE::instructions);
 			//playerCount=number of players to initialise
 		}
 	}break;
 	case GENERAL_STATE::instructions : {
-										   if (input->isKeyDown(TAB_KEY)){
-											   gameControl->setGeneralState(GENERAL_STATE::game);
+										   if (input->wasKeyPressed(SPACE_KEY)){
+											   Sleep(300);
+											   gameControl->setGeneralState(GENERAL_STATE::game);		  
 										   }
 	}break;
 
@@ -305,6 +334,14 @@ void Descent::update()
 		{		
 			turret->setX(tank->getX() + 18.0f);
 		}
+
+		if (input->wasKeyPressed(SPACE_KEY))
+		{
+			cannonball->getTank(tank);
+		}
+		 cannonball->update(frameTime);
+		 cannonball->updateChargingBar(frameTime, tank->getX());
+
 		if (input->wasKeyPressed(UP_KEY) || (input->wasKeyPressed(DOWN_KEY)))
 		{
 			switch (tank->getTankAngle()){
@@ -325,12 +362,6 @@ void Descent::update()
 				break;
 			}
 		}
-		if (input->isKeyDown(SPACE_KEY))
-		{
-			cannonball->getTank(tank);
-		}
-
-		cannonball->update(frameTime);
 
 		 switch (waveState){
 			case WAVE_STATE::pauseWave:{
@@ -382,10 +413,25 @@ void Descent::update()
 	}break;
 
 	case GENERAL_STATE::paused:{
-		if (input->wasKeyPressed(PAUSE_KEY))
-		{
 
-			gameControl->setGeneralState(GENERAL_STATE::game);
+		if (input->isKeyDown(DOWN_KEY)){
+			pause->setCurrentFrame(PAUSE_END_FRAME);
+			pauseScreen = 1;
+		}
+		else if (input->isKeyDown(UP_KEY)){
+			pause->setCurrentFrame(PAUSE_START_FRAME);
+			pauseScreen = 0;
+		}
+		if (input->wasKeyPressed(ENTER_KEY)){
+			Sleep(500);
+			switch (pauseScreen)
+			{
+			case 0: gameControl->setGeneralState(GENERAL_STATE::game);
+				break;
+			case 1: gameControl->setGeneralState(GENERAL_STATE::menu);
+				break;
+			}
+			
 		}
 	}break;
 	}
@@ -407,26 +453,14 @@ void Descent::ai()
 void Descent::collisions()
 {
     VECTOR2 collisionVector;
-    
-	//loop for multiple objects
-		//if object collides with thing
-			//do thing
-
-	/*if (ship1.collidesWith(planet, collisionVector))
-	{
-		// bounce off planet
-		ship1.bounce(collisionVector, planet);
-		ship1.damage(PLANET);
-	}*/
 
 	if (cannonball->collidesWith(*boss, collisionVector))
 	{
 		cannonball->bounce(collisionVector, *boss);
 		
-			//std::cout << cannonball->getDamageLeft() + "COLLIDE BOSSSHIP" << std::endl;
+		//std::cout << cannonball->getDamageLeft() + "COLLIDE BOSSSHIP" << std::endl;
 		
-		cannonball->hit(bossShip);
-		
+		//cannonball->hit(bossShip);
 	}	
 
 	for (int i = 0; i < array_spaceships.size(); i++)
@@ -435,48 +469,51 @@ void Descent::collisions()
 		{
 			if (cannonball->getActive())
 			{
-				cannonball->hit(spaceShip);
 				//actual damage code
 				//calculate damage from cannonball
-				int forcePower = 20;// cannonball.getDamageLeft();	//if unavailable, use 3
+				int spaceshipHealth = array_spaceships[i]->getHealth();
+				array_spaceships[i]->setHealth(array_spaceships[i]->getHealth() - cannonball->getForcePower());	//decreases health of spaceship
+				if (cannonball->getForcePower() > 0)
+				{
+					cannonball->setForcePower(cannonball->getForcePower() - spaceshipHealth); //decreases health of cannonball
+				}
+				else
+				{
+					cannonball->setForcePower(0);
+				}
 
-
-				array_spaceships[i]->setHealth(array_spaceships[i]->getHealth() - forcePower);	//decreases health
-				std::cout << "Spaceship " << i << " took " << forcePower << " damage." << std::endl;
-				std::cout << array_spaceships[i]->getHealth() << " health left " << std::endl;
-
-				std::cout << "Cannonball has " << cannonball->getDamageLeft() << " power left " << std::endl;
-
-				if (array_spaceships[i]->getHealth() <= SPACESHIP_STARTING_HEALTH / SPACESHIP_CRITICAL_HEALTH_FACTOR)
+				if (array_spaceships[i]->getHealth() <= SPACESHIP_STARTING_HEALTH * SPACESHIP_CRITICAL_HEALTH_FACTOR)
 				{
 					array_spaceships[i]->setIsAtCritical(true);
 				}
 
 				if (array_spaceships[i]->getHealth() <= 0)
 				{
+					audio[2]->play();
 					//simple destruction (not intended for actual game)
 					array_spaceships[i]->setVisible(false);
-					std::cout << "Spaceship " << i << " is kill" << std::endl;
 					delete array_spaceships[i];
 					array_spaceships.erase(array_spaceships.begin() + i);
 					currentActiveSpaceships--;
 				}
 
-				if (cannonball->getDamageLeft() == 0)
+				if (cannonball->getForcePower() == 0)
 				{
-					std::cout << "Cannonball is kill" << std::endl;
-					cannonball->setVisible(false);
-					cannonball->setActive(false);
+					cannonball->hit(land);
 				}
-
 			}
 		}
 	}
 
-
+	if (cannonball->collidesWith(*tank, collisionVector))
+	{
+		if (cannonball->getActive())
+		{
+			tank->setHealth(tank->getHealth() - cannonball->getForcePower());
+			cannonball->hit(land);
+		}
+	}
 }
-
-
 
 //=============================================================================
 // Render game items
@@ -490,16 +527,15 @@ void Descent::render()
 								 menu1->draw();
 	}break;
 	case GENERAL_STATE::instructions:{
-								//draw instructions
+								 instructionScreen->draw();
 	}break;
 	case GENERAL_STATE::game:{
 								 background->draw();
 								 ground->draw();                   // add the object to the scene
 								 cannonball->draw();					//in real game, Cannonball should be drawn later, when wormhole appears
-								// enemy_spaceship->draw();
 								 turret->draw();
 								 tank->draw();
-								// smoke->draw();
+								 
 								 
 								 for (int i = 0; i < currentActiveSpaceships; i++)
 								 {
@@ -533,7 +569,8 @@ void Descent::render()
 	}break;
 	case GENERAL_STATE::paused:{
 								   pauseText->print("Paused", GAME_HEIGHT / 2, GAME_WIDTH / 2);
-	}
+								   pause->draw();
+	}break;
 	}
     
 
@@ -547,6 +584,8 @@ void Descent::render()
 void Descent::releaseAll()
 {
 	//exampleTexture->onLostDevice();
+	pauseTexture->onLostDevice();
+	instructionTexture->onLostDevice();
 	backgroundTexture->onLostDevice();
 	cannonballTexture->onLostDevice();
 	groundTexture->onLostDevice();
@@ -554,6 +593,8 @@ void Descent::releaseAll()
 	tankTexture->onLostDevice();
 	turretTexture->onLostDevice();
 	smokeTexture->onLostDevice();
+	cannonball->releaseAll();
+	tank->releaseAll();
     Game::releaseAll();
     return;
 }
@@ -565,6 +606,8 @@ void Descent::releaseAll()
 void Descent::resetAll()
 {
     //exampleTexture->onResetDevice();
+	pauseTexture->onResetDevice();
+	instructionTexture->onResetDevice();
 	backgroundTexture->onResetDevice();
 	cannonballTexture->onResetDevice();
 	groundTexture->onResetDevice();
@@ -572,8 +615,18 @@ void Descent::resetAll()
 	tankTexture->onResetDevice();
 	turretTexture->onResetDevice();
 	smokeTexture->onResetDevice();
+	cannonball->resetAll();
+	tank->resetAll();
     Game::resetAll();
     return;
+}
+
+//=============================================================================
+// load audio
+//=============================================================================
+void Descent::loadAudio(std::string source)
+{
+	audio.push_back(new Audio(source));
 }
 
 //=============================================================================
@@ -583,9 +636,16 @@ void Descent::initializeTank()
 {
 	tank->setFrames(PlayerNS::START_FRAME, PlayerNS::END_FRAME);
 	tank->setCurrentFrame(PlayerNS::START_FRAME);
-	tank->setX(GAME_WIDTH / 2);
-	tank->setY(GROUND_LEVEL_HEIGHT - PLAYER_HEIGHT + 2.0f);
+	/*if (playerCount == 1)
+	{*/
+		tank->setX(GAME_WIDTH / 2);
+		tank->setY(GROUND_LEVEL_HEIGHT - PLAYER_HEIGHT + 2.0f);
+	/*}
+	else
+	{
+	}*/
 	tank->flipHorizontal(false);
+	tank->initialiseTankHealthbar();
 
 	turret->setCurrentFrame(3);
 	turret->setX(tank->getX() + 28.0f);
@@ -593,6 +653,7 @@ void Descent::initializeTank()
 
 	cannonball->setX(tank->getX());
 	cannonball->setY(tank->getY());
+	cannonball->initialiseChargingbar(tank->getX(),tank->getY());
 }
 
 //=============================================================================
@@ -824,14 +885,18 @@ void Descent::timer_start()
 				currentInGameTime++;
 				//std::cout << "in game seconds passed: = " << currentInGameTime << std::endl;
 				//std::cout << currentInGameTime << " seconds has passed in-game. " << getSecondsPassed() << " second(s) has passed (in program)." << std::endl;
-
 				moveSpaceships(isAllSpaceshipMovingRight);
-
 			}
-
 		}
-
-		
-
 	}
+}
+
+//=============================================================================
+// load all audios
+//=============================================================================
+void Descent::loadAllAudio()
+{
+	loadAudio("resources\\music\\background.ogg");
+	loadAudio("resources\\music\\tankMoving.wav");
+	loadAudio("resources\\music\\explode.wav");
 }

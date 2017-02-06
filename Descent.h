@@ -35,11 +35,6 @@
 class Descent : public Game
 {
 private:
-    //texture items
-	//game items
-	
-	TextureManager exampleTexture;
-	Image exampleImage;
 	TextDX* pauseText;
 	TextDX* waveNumberText;
 	GameControl*	gameControl;
@@ -55,30 +50,32 @@ private:
 	TextureManager* tankTexture;
 	TextureManager* turretTexture;
 	TextureManager* smokeTexture;
+	TextureManager* pauseTexture;
+	TextureManager* instructionTexture;
 
 	Image* background;
+	Image* pause;
+	Image* instructionScreen;
 	Image* ground;
 	Image* menu1;
 	Image* turret;
+
 	Cannonball* cannonball;
 	Spaceship* enemy_spaceship;	//only one for now, testing only
 	Boss_Spaceship* boss;
-	int waveNumber=1;
 	Player* tank;
 	Shell* shell;
 	std::vector<Spaceship*> array_spaceships;
-	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
+	std::vector<Audio*> audio;
 	
+	int waveNumber = 1;
 	int playerCount;//use this value to count 1 player or 2 player
-	int highestY;
+	double secondsPassed;
+	int pauseScreen=0;
 
 	//modifiers
 	int timeModifier = GAME_BASE_TIME_MODIFIER; //Default value is 1, value affects time - this value will multiply by 1 second to achieve new time
 	int speedModifier = GAME_BASE_SPEED_MODIFIER; //Default value is 1, value affects speed - this value will be multiplied by speed values to achieve new speed
-
-	double secondsPassed;
-
-	Audio* audio;
 
 public:
 	int currentActiveSpaceships; //amt of spaceships currently alive (should be dynamically less or equal to maxActiveSpaceships)
@@ -101,6 +98,8 @@ public:
     void resetAll();
 
 	//other functions
+	void loadAudio(std::string source);
+	void loadAllAudio();
 	void initializeTank();
 	void moveSpaceships(bool isMovingRight);
 	void timer_start();

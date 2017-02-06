@@ -23,6 +23,18 @@ Player::Player() : Entity()
 	speed = 100.0f;
 	tankAngle = 90;
 	tankDirection = false;
+	baseStrength = PLAYER_BASE_STRENGTH;
+	health = PLAYER_MAX_HEALTH;
+	
+}
+
+//=============================================================================
+// Deconstructor
+// 
+//=============================================================================
+Player::~Player()
+{
+	delete tankHealth;
 }
 
 //=============================================================================
@@ -32,8 +44,14 @@ Player::Player() : Entity()
 bool Player::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM)
 {
-	maxHealth = PLAYER_MAX_HEALTH;
-	baseStrength = PLAYER_BASE_STRENGTH;
+	tankHealthTexture = new TextureManager();
+	tankHealth = new Image();
+
+	if (!tankHealthTexture->initialize(gamePtr->getGraphics(), TANK_HEALTH_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank health texture"));
+
+	if (!tankHealth->initialize(gamePtr->getGraphics(), PLAYER_HEALTH_WIDTH, PLAYER_HEALTH_HEIGHT, PLAYER_HEALTH_TEXTURE_COLUMNS, tankHealthTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank health"));
 
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
 }
@@ -43,6 +61,7 @@ bool Player::initialize(Game *gamePtr, int width, int height, int ncols,
 //=============================================================================
 void Player::draw()
 {
+	tankHealth->draw();
 	Image::draw();              // draw ship
 }
 
@@ -71,16 +90,17 @@ void Player::update(float frameTime)
 
 	if (input->isKeyDown(LEFT_KEY))
 	{
-		//audio.playTankSounds("resources/music/tankMoving.wav");
 		spriteData.flipHorizontal = false;
 		tankDirection = false;
 		spriteData.x -= frameTime * speed;
+		tankHealth->setX(spriteData.x + 10.0f);
 	}
 	if (input->isKeyDown(RIGHT_KEY))
 	{
 		spriteData.flipHorizontal = true;
 		tankDirection = true;
 		spriteData.x += frameTime * speed;
+		tankHealth->setX(spriteData.x+ 10.0f);
 	}
 	if (input->wasKeyPressed(UP_KEY))
 	{
@@ -120,6 +140,23 @@ void Player::update(float frameTime)
 			break;
 		}
 	}
+
+	if (health < 0)
+		health = 0;
+	if (health > PLAYER_MAX_HEALTH)
+		health = PLAYER_MAX_HEALTH;
+	if ((health <= PLAYER_MAX_HEALTH) && (health > (3 * PLAYER_MAX_HEALTH / 4))) // 100% to 76%
+		tankHealth->setCurrentFrame(0);
+	if ((health <= (3 * PLAYER_MAX_HEALTH / 4)) && (health > (PLAYER_MAX_HEALTH / 2))) //75% to 51%
+		tankHealth->setCurrentFrame(1);
+	if ((health <= (PLAYER_MAX_HEALTH / 2)) && (health > PLAYER_MAX_HEALTH / 4)) //50% to26%
+		tankHealth->setCurrentFrame(2);
+	if ((health <= PLAYER_MAX_HEALTH /4) && (health > 0)) //25% to 1%
+		tankHealth->setCurrentFrame(3);
+	if (health == 0)
+		tankHealth->setVisible(false); //GAMES END HERE
+
+	tankHealth->update(frameTime);
 }
 
 //additional methods here
@@ -167,4 +204,53 @@ int Player::getTankAngle()
 bool Player::getTankDirection()
 {
 	return tankDirection;
+}
+
+//=============================================================================
+// The graphics device was lost.
+// Release all reserved video memory so graphics device may be reset.
+//=============================================================================
+void Player::releaseAll()
+{
+	tankHealthTexture->onLostDevice();
+	return;
+}
+
+//=============================================================================
+// The grahics device has been reset.
+// Recreate all surfaces.
+//=============================================================================
+void Player::resetAll()
+{
+	tankHealthTexture->onResetDevice();
+	return;
+}
+
+//=============================================================================
+// initialise healthbar of the tank
+//=============================================================================
+void Player::initialiseTankHealthbar()
+{
+	tankHealth->setCurrentFrame(0);
+	tankHealth->setScale(2);
+	tankHealth->setX(Player::spriteData.x + 10.0f);
+	tankHealth->setY(Player::spriteData.y + 70.0f);
+}
+
+//=============================================================================
+// setHealth
+// set health
+//=============================================================================
+void Player::setHealth(int h)
+{
+	health = h;
+}
+
+//=============================================================================
+// getHealth
+// return health
+//=============================================================================
+int Player::getHealth()
+{
+	return health;
 }

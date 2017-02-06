@@ -57,6 +57,13 @@ const float PLAYER_ANIMATION_DELAY = 0.2f;		//note: make player animate only whe
 const float PLAYER_BASE_STRENGTH = 25.0f;		//base strength, related to player throwing
 const float PLAYER_MAX_HEALTH = 100;			//for dynamic health values, should represent health as a number
 
+//player(tank) health
+const int PLAYER_HEALTH_WIDTH = 28;
+const int PLAYER_HEALTH_HEIGHT = 8;
+const int PLAYER_HEALTH_TEXTURE_COLUMNS = 1;
+const int PLAYER_HEALTH_START_FRAME = 0;
+const int PLAYER_HEALTH_END_FRAME = 0;
+
 //cannonball variables
 const int CANNONBALL_WIDTH = 32;
 const int CANNONBALL_HEIGHT = 32;
@@ -67,6 +74,13 @@ const float CANNONBALL_MASS = 1200.0f;				//number subject to change - idk what 
 const float CANNONBALL_BASE_SPEED = 200.0f;			//base speed that CANNONBALL always moves on, MAY NOT BE RELEVANT DEPENDING ON HOW WE CALCULATE SPEED 
 const float CANNONBALL_ANIMATION_DELAY = 0.2f;		//note: maybe Cannonball animates when moving 
 const int CANNONBALL_DAMAGE = 5;
+
+//charging bar variabbles
+const int CHARGINGBAR_WIDTH = 28;
+const int CHARGINGBAR_HEIGHT = 8;
+const int CHARGINGBAR_TEXTURE_COLUMNS = 1;
+const int CHARGINGBAR_START_FRAME = 0;
+const int CHARGINGBAR_END_FRAME = 0;
 
 //refers to a wormhole/blackhole image, is not an actual object. Remove if confirmed to go for tank theme instead of Cannonball theme
 //can also incorporate to 'explain' arrival of spaceships
@@ -141,6 +155,20 @@ const int MENU1_TEXTURE_COLUMNS = 0;
 const int MENU1_START_FRAME = 0;
 const int MENU1_END_FRAME = 1;
 
+//pause frames
+const int PAUSE_WIDTH = GAME_WIDTH;
+const int PAUSE_HEIGHT = GAME_HEIGHT;
+const int PAUSE_TEXTURE_COLUMNS = 0;
+const int PAUSE_START_FRAME = 0;
+const int PAUSE_END_FRAME = 1;
+
+//instruction frames
+const int INSTRUCTIONS_WIDTH = GAME_WIDTH;
+const int INSTRUCTIONS_HEIGHT = GAME_HEIGHT;
+const int INSTRUCTIONS_TEXTURE_COLUMNS = 0;
+const int INSTRUCTIONS_START_FRAME = 0;
+const int INSTRUCTIONS_END_FRAME = 0;
+
 //turret frames
 const int TURRET_WIDTH = 35;
 const int TURRET_HEIGHT = 35;
@@ -177,12 +205,18 @@ const char GROUND_TILESET_IMAGE[] = "resources\\images\\ground_tile.png";
 const char CANNONBALL_IMAGE[] = "resources\\images\\cannonball.png";
 const char SPACESHIP_IMAGE[] = "resources\\images\\spaceship.png";
 const char MENU1_IMAGE[] = "resources\\images\\menu1.png";
+const char PAUSE_IMAGE[] = "resources\\images\\pause.png";
 const char BOSS_SPACESHIP_IMAGE[] = "resources\\images\\boss_spaceship.png";
 const char TANK_IMAGE[] = "resources\\images\\tank.png";
+const char TANK2_IMAGE[] = "resources\\images\\tank2.png";
+const char TANK_HEALTH_IMAGE[] = "resources\\images\\tankHealth.png";
+const char TANK2_HEALHT_IMAGE[] = "resources\\images\\tank2Health.png";
 const char BKGRND_IMAGE[] = "resources\\images\\background.png";
+const char INSTRUCTION_IMAGE[] = "resources\\images\\instruction.png";
 const char TURRET_IMAGE[] = "resources\\images\\turret.png";
 const char SMOKE_IMAGE[] = "resources\\images\\smoke.png";
 const char SHELL_IMAGE[] = "resources\\images\\shell.png";
+const char CHARGINGBAR_IMAGE[] = "resources\\images\\chargingbar.png";
 
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used

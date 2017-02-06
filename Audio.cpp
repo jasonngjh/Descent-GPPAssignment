@@ -3,10 +3,11 @@
 //=============================================================================
 // default constructor
 //=============================================================================
-Audio::Audio()
+Audio::Audio(std::string source)
 {
-	bgmBuffer = new sf::SoundBuffer();
-	tankBuffer = new sf::SoundBuffer();
+	_source = source;
+	buffer.loadFromFile(_source);
+	sound.setBuffer(buffer);
 }
 
 //=============================================================================
@@ -14,42 +15,31 @@ Audio::Audio()
 //=============================================================================
 Audio::~Audio()
 {
-	delete bgmBuffer;
-	delete tankBuffer;
 }
 
 //=============================================================================
 // playBGM
 // play background music of the game
 //=============================================================================
-void Audio::playBGM()
+void Audio::play()
 {
-	if (!bgmBuffer->loadFromFile("resources/music/background.ogg"))
-		return;
-	bgm.setBuffer(*bgmBuffer);
-	bgm.setLoop(true);
-	bgm.play();
+	sound.play();
 }
 
 //=============================================================================
 // stopBGM
 // stop background music of the game
 //=============================================================================
-void Audio::stopBGM()
+void Audio::stop()
 {
-	bgm.pause();
+	sound.stop();
 }
 
 //=============================================================================
-// playTankSounds
+// setLoop
 // stop background music of the game
 //=============================================================================
-void Audio::playTankSounds(std::string fileLocation)
+void Audio::setLoop(bool b)
 {
-	if (!tankBuffer->loadFromFile(fileLocation))
-		return;
-	sf::Sound tank;
-	tank.setBuffer(*bgmBuffer);
-	tank.setLoop(true);
-	tank.play();
+	sound.setLoop(b);
 }

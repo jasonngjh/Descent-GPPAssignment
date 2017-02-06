@@ -9,24 +9,24 @@
 
 class Audio
 {
+
 private:
-	sf::SoundBuffer* bgmBuffer;
-	sf::Sound bgm;
-	sf::SoundBuffer* tankBuffer;
-	sf::SoundBuffer spaceshipBuffer;
-	sf::Sound spaceship;
+	sf::SoundBuffer buffer;
+	sf::Sound sound;
+	std::string _source;
 
 public:
 	//constructor
-	Audio();
+	Audio(std::string source);
 
 	//destructor
 	~Audio();
 
 	//additional methods here
-	void playBGM();
-	void stopBGM();
-	void playTankSounds(std::string);
+	void loadAudio();
+	void play();
+	void stop();
+	void setLoop(bool);
 };
 
 #endif

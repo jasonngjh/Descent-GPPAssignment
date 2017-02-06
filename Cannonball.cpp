@@ -21,11 +21,14 @@ Cannonball::Cannonball() : Entity()
 	mass = CannonballNS::MASS;
 	collisionType = entityNS::CIRCLE;
 	onGround = true;
-	timeHold = 1.0;
-	time = 5;
+	forcePower = 0;
 
 	Image::setScale(0.5);
-	//Image::setVisible(false);
+	Image::setVisible(false);
+	setActive(false);
+
+	chargingTexture = new TextureManager();
+	chargingBar = new Image();
 }
 
 //=============================================================================
@@ -33,7 +36,8 @@ Cannonball::Cannonball() : Entity()
 //=============================================================================
 Cannonball::~Cannonball()
 {
-	SAFE_DELETE(tank);
+	delete chargingTexture;
+	delete chargingBar;
 }
 
 //=============================================================================
@@ -43,7 +47,12 @@ Cannonball::~Cannonball()
 bool Cannonball::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM)
 {
-	damageLeft = CannonballNS::DAMAGE;
+
+	if (!chargingTexture->initialize(gamePtr->getGraphics(), CHARGINGBAR_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing charging bar texture"));
+
+	if (!chargingBar->initialize(gamePtr->getGraphics(), CHARGINGBAR_WIDTH, CHARGINGBAR_HEIGHT, CHARGINGBAR_TEXTURE_COLUMNS, chargingTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing charging bar"));
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
 }
 
@@ -52,6 +61,7 @@ bool Cannonball::initialize(Game *gamePtr, int width, int height, int ncols,
 //=============================================================================
 void Cannonball::draw()
 {
+	chargingBar->draw();
 	Image::draw();              // draw ship
 }
 
@@ -82,10 +92,11 @@ void Cannonball::update(float frameTime)
 		}
 	}
 
-	if (spriteData.y > GROUND)
+	if ((spriteData.y > GROUND_LEVEL_HEIGHT))
 	{
 		hit(land);
 	}
+
 
 	if (spriteData.x > GAME_WIDTH - CannonballNS::WIDTH*getScale())
 	{
@@ -121,23 +132,24 @@ void Cannonball::hit(hitWho target)
 	if (target == land)
 	{
 		onGround = true;
-		//Image::setVisible(false);
+		setActive(false);
+		Image::setVisible(false);
 		spriteData.y = GROUND;//change value to where ur land is changes
 		velocity.y = 0.0;
 		velocity.x = 0.0;
-		damageLeft = 5;
+		
 	}
 	if (target == spaceShip)
 	{
-		if (damageLeft>0)
-		damageLeft -= 1;
-		else damageLeft = 0;
+		if (forcePower>0)
+			forcePower -= 1;
+		else forcePower = 0;
 	}
 	if (target == bossShip)
 	{
-		if (damageLeft>0)
-			damageLeft -= 1;
-		else damageLeft = 0;
+		if (forcePower>0)
+			forcePower -= 1;
+		else forcePower = 0;
 		
 	}
 }
@@ -156,16 +168,12 @@ void Cannonball::getTank(Player* t)
 // playerCannonball()
 // encapsulate the method to for firing the ball based on which player
 //=============================================================================
-void Cannonball::playerCannonball(double time)
+void Cannonball::playerCannonball()
 {
-	std::cout << "time: " << time << std::endl;
+	float initialVelocity = 2000.0;
 
-	float initialVelocity;
-	if (time > 0 && time <= 1)
-	{
-		initialVelocity = 2000.0;
-	}
 	onGround = false;
+	setActive(true);
 	Image::setVisible(true);
 	D3DXVECTOR2 v;
 	switch (tank->getTankAngle())
@@ -275,15 +283,107 @@ void Cannonball::checkForHold()
 	{
 		currentChargeTime = ((clock() - timer) / (double)CLOCKS_PER_SEC);  //convert computer timer to real life seconds
 
+		if (currentChargeTime > 0 && currentChargeTime <= 0.5)
+			chargingBar->setCurrentFrame(5);
+		if (currentChargeTime > 0.5 && currentChargeTime <= 1.0)
+			chargingBar->setCurrentFrame(4);
+		if (currentChargeTime > 1.0 && currentChargeTime <= 1.5)
+			chargingBar->setCurrentFrame(3);
+		if (currentChargeTime > 1.5 && currentChargeTime <= 2.0)
+			chargingBar->setCurrentFrame(2);
+		if (currentChargeTime > 2.0 && currentChargeTime <= 2.5)
+			chargingBar->setCurrentFrame(1);
+		if (currentChargeTime > 2.5 && currentChargeTime <= 3.0)
+			chargingBar->setCurrentFrame(0);
+
 		if (currentChargeTime > 3.0)
 		{
 			currentChargeTime = 3.0;
 			boolKeyHold = false;
 		}
 	}
-	
-	playerCannonball(currentChargeTime);
+	chargingBar->setCurrentFrame(6);
+	calulateForce(currentChargeTime);
+	playerCannonball();
 	currentChargeTime = 0.0;
+}
+//=============================================================================
+// calculateForce(double)
+// use the time to get the force
+//=============================================================================
+void Cannonball::calulateForce(double time)
+{
+	if (time >= 0.0 && time < 1.0)
+	{
+		setForcePower(10);
+	}
+	if (time >= 1.0 && time < 2.0)
+	{
+		setForcePower(25);
+	}
+	if (time >= 2.0 && time <= 3.0)
+	{
+		setForcePower(50);
+	}
 	boolKeyHold = false;
 	isCharging = false;
+}
+
+//=============================================================================
+// setForcePower()
+// set the force power of the cannonball
+//=============================================================================
+void Cannonball::setForcePower(int f)
+{
+	forcePower = f;
+}
+
+//=============================================================================
+// getForcePower()
+// get the force power of the cannonball
+//=============================================================================
+int Cannonball::getForcePower()
+{
+	return forcePower;
+}
+
+//=============================================================================
+// The graphics device was lost.
+// Release all reserved video memory so graphics device may be reset.
+//=============================================================================
+void Cannonball::releaseAll()
+{
+	chargingTexture->onLostDevice();
+	return;
+}
+
+//=============================================================================
+// The grahics device has been reset.
+// Recreate all surfaces.
+//=============================================================================
+void Cannonball::resetAll()
+{
+	chargingTexture->onResetDevice();
+	return;
+}
+
+//=============================================================================
+// initialise charging bar
+//=============================================================================
+void Cannonball::initialiseChargingbar(float x, float y)
+{
+	chargingBar->setCurrentFrame(6);
+	chargingBar->setX(x + 10.0f);
+	chargingBar->setY(y + 90.0f);
+}
+
+//=============================================================================
+// update charging bar as the tank is moving
+//=============================================================================
+void Cannonball::updateChargingBar(float frametime,float x)
+{
+	if ((input->isKeyDown(LEFT_KEY)) || (input->isKeyDown(RIGHT_KEY)))
+	{
+		chargingBar->setX(x + 10.0f);
+	}
 }

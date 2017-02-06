@@ -104,9 +104,6 @@
     <ClInclude Include="powerup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HealthComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AttackComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
