@@ -589,7 +589,10 @@ void Descent::update()
 void Descent::ai()
 {
 
-	//no ai
+	//simple ai for wave 2 shooting
+
+	//timer feedbacks player movement and speed to AI
+		//DO SOMETHING RELATED 
 
 }
 
@@ -1342,13 +1345,34 @@ void Descent::timer_start()
 			setSecondsPassed((clock() - timer) / (double)CLOCKS_PER_SEC);  //convert computer timer to real life seconds
 
 			if ((fmod(getSecondsPassed(), SPACESHIP_MOVE_FREQUENCY*timeModifier)) == 0)
-			{	
+			{
 
 				//std::cout << "in game seconds passed: = " << currentInGameTime << std::endl;
 				//std::cout << currentInGameTime << " seconds has passed in-game. " << getSecondsPassed() << " second(s) has passed (in program)." << std::endl;
 
 				moveSpaceships();
 
+			}
+
+			//if game state wave 1
+			//fmod wave 1 speed shooting chance
+
+			if ((fmod(getSecondsPassed(), SPACESHIP_ATTACK_FREQUENCY)) == 0)
+			{
+
+				for (int i = 0; i < currentActiveSpaceships; i++)
+				{
+					double generatedChance = rand() % 100;
+					if (WAVE_1_SPACESHIPS_FIRE_CHANCE >= generatedChance)	//pew!
+					{
+
+					}
+				}
+
+				//run for loop that iterates through every spaceship
+					//for each spaceship, check and compare seed
+						//if chance not hit, ignore
+						//if chance hit, 
 			}
 
 			if ((fmod(getSecondsPassed(), POWERUP_SPAWN_FREQUENCY)) == 0 && currentActivePowerups < MAX_NO_OF_POWERUPS && !isPowerupInProgress)

@@ -105,6 +105,7 @@
     <ClCompile Include="Powerup.cpp" />
     <ClCompile Include="shell.cpp" />
     <ClCompile Include="Spaceship.cpp" />
+    <ClCompile Include="Spaceship_bullet.cpp" />
     <ClCompile Include="textDX.cpp" />
     <ClCompile Include="Descent.cpp" />
     <ClCompile Include="textureManager.cpp" />
@@ -131,6 +132,7 @@
     <ClInclude Include="powerup.h" />
     <ClInclude Include="shell.h" />
     <ClInclude Include="Spaceship.h" />
+    <ClInclude Include="Spaceship_bullet.h" />
     <ClInclude Include="textDX.h" />
     <ClInclude Include="Descent.h" />
     <ClInclude Include="textureManager.h" />

@@ -94,17 +94,36 @@ const float SPACESHIP_ANIMATION_DELAY = 0.1f;		//passively animates
 const int SPACESHIP_STARTING_HEALTH = 5;
 const int SPACESHIP_MOVEMENT_DISTANCE = 29;
 const int SPACESHIP_MOVE_FREQUENCY = 2;
+const int SPACESHIP_ATTACK_FREQUENCY = 1;
 const double SPACESHIP_CRITICAL_HEALTH_FACTOR = 0.25;
 const int SPACESHIP_REWARD_SCORE = 50;
 const double SPACESHIP_REWARD_COMBO_MULTIPLIER = 1;		//amt of points multiplied for collateral kills
 const int HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 80;	//this affects how much ships can be created in a row, if values are too high will lead to weird spaceship orientation
 const int VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 20;	
 
+//SPACESHIP_BULLET variables
+const int SPACESHIP_BULLET_WIDTH = 6;
+const int SPACESHIP_BULLET_HEIGHT = 12;
+const int SPACESHIP_BULLET_TEXTURE_COLUMNS = 2;
+const int SPACESHIP_BULLET_START_FRAME = 0;
+const int SPACESHIP_BULLET_END_FRAME = 1;
+const float SPACESHIP_BULLET_SPEED = 150.0f;
+const float SPACESHIP_BULLET_ANIMATION_DELAY = 0.2f;
+const int SPACESHIP_BULLET_DAMAGE = 1;
+const int MAX_NO_OF_SPACESHIP_BULLETS = 10;
+
 //spaceship spawn variables
 const int MAX_NO_OF_SPACESHIPS = 60; //number of spaceships allowed to exist
 const int AMT_OF_SPACESHIPS_PER_ROW = 5; //number should not be less than GAME_WIDTH/(SPACESHIP_WIDTH + HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS)
 const int WAVE_1_SPACESHIPS_AMT_OF_ROWS = 4;
 const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 6;
+
+const int WAVE_1_SPACESHIPS_HEALTH = 4;
+const int WAVE_2_SPACESHIPS_HEALTH = 7;
+
+const double WAVE_1_SPACESHIPS_FIRE_CHANCE = 0.02;		//measured in percentages
+const double WAVE_2_SPACESHIPS_FIRE_CHANCE = 0.04;		//measured in percentages
+
 
 //boss spaceship variables
 const int BOSS_SPACESHIP_WIDTH = 212;

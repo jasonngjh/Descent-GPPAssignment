@@ -10,6 +10,7 @@
 #include "cannonball.h"
 #include "Player.h"
 #include "Spaceship.h"
+#include "Spaceship_bullet.h"
 #include "powerup.h"
 #include "Assist_Tank.h"
 #include "Assist_Tank_bullet.h"
@@ -58,6 +59,7 @@ private:
 	TextureManager* groundTexture;
 	TextureManager* cannonballTexture;
 	TextureManager* spaceshipTexture;
+	TextureManager* spaceship_bulletTexture;
 	TextureManager* menu1Texture;
 	TextureManager* tankTexture;
 	TextureManager* turretTexture;
@@ -93,14 +95,16 @@ private:
 	Powerup* powerup_passerbyTank;
 
 	std::vector<Spaceship*> array_spaceships;
+	std::vector<Spaceship_bullet*> array_spaceships_bullets;
 	std::vector<Powerup*> array_powerups_drawingSpace;			//the vector where all different types of powerups are initialized
 	std::vector<Powerup*> array_powerups;
 	std::vector<Assist_Tank_bullet*> array_tank_assist_bullets;	//to store attacks by friendly NPC tank
 
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
+	const int maxActiveSpaceshipBullets = MAX_NO_OF_SPACESHIP_BULLETS;
 	const int maxActivePowerups = MAX_NO_OF_POWERUPS;
 	const int maxActiveAssistTankBullets = MAX_NO_OF_ASSIST_TANK_BULLETS;
-	
+
 	int playerCount;//use this value to count 1 player or 2 player
 	int highestY;
 	int currentScore;
@@ -115,13 +119,13 @@ private:
 
 
 public:
-	int currentActiveSpaceships; //amt of spaceships currently alive (should be dynamically less or equal to maxActiveSpaceships)
-	int currentActivePowerups;	//amt of powerups currently in the game as objects (NOT the ones in effect)
-	int totalAmtOfPowerupVariety;	//for use with array_powerups_drawingSpace, keeps track of amount of hard-coded powerup effects
+	int currentActiveSpaceships;			//amt of spaceships currently alive (should be dynamically less or equal to maxActiveSpaceships)
+	int currentActiveSpaceshipBullets;		//amt of spaceship bullets active
+	int currentActivePowerups;				//amt of powerups currently in the game as objects (NOT the ones in effect)
+	int totalAmtOfPowerupVariety;			//for use with array_powerups_drawingSpace, keeps track of amount of hard-coded powerup effects
 	int currentActiveTankAssistBullets;
 
 	int hiscore;
-	//int score;
 
 	int comboSpaceshipCounter;		//to check how much spaceships has been destroyd by a single cannonball
 
