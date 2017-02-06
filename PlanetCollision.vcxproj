@@ -90,6 +90,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Assist_Tank.cpp" />
+    <ClCompile Include="Assist_Tank_bullet.cpp" />
     <ClCompile Include="Boss_Spaceship.cpp" />
     <ClCompile Include="Cannonball.cpp" />
     <ClCompile Include="entity.cpp" />
@@ -110,6 +112,8 @@
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Assist_Tank.h" />
+    <ClInclude Include="Assist_Tank_bullet.h" />
     <ClInclude Include="AttackComponent.h" />
     <ClInclude Include="Boss_Spaceship.h" />
     <ClInclude Include="Cannonball.h" />

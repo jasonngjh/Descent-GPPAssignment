@@ -1,23 +1,30 @@
-﻿Build started 5/2/2017 2:10:03 AM.
+﻿Build started 6/2/2017 12:49:28 PM.
      1>Project "C:\Users\Jack\Source\Repos\gppassignmentLATEST\PlanetCollision.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\NPStudent\Source\Repos\gppassignment22 /I"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Descent.cpp gameControl.cpp waveControl.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\NPStudent\Source\Repos\gppassignment22 /I"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Descent.cpp
          Descent.cpp
-     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(87): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(172): warning C4244: 'argument' : conversion from 'const UINT' to 'float', possible loss of data
-     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(280): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(281): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(527): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(789): warning C4244: '=' : conversion from 'const double' to 'int', possible loss of data
-     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(830): warning C4244: 'argument' : conversion from 'const double' to 'float', possible loss of data
-     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(983): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(984): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
-         Generating Code...
-         Skipping... (no relevant changes detected)
-         waveControl.cpp
-         gameControl.cpp
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(93): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(183): warning C4244: 'argument' : conversion from 'const UINT' to 'float', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(211): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(305): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(306): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(886): warning C4244: '=' : conversion from 'const double' to 'int', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(897): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(936): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(959): warning C4244: 'argument' : conversion from 'const double' to 'float', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(966): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(1018): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(1069): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(1109): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(1118): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(1131): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(1300): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(1311): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\jack\source\repos\gppassignmentlatest\descent.cpp(1312): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Jack\Source\Repos\gppassignmentLATEST\Debug\Throw Ball Game.exe" /NOLOGO /LIBPATH:"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Lib\x86" d3d9.lib d3dx9.lib winmm.lib xinput.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Jack\Source\Repos\gppassignmentLATEST\Debug\Throw Ball Game.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Jack\Source\Repos\gppassignmentLATEST\Debug\Throw Ball Game.lib" /MACHINE:X86 /SAFESEH:NO Debug\Boss_Spaceship.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Jack\Source\Repos\gppassignmentLATEST\Debug\Throw Ball Game.exe" /NOLOGO /LIBPATH:"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Lib\x86" d3d9.lib d3dx9.lib winmm.lib xinput.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Jack\Source\Repos\gppassignmentLATEST\Debug\Throw Ball Game.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Jack\Source\Repos\gppassignmentLATEST\Debug\Throw Ball Game.lib" /MACHINE:X86 /SAFESEH:NO Debug\Assist_Tank.obj
+         Debug\Assist_Tank_bullet.obj
+         Debug\Boss_Spaceship.obj
          Debug\Cannonball.obj
          Debug\entity.obj
          Debug\game.obj
@@ -40,4 +47,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.92
+Time Elapsed 00:00:02.06

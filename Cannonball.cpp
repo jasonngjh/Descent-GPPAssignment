@@ -67,9 +67,11 @@ void Cannonball::update(float frameTime)
 	
 	if (input->isKeyDown(SPACE_KEY))
 	{
+
 		if (onGround)
 		{
 			onGround = false;
+			active = true;
 
 			switch (tank.getTankAngle())
 			{
@@ -194,6 +196,7 @@ void Cannonball::hit(hitWho target)
 	if (target == land)
 	{
 		onGround = true;
+		active = false;
 		spriteData.y = GROUND;//change value to where ur land is changes
 		velocity.y = 0.0;
 		velocity.x = 0.0;

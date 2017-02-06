@@ -5,6 +5,7 @@
 #include "entity.h"
 #include "constants.h"
 #include <ctime>
+#include <time.h>
 #include <thread>
 #include <future>
 #include <iostream>

@@ -70,43 +70,44 @@ void Powerup::beginExpireCountdown()
 }
 
 //=============================================================================
-// start and run timer
-// to track each individual powerup
+// timer function
+// to track each individual powerup's expiry time
 //	using thread
 //=============================================================================
 void Powerup::powerup_timer_start()
 {
 	//create timer
-	clock_t timer1 = clock();//start timer
 
-	//std::cout << "beginning countdown" << std::endl;
+	time_t clockTimer;
+	double seconds = 0;
+
+	int startingTime = time(&clockTimer);	//saves the time that the thread started on
+
+	std::cout << "Starting time: " << startingTime << std::endl;
 
 	bool loop = true;
 	while (loop)
 	{
 
-		setSecondsPassed((clock() - timer1) / (double)CLOCKS_PER_SEC);  //convert computer timer to real life seconds
+		//setSecondsPassed((clock() - timer) / (double)CLOCKS_PER_SEC);  //convert computer timer to real life seconds
 
 		if ((fmod(getSecondsPassed(), SECOND) == 0))
 		{
-			//std::cout << "current powerup time is " << getSecondsPassed() << std::endl;
+			//every second in processor, check and update real time
+			time(&clockTimer);  //get and update current time
+			seconds = difftime(clockTimer, startingTime);
 		}
 			
-
-		if ((fmod(getSecondsPassed(), POWERUP_START_BLINKING_TIME_MARK) == 0))
+		if (seconds == POWERUP_START_BLINKING_TIME_MARK)
 		{
 			endFrame = POWERUP_BLINKING_END_FRAME;
 		}
 
-
-		else if ((fmod(getSecondsPassed(), POWERUP_OBJECT_DURATION) == 0))
+		else if (seconds == POWERUP_OBJECT_DURATION)
 		{
 			active = false;	//this triggers the kill command in Descent.cpp
-			//std::cout << "powerup is kill" << std::endl;
-			loop = false;
+			loop = false;	//stops the timer since powerup has expired
 		}
-
-		
 
 	}
 }

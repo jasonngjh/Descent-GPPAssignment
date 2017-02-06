@@ -11,6 +11,8 @@
 #include "Player.h"
 #include "Spaceship.h"
 #include "powerup.h"
+#include "Assist_Tank.h"
+#include "Assist_Tank_bullet.h"
 #include "Boss_Spaceship.h"
 #include "shell.h"
 
@@ -21,9 +23,11 @@
 #include "animation.h"
 
 #include <windows.h>
+#include <time.h>
 #include <conio.h>
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include <thread>
 #include <functional>
 #include <ctime>
@@ -44,6 +48,7 @@ private:
 	Image exampleImage;
 	TextDX* pauseText;
 	TextDX* waveNumberText;
+	TextDX* powerup_notification_text;
 	GameControl*	gameControl;
 	WaveControl*	waveControl;
 
@@ -57,6 +62,8 @@ private:
 	TextureManager* tankTexture;
 	TextureManager* turretTexture;
 	TextureManager* smokeTexture;
+	TextureManager* assistTankTexture;
+	TextureManager* assistTankBulletTexture;
 
 	TextureManager* powerup_timeSlow_texture;
 	TextureManager* powerup_restoreHealth_texture;
@@ -76,6 +83,7 @@ private:
 	int waveNumber=1;
 	Player* tank;
 	Shell* shell;
+	Assist_Tank* assistTank;
 
 	Powerup* powerup_timeSlow;
 	Powerup* powerup_restoreHealth;
@@ -85,18 +93,23 @@ private:
 	Powerup* powerup_passerbyTank;
 
 	std::vector<Spaceship*> array_spaceships;
-	std::vector<Powerup*> array_powerups_drawingSpace;	//the vector where all different types of powerups are initialized
+	std::vector<Powerup*> array_powerups_drawingSpace;			//the vector where all different types of powerups are initialized
 	std::vector<Powerup*> array_powerups;
+	std::vector<Assist_Tank_bullet*> array_tank_assist_bullets;	//to store attacks by friendly NPC tank
 
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
 	const int maxActivePowerups = MAX_NO_OF_POWERUPS;
+	const int maxActiveAssistTankBullets = MAX_NO_OF_ASSIST_TANK_BULLETS;
 	
 	int playerCount;//use this value to count 1 player or 2 player
 	int highestY;
+	int currentScore;
 
 	//modifiers
 	int timeModifier = GAME_BASE_TIME_MODIFIER; //Default value is 1, value affects time - this value will multiply by 1 second to achieve new time
 	int speedModifier = GAME_BASE_SPEED_MODIFIER; //Default value is 1, value affects speed - this value will be multiplied by speed values to achieve new speed
+
+	bool isPowerupInProgress = false;		//checks if there is currently an active powerup
 
 	double secondsPassed;
 
@@ -105,9 +118,16 @@ public:
 	int currentActiveSpaceships; //amt of spaceships currently alive (should be dynamically less or equal to maxActiveSpaceships)
 	int currentActivePowerups;	//amt of powerups currently in the game as objects (NOT the ones in effect)
 	int totalAmtOfPowerupVariety;	//for use with array_powerups_drawingSpace, keeps track of amount of hard-coded powerup effects
+	int currentActiveTankAssistBullets;
 
-	bool isAllSpaceshipMovingRight;	//keeps track of ship direction
-	bool isShipsReadyToShift;		//keeps track of ship movement, for use in downwards movement
+	int hiscore;
+	//int score;
+
+	int comboSpaceshipCounter;		//to check how much spaceships has been destroyd by a single cannonball
+
+	bool isAllSpaceshipMovingRight;			//keeps track of ship direction
+	bool isShipsReadyToShift;				//keeps track of ship movement, for use in downwards movement
+	bool isCurrentScoreHighestScore;		// keeps track of high-scoring
 
     // Constructor
 	Descent();
@@ -144,10 +164,13 @@ public:
 	void applyPowerupEffect(int powerupCode);
 
 	void applyPowerupEffect_timeSlow();
+	void applyPowerupEffect_restoreHealth();
 	void applyPowerupEffect_increaseTankSpeed();
 	void applyPowerupEffect_timeLock();
 	void applyPowerupEffect_maxPower();
 	void applyPowerupEffect_tankAssist();
+
+	void addToScore(int scoreToAdd);
 
 };
 
