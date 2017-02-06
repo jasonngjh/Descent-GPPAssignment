@@ -28,11 +28,14 @@ Shell::Shell() : Entity()
 bool Shell::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM)
 {
-	
-
-	//crosshair.setLoop(false);
+	crosshair.initialize(gamePtr->getGraphics(), width, height, ncols, textureM);
+	crosshair.setFrames(ShellNS::CROSSHAIR_START_FRAME, ShellNS::CROSSHAIR_END_FRAME);
+	crosshair.setCurrentFrame(ShellNS::CROSSHAIR_START_FRAME);
+	crosshair.setFrameDelay(0.1f);
+	crosshair.setDegrees(ShellNS::CROSSHAIR_ROTATION_RATE);
+	crosshair.setScale(0.8);
 	spriteData.angle = PI / 2;
-	spriteData.scale=3.0;
+	spriteData.scale=0.08;
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
 }
 
@@ -42,6 +45,9 @@ bool Shell::initialize(Game *gamePtr, int width, int height, int ncols,
 void Shell::draw()
 {
 		Image::draw();              // draw ship
+		
+		crosshair.draw(spriteData, graphicsNS::ALPHA50 );//gpp common test 
+
 }
 
 //=============================================================================
@@ -56,7 +62,8 @@ void Shell::update(float frameTime, Player turret)
 	//spriteData.angle += frameTime * ShellNS::ROTATION_RATE;
 
 	//distance = sqrt(pow(turret.getX() - spriteData.x, 2) + pow(turret.getY() - spriteData.y, 2));
-
+	crosshair.setDegrees(ShellNS::CROSSHAIR_ROTATION_RATE*frameTime);
+	crosshair.update(frameTime);
 	thrust = 0.25;
 	tx = (turret.getX()+turret.getWidth()/4) - spriteData.x;
 	ty = (turret.getY()) - spriteData.y;
@@ -90,6 +97,7 @@ void Shell::update(float frameTime, Player turret)
 		velocity.y = -velocity.y;               // reverse Y direction
 	}
 	//crosshair.setCurrentFrame(ShellNS::CROSSHAIR_START_FRAME);
+	//Entity::update(frameTime);
 
 
 }

@@ -36,6 +36,7 @@ private:
 	int health=4;
 	Shell shell;
 	Image turret;
+	bool leftright=true;
 public:
 	// constructor
 	Boss_Spaceship();

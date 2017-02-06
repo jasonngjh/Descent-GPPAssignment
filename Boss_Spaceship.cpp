@@ -49,6 +49,20 @@ void Boss_Spaceship::draw()
 void Boss_Spaceship::update(float frameTime)
 {
 	Entity::update(frameTime);
+	if ((spriteData.x+BOSS_SPACESHIP_WIDTH > GAME_WIDTH))
+	{
+		leftright = true;
+		while (leftright)
+		spriteData.x-=30*frameTime;
+	}
+	if (spriteData.x<0)
+
+	{
+		leftright = false;
+		while (!leftright)
+		spriteData.x -=30*frameTime;
+	}
+	
 }
 
 //additional methods here

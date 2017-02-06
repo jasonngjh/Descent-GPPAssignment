@@ -154,11 +154,11 @@ const int SMOKE_START_FRAME = 0;
 const int SMOKE_END_FRAME = 3;
 
 //shell variables
-const int SHELL_WIDTH = 18;
-const int SHELL_HEIGHT = 7;
+const int SHELL_WIDTH = 400;
+const int SHELL_HEIGHT = 400;
 const int SHELL_START_FRAME = 0;
 const int SHELL_END_FRAME = 0;
-const int SHELL_TEXTURE_COLUMNS = 0;
+const int SHELL_TEXTURE_COLUMNS = 2;
 const float SHELL_MASS = 5.0f;
 const float SHELL_BASE_SPEED = 5.0f;
 const float SHELL_ANIMATION_DELAY = 0.0f;
@@ -172,6 +172,13 @@ const int BACKGROUND_TEXTURE_COLS = 4;
 const int BACKGROUND_START_FRAME = 0;
 const int BACKGROUND_END_FRAME = 3;
 
+const int BOSSLASER_WIDTH = 8;
+const int BOSSLASER_HEIGHT = 17;
+const int BOSSLASER_START_FRAME = 0;
+const int BOSSLASER_END_FRAME = 1;
+const int BOSSLASER_TEXTURE_COLUMNS = 2;
+const float BOSSLASER_BASE_SPEED = 12.0f;
+const float BOSSLASER_MASS = 5.0f;
 // graphic images
 const char EXAMPLE_OBJECT_IMAGE[] = "images\\[PLACEHOLDER].jpg";
 const char GROUND_TILESET_IMAGE[] = "images\\ground_tile.png";
@@ -184,6 +191,7 @@ const char BKGRND_IMAGE[] = "images\\background.png";
 const char TURRET_IMAGE[] = "images\\turret.png";
 const char SMOKE_IMAGE[] = "images\\smoke.png";
 const char SHELL_IMAGE[] = "images\\shell.png";
+const char BOSSLASER_IMAGE[]="images\\bosslaser.png";
 
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used

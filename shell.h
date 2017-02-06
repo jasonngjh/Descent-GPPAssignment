@@ -17,7 +17,9 @@ namespace ShellNS
 	const int END_FRAME = SHELL_END_FRAME;
 	const float ANIMATION_DELAY = SHELL_ANIMATION_DELAY;
 	const int DAMAGE = SHELL_DAMAGE;
-
+	const int CROSSHAIR_START_FRAME = 1;
+	const int CROSSHAIR_END_FRAME = 1;
+	const int CROSSHAIR_ROTATION_RATE = 0.5f;
 	const int X = 0;
 	const int Y = 0;
 }
@@ -28,6 +30,7 @@ private:
 	bool moving;
 	float drectionX, directionY,distance;
 	float tx, ty, dist,thrust;
+	Image crosshair;//gpp common test
 
 public:
 	Shell();

@@ -219,8 +219,9 @@ void Descent::initialize(HWND hwnd)
 
 	boss->setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
 	boss->setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
-	boss->setX(GAME_WIDTH / 4);
-	boss->setY(GAME_HEIGHT / 5);
+	boss->setX(GAME_WIDTH / 4+45);
+	boss->setY(20);
+	boss->setScale(0.75);
 	currentActiveSpaceships = 0;
 	isAllSpaceshipMovingRight = true;
 	isShipsReadyToShift = false;
@@ -229,7 +230,8 @@ void Descent::initialize(HWND hwnd)
 
 	shell->setX(boss->getX() + BOSS_SPACESHIP_WIDTH / 2);
 	shell->setY(boss->getY() + BOSS_SPACESHIP_HEIGHT / 2);
-	
+	shell->setScale(0.045);
+
 #pragma endregion
 
 	initializeTank();
@@ -348,7 +350,7 @@ void Descent::update()
 			case WAVE_STATE::pauseWave:{
 											//std::cout << "pause" << std::endl; 
 											if (input->isKeyDown(SPACE_KEY))
-												waveControl->setWaveState(WAVE_STATE::wave1);
+												waveControl->setWaveState(WAVE_STATE::wave3);
 			 }break;
 			 case WAVE_STATE::wave1:{
 										
@@ -449,9 +451,21 @@ void Descent::collisions()
 			
 			std::cout << "collide with tank liao" << std::endl;
 			shell->setActive(false);
+			shell->setVisible(false);
 			std::cout << "can u see dis" << std::endl;
 	}
-
+	if (shell->collidesWith(*cannonball, collisionVector))
+	{
+		std::cout << "cannonball hit shell" << std::endl;
+		shell->setActive(false);
+		shell->setVisible(false);
+	}
+	if (cannonball->collidesWith(*shell, collisionVector))
+	{
+		std::cout << "cannonball hit shell" << std::endl;
+		shell->setActive(false);
+		shell->setVisible(false);
+	}
 	if (cannonball->collidesWith(*boss, collisionVector))
 	{
 		cannonball->bounce(collisionVector, *boss);
@@ -460,7 +474,7 @@ void Descent::collisions()
 		
 		cannonball->hit(bossShip);
 		boss->setHealth((boss->getHealth() - cannonball->getDamageLeft()));
-		boss->setVisible(false);
+		//boss->setVisible(false);
 		std::cout << "Boss HP Left:" <<(int)boss->getHealth()<< std::endl;
 	}	
 
@@ -581,9 +595,9 @@ void Descent::render()
 															//if (currentInGameTime%5==0)
 															//{
 																
-																if (shell->getActive()){
+																
 																	shell->draw();
-																}
+																
 											
 
 															//}
@@ -905,6 +919,7 @@ void Descent::timer_start()
 void Descent::resetShellPos()
 {
 	shell->setActive(true);
+	shell->setVisible(true);
 	//if (!shellTexture->initialize(graphics, SHELL_IMAGE))
 		//throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell texture"));
 	if (!shell->initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, shellTexture))
