@@ -122,7 +122,6 @@ void Descent::initialize(HWND hwnd)
     Game::initialize(hwnd); // throws GameError
 	if (dxFont.initialize(graphics, gameNS::POINT_SIZE, false, false, gameNS::FONT) == false)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Failed to initialize DirectX font."));
-	std::cout << "initialising game" << std::endl;
 
 	srand(time(NULL));		//seeds the RNG
 	
@@ -267,13 +266,6 @@ void Descent::initialize(HWND hwnd)
 	powerup_maxPower = new Powerup();
 	powerup_passerbyTank = new Powerup();
 
-	powerup_timeSlow->setPowerupCode(POWERUP_TIME_SLOW_CODE);
-	powerup_restoreHealth->setPowerupCode(POWERUP_RESTORE_HEALTH_CODE);
-	powerup_increaseTankSpeed->setPowerupCode(POWERUP_INCREASE_TANK_SPEED_CODE);
-	powerup_timeLock->setPowerupCode(POWERUP_TIME_LOCK_CODE);
-	powerup_maxPower->setPowerupCode(POWERUP_MAX_POWER_CODE);
-	powerup_passerbyTank->setPowerupCode(POWERUP_TANK_ASSIST_CODE);
-
 	if (!powerup_timeSlow->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_timeSlow_texture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (down speed) object"));
 
@@ -292,40 +284,7 @@ void Descent::initialize(HWND hwnd)
 	if (!powerup_passerbyTank->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_passerbyTank_texture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (passerby tank) object"));
 
-	array_powerups_drawingSpace.push_back(powerup_timeSlow);
-	array_powerups_drawingSpace.push_back(powerup_restoreHealth);
-	array_powerups_drawingSpace.push_back(powerup_increaseTankSpeed);
-	array_powerups_drawingSpace.push_back(powerup_timeLock);
-	array_powerups_drawingSpace.push_back(powerup_maxPower);
-	array_powerups_drawingSpace.push_back(powerup_passerbyTank);
-
-	totalAmtOfPowerupVariety = array_powerups_drawingSpace.size();
-	std::cout << "total amount of loaded powerups: " << totalAmtOfPowerupVariety << std::endl;
-
-	currentActivePowerups = 0;
-
-	initializeTank();
-
 #pragma endregion
-	
-	std::async(&Descent::timer_start, this); //run timer thread while main loop is contiuing
-
-	//instantiating counter and boolean variables
-	currentActiveSpaceships = 0;
-	currentActiveSpaceshipBullets = 0;
-	currentActiveTankAssistBullets = 0;
-	comboSpaceshipCounter = 0;
-	currentScore = 0;
-
-	acquiredPlayerSpeed = 0;
-	acquiredPlayerDirectionIsRight = true;
-
-	isAllSpaceshipMovingRight = true;
-	isShipsReadyToShift = false;
-	isPowerupInProgress = false;
-	isPowerupSpawning = true;
-	isCalculatingPlayerPattern = false;
-	isAllSpaceshipsFiring = false;
 
     return;
 }
@@ -1668,10 +1627,8 @@ void Descent::timer_start()
 	//create timer
 	clock_t timer = clock();//start timer
 
-	bool loop = true;
-	while (loop)
+	while (timerLoop)
 	{
-
 		if (gameControl->getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
 		{
 			setSecondsPassed((clock() - timer) / (double)CLOCKS_PER_SEC);  //convert computer timer to real life seconds
@@ -1711,7 +1668,7 @@ void Descent::timer_start()
 				&& !isPowerupInProgress
 				&& isPowerupSpawning)
 				spawnPowerup();
-
+				
 		}
 	}
 }
@@ -1846,7 +1803,7 @@ void Descent::checkGamestatus()
 {
 	if (tank->getHealth() == 0)
 	{
-		gameStatus = 2;
+		gameStatus = 1;
 		gameControl->setGeneralState(GENERAL_STATE::gameOver);
 	}
 }
@@ -1884,8 +1841,9 @@ void Descent::launchBossLaser()
 //=============================================================================
 void Descent::despawnSpaceships()
 {
-	std::cout << array_spaceships.size() << std::endl;
-	std::cout << currentActiveSpaceships << std::endl;
+	std::cout << "before despawinning" << std::endl;
+	std::cout << "Array_Spaceship size: " << array_spaceships.size() << std::endl;
+	std::cout << "Current active spaceship size: "<<currentActiveSpaceships << std::endl;
 	for (int i = currentActiveSpaceships-1; i >= 0; i--)
 	{
 		array_spaceships[i]->setVisible(false);
@@ -1894,8 +1852,9 @@ void Descent::despawnSpaceships()
 		array_spaceships.erase(array_spaceships.begin() + i);
 		currentActiveSpaceships--;
 	}
-	std::cout << array_spaceships.size() << std::endl;
-	std::cout << currentActiveSpaceships << std::endl;
+	std::cout << "after despawinning" << std::endl;
+	std::cout << "Array_Spaceship size: " << array_spaceships.size() << std::endl;
+	std::cout << "Current active spaceship size: "<< currentActiveSpaceships << std::endl;
 
 }
 
@@ -1928,13 +1887,9 @@ void Descent::loadHighScore()
 //=============================================================================
 void Descent::restartGame()
 {
+	std::cout << "restart game" << std::endl;
+	timerLoop = false;
 	initializeTank();
-	enemy_spaceship->setFrames(SpaceshipNS::START_FRAME, SpaceshipNS::END_FRAME);
-	enemy_spaceship->setCurrentFrame(SpaceshipNS::START_FRAME);
-	enemy_spaceship->setX(1);
-	enemy_spaceship->setY(1);
-	enemy_spaceship->setHealth(2); //for testing only
-	enemy_spaceship->setIsAtCritical(true);
 
 	boss->setVelocity(VECTOR2(100, 0)); // VECTOR2(X, Y)
 	launchBossLaser();
@@ -1956,4 +1911,55 @@ void Descent::restartGame()
 	assistTank->setX(ASSIST_TANK_WIDTH);
 	assistTank->setY(GROUND_LEVEL_HEIGHT - ASSIST_TANK_HEIGHT);
 	assistTank->setActive(false);
+
+	timerLoop = true;
+
+	std::async(&Descent::timer_start, this); //run timer thread while main loop is contiuing
+
+	powerup_timeSlow->setPowerupCode(POWERUP_TIME_SLOW_CODE);
+	powerup_restoreHealth->setPowerupCode(POWERUP_RESTORE_HEALTH_CODE);
+	powerup_increaseTankSpeed->setPowerupCode(POWERUP_INCREASE_TANK_SPEED_CODE);
+	powerup_timeLock->setPowerupCode(POWERUP_TIME_LOCK_CODE);
+	powerup_maxPower->setPowerupCode(POWERUP_MAX_POWER_CODE);
+	powerup_passerbyTank->setPowerupCode(POWERUP_TANK_ASSIST_CODE);
+
+	array_powerups_drawingSpace.push_back(powerup_timeSlow);
+	array_powerups_drawingSpace.push_back(powerup_restoreHealth);
+	array_powerups_drawingSpace.push_back(powerup_increaseTankSpeed);
+	array_powerups_drawingSpace.push_back(powerup_timeLock);
+	array_powerups_drawingSpace.push_back(powerup_maxPower);
+	array_powerups_drawingSpace.push_back(powerup_passerbyTank);
+
+	//instantiating counter and boolean variables
+	totalAmtOfPowerupVariety = array_powerups_drawingSpace.size();
+	std::cout << "total amount of loaded powerups: " << totalAmtOfPowerupVariety << std::endl;
+	currentActivePowerups = 0;
+	currentActiveSpaceships = 0;
+	currentActiveSpaceshipBullets = 0;
+	currentActiveTankAssistBullets = 0;
+	comboSpaceshipCounter = 0;
+	currentScore = 0;
+
+	acquiredPlayerSpeed = 0;
+	acquiredPlayerDirectionIsRight = true;
+
+	isAllSpaceshipMovingRight = true;
+	isShipsReadyToShift = false;
+	isPowerupInProgress = false;
+	isPowerupSpawning = false;
+	isCalculatingPlayerPattern = false;
+	isAllSpaceshipsFiring = true;
+
+	hasWaveOneSpawned = false;
+	hasWaveTwoSpawned = false;
+	hasWaveThreeSpawned = false;
+
+	tank->setHealth(PLAYER_MAX_HEALTH);
+	//boss->setHealth();
+	gameStatus = 0;
+	currentActiveSpaceships = 0;
+
+	waveControl->setWaveState(WAVE_STATE::pauseWave);
+
+	pause->setCurrentFrame(PAUSE_START_FRAME);
 }
