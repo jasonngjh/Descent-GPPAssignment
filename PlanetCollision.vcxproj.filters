@@ -66,6 +66,9 @@
     <ClCompile Include="shell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="bosslaser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -129,6 +132,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="shell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bosslaser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

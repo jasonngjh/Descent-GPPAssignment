@@ -12,6 +12,7 @@
 #include "Spaceship.h"
 #include "Boss_Spaceship.h"
 #include "shell.h"
+#include "bosslaser.h"
 
 #include "guicon.h"
 #include "gameControl.h"
@@ -32,6 +33,8 @@
 //=============================================================================
 // This class is the core of the game
 //=============================================================================
+
+
 class Descent : public Game
 {
 private:
@@ -44,6 +47,7 @@ private:
 	TextDX* waveNumberText;
 	GameControl*	gameControl;
 	WaveControl*	waveControl;
+	GENERAL_STATE currentState;
 
 	TextureManager* shellTexture;
 	TextureManager* bossTexture;
@@ -55,18 +59,26 @@ private:
 	TextureManager* tankTexture;
 	TextureManager* turretTexture;
 	TextureManager* smokeTexture;
+	TextureManager* bossLaserTexture;
 
+	BossLaser* bosslaser;
 	Image* background;
 	Image* ground;
 	Image* menu1;
 	Image* turret;
 	Cannonball* cannonball;
-	Spaceship* enemy_spaceship;	//only one for now, testing only
 	Boss_Spaceship* boss;
 	int waveNumber=1;
 	Player* tank;
 	Shell* shell;
+	Shell shell1;
+	bool initAlready = true;
 	std::vector<Spaceship*> array_spaceships;
+	std::vector<BossLaser*> array_bosslaser;
+	float array[3];
+
+	int laserCounter = 0;
+	bool existOnScreen = true;
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
 	
 	int playerCount;//use this value to count 1 player or 2 player
@@ -76,8 +88,9 @@ private:
 	int timeModifier = GAME_BASE_TIME_MODIFIER; //Default value is 1, value affects time - this value will multiply by 1 second to achieve new time
 	int speedModifier = GAME_BASE_SPEED_MODIFIER; //Default value is 1, value affects speed - this value will be multiplied by speed values to achieve new speed
 
-
+	bool missileFire=true;
 	double secondsPassed;
+	int currentInGameTime;
 
 
 public:
@@ -99,11 +112,14 @@ public:
     void render();      // "
     void releaseAll();
     void resetAll();
+	
 
 	//other functions
 	void initializeTank();
 	void moveSpaceships(bool isMovingRight);
 	void timer_start();
+	void resetShellPos();
+	void launchBossLaser();
 
 	double getSecondsPassed() { return secondsPassed; }
 	void setSecondsPassed(double seconds) { secondsPassed = seconds; }
@@ -113,6 +129,7 @@ public:
 
 	int getSpeedModifier() { return speedModifier; }
 	void setSpeedModifier(int modifyingValue) { speedModifier = modifyingValue; }
+	
 };
 
 #endif
