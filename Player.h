@@ -4,7 +4,7 @@
 
 #include "entity.h"
 #include "constants.h"
-#include "HealthComponent.h"
+#include "Audio.h"
 
 namespace PlayerNS
 {
@@ -33,39 +33,40 @@ class Player : public Entity
 private:
 	
 	float baseStrength;
-	bool	isHoldingCannonball = false;
-
 	bool	isAlive = true;
-	float maxHealth;
-	int health;
-	float speed;						// X pixels per second
-	int tankAngle;
-	bool tankDirection;
-	//HealthComponent* health;
+	double		health;
+	float	speed;						// X pixels per second
+	int		tankAngle;
+	bool	tankDirection;
+	TextureManager* tankHealthTexture;
+	Image* tankHealth;
 
 public:
 	// constructor
 	Player();
+
+	//deconstructor
+	~Player();
 
 	// inherited member functions
 	virtual void draw();
 	virtual bool initialize(Game *gamePtr, int width, int height, int ncols,
 		TextureManager *textureM);
 	void update(float frameTime);
-
-	void setIsHoldingCannonball(bool isHeld)
-	{
-		isHoldingCannonball = isHeld;
-	}
+	void releaseAll();
+	void resetAll();
+	void initialiseTankHealthbar();
 
 	//setters
 	void setSpeed(float s);
 	void setTankAngle(int a);
+	void setHealth(double h);
 
 	//getters
 	float getSpeed();
 	int getTankAngle();
 	bool getTankDirection();
+	double getHealth();
 };
 #endif
 

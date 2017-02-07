@@ -57,6 +57,13 @@ const float PLAYER_ANIMATION_DELAY = 0.2f;		//note: make player animate only whe
 const float PLAYER_BASE_STRENGTH = 25.0f;		//base strength, related to player throwing
 const float PLAYER_MAX_HEALTH = 100;			//for dynamic health values, should represent health as a number
 
+//player(tank) health
+const int PLAYER_HEALTH_WIDTH = 28;
+const int PLAYER_HEALTH_HEIGHT = 8;
+const int PLAYER_HEALTH_TEXTURE_COLUMNS = 1;
+const int PLAYER_HEALTH_START_FRAME = 0;
+const int PLAYER_HEALTH_END_FRAME = 0;
+
 //cannonball variables
 const int CANNONBALL_WIDTH = 32;
 const int CANNONBALL_HEIGHT = 32;
@@ -67,6 +74,13 @@ const float CANNONBALL_MASS = 1200.0f;				//number subject to change - idk what 
 const float CANNONBALL_BASE_SPEED = 200.0f;			//base speed that CANNONBALL always moves on, MAY NOT BE RELEVANT DEPENDING ON HOW WE CALCULATE SPEED 
 const float CANNONBALL_ANIMATION_DELAY = 0.2f;		//note: maybe Cannonball animates when moving 
 const int CANNONBALL_DAMAGE = 5;
+
+//charging bar variabbles
+const int CHARGINGBAR_WIDTH = 28;
+const int CHARGINGBAR_HEIGHT = 8;
+const int CHARGINGBAR_TEXTURE_COLUMNS = 1;
+const int CHARGINGBAR_START_FRAME = 0;
+const int CHARGINGBAR_END_FRAME = 0;
 
 //refers to a wormhole/blackhole image, is not an actual object. Remove if confirmed to go for tank theme instead of Cannonball theme
 //can also incorporate to 'explain' arrival of spaceships
@@ -141,6 +155,27 @@ const int MENU1_TEXTURE_COLUMNS = 0;
 const int MENU1_START_FRAME = 0;
 const int MENU1_END_FRAME = 1;
 
+//pause frames
+const int PAUSE_WIDTH = GAME_WIDTH;
+const int PAUSE_HEIGHT = GAME_HEIGHT;
+const int PAUSE_TEXTURE_COLUMNS = 0;
+const int PAUSE_START_FRAME = 0;
+const int PAUSE_END_FRAME = 1;
+
+//instruction frames
+const int INSTRUCTIONS_WIDTH = GAME_WIDTH;
+const int INSTRUCTIONS_HEIGHT = GAME_HEIGHT;
+const int INSTRUCTIONS_TEXTURE_COLUMNS = 0;
+const int INSTRUCTIONS_START_FRAME = 0;
+const int INSTRUCTIONS_END_FRAME = 0;
+
+//game win/lose frames
+const int WINLOSE_WIDTH = GAME_WIDTH;
+const int WINLOSE_HEIGHT = GAME_HEIGHT;
+const int WINLOSE_TEXTURE_COLUMNS = 2;
+const int WINLOSE_START_FRAME = 0;
+const int WINLOSE_END_FRAME = 1;
+
 //turret frames
 const int TURRET_WIDTH = 35;
 const int TURRET_HEIGHT = 35;
@@ -181,18 +216,22 @@ const float BOSSLASER_ANIMATION_DELAY = 0.5f;
 const float BOSSLASER_BASE_SPEED = 300.0f;
 const float BOSSLASER_MASS = 5.0f;	
 // graphic images
-const char EXAMPLE_OBJECT_IMAGE[] = "images\\[PLACEHOLDER].jpg";
-const char GROUND_TILESET_IMAGE[] = "images\\ground_tile.png";
-const char CANNONBALL_IMAGE[] = "images\\cannonball.png";
-const char SPACESHIP_IMAGE[] = "images\\spaceship.png";
-const char MENU1_IMAGE[] = "images\\menu1.png";
-const char BOSS_SPACESHIP_IMAGE[] = "images\\boss_spaceship.png";
-const char TANK_IMAGE[] = "images\\tank.png";
-const char BKGRND_IMAGE[] = "images\\background.png";
-const char TURRET_IMAGE[] = "images\\turret.png";
-const char SMOKE_IMAGE[] = "images\\smoke.png";
-const char SHELL_IMAGE[] = "images\\shell.png";
+const char GROUND_TILESET_IMAGE[] = "resources\\images\\ground_tile.png";
+const char CANNONBALL_IMAGE[] = "resources\\images\\cannonball.png";
+const char SPACESHIP_IMAGE[] = "resources\\images\\spaceship.png";
+const char MENU1_IMAGE[] = "resources\\images\\menu1.png";
+const char PAUSE_IMAGE[] = "resources\\images\\pause.png";
+const char BOSS_SPACESHIP_IMAGE[] = "resources\\images\\boss_spaceship.png";
+const char TANK_IMAGE[] = "resources\\images\\tank.png";
+const char TANK_HEALTH_IMAGE[] = "resources\\images\\tankHealth.png";
+const char BKGRND_IMAGE[] = "resources\\images\\background.png";
+const char INSTRUCTION_IMAGE[] = "resources\\images\\instruction.png";
+const char TURRET_IMAGE[] = "resources\\images\\turret.png";
+const char SHELL_IMAGE[] = "resources\\images\\shell.png";
+const char CHARGINGBAR_IMAGE[] = "resources\\images\\chargingbar.png";
 const char BOSSLASER_IMAGE[]="images\\bosslaser.png";
+const char GAME_WIN_IMAGE[] = "resources\\images\\gamewin.png";
+const char GAME_LOSE_IMAGE[] = "resources\\images\\gamelose.png";
 
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
@@ -205,12 +244,18 @@ const UCHAR SPACE_KEY = VK_SPACE;
 const UCHAR UP_KEY = VK_UP;
 const UCHAR LEFT_KEY = VK_LEFT;
 const UCHAR RIGHT_KEY = VK_RIGHT;
+const UCHAR M_KEY = 0x4D;
 const UCHAR TAB_KEY = VK_TAB;
 const UCHAR PAUSE_KEY = 0x50;
 //note - might want to change the following to more obvious names
 const UCHAR O_KEY = 0x31;					//number 1
 const UCHAR TW_KEY = 0x32;					//number 2
 const UCHAR TH_KEY = 0x33;					//number 3
+const UCHAR W_KEY = 0x57;
+const UCHAR A_KEY = 0x41;
+const UCHAR S_KEY = 0x53;
+const UCHAR D_KEY = 0x44;
+const UCHAR F_KEY = 0x46;
 
 enum hitWho{land,spaceShip,bossShip,player};
 

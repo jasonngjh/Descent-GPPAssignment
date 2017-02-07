@@ -6,6 +6,10 @@
 
 #include "entity.h"
 #include "constants.h"
+#include <iostream>
+#include <future>
+#include <math.h>
+#include <ctime>
 #include "Player.h"
 #include <math.h>
 
@@ -34,13 +38,14 @@ namespace CannonballNS
 class Cannonball : public Entity
 {
 private:
-	bool    shieldOn;
 	int		playerNumber;		//which player is holding the Cannonball 
-	int		damageLeft;
-	int		distance, time;
-	Player	tank;
+	Player *tank;
 	bool	onGround;
-	float	timeHold;
+	bool	boolKeyHold = true;
+	bool	isCharging = false;
+	int		forcePower;
+	TextureManager* chargingTexture;
+	Image* chargingBar;
 
 public:
 	// constructor
@@ -55,19 +60,24 @@ public:
 		TextureManager *textureM);
 	void update(float frameTime);
 	void hit(hitWho);
-	int getDamageLeft(){ return damageLeft; }
 	void setCannonballIsHeld(int playerNo)
 	{
-
 		if (playerNumber == 1 || playerNumber == 2)
 			playerNumber = playerNo;
 		else
-			playerNumber = 0;
-		
+			playerNumber = 0;	
 	}
-	void getTank(Player tank);
-	
-	//any other relevant methods here
+	void getTank(Player* tank);
+	void playerCannonball();
+	void checkForHold();
+	void setForcePower(int f);
+	int	 getForcePower();
+	void calulateForce(double time);
+	void releaseAll();
+	void resetAll();
+	void initialiseChargingbar(float x, float y);
+	void updateChargingBar(float frameTime,float x);
+
 
 };
 #endif

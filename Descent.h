@@ -12,7 +12,6 @@
 #include "Spaceship.h"
 #include "Boss_Spaceship.h"
 #include "shell.h"
-#include "bosslaser.h"
 
 #include "guicon.h"
 #include "gameControl.h"
@@ -28,21 +27,14 @@
 #include <functional>
 #include <ctime>
 #include <future>
-
+#include "Audio.h"
 
 //=============================================================================
 // This class is the core of the game
 //=============================================================================
-
-
 class Descent : public Game
 {
 private:
-    //texture items
-	//game items
-	
-	TextureManager exampleTexture;
-	Image exampleImage;
 	TextDX* pauseText;
 	TextDX* waveNumberText;
 	GameControl*	gameControl;
@@ -57,41 +49,53 @@ private:
 	TextureManager* spaceshipTexture;
 	TextureManager* menu1Texture;
 	TextureManager* tankTexture;
+	TextureManager* tank2Texture;
 	TextureManager* turretTexture;
 	TextureManager* smokeTexture;
+	TextureManager* pauseTexture;
+	TextureManager* instructionTexture;
+	TextureManager* gamewinTexture;
+	TextureManager* gameloseTexture;
 	TextureManager* bossLaserTexture;
 
-	BossLaser* bosslaser;
 	Image* background;
+	Image* pause;
+	Image* instructionScreen;
 	Image* ground;
 	Image* menu1;
 	Image* turret;
-	Cannonball* cannonball;
-	Boss_Spaceship* boss;
-	int waveNumber=1;
-	Player* tank;
-	Shell* shell;
-	Shell shell1;
-	bool initAlready = true;
-	std::vector<Spaceship*> array_spaceships;
-	std::vector<BossLaser*> array_bosslaser;
-	float array[3];
+	Image* turret2;
+	Image* gamewin;
+	Image* gamelose;
 
+	Cannonball* cannonball;
+	Cannonball* cannonball2;
+	Spaceship* enemy_spaceship;	//only one for now, testing only
+	Boss_Spaceship* boss;
+	Player* tank;
+	Player* tank2;
+	Shell* shell;
+	std::vector<Spaceship*> array_spaceships;
+	std::vector<Audio*> audio;
+	std::vector<BossLaser*> array_bosslaser;
+	BossLaser* bosslaser;
+	
+	bool initAlready = true;
+	int waveNumber = 1;
+	int playerCount = 1;//use this value to count 1 player or 2 player
+	double secondsPassed;
+	int pauseScreen=0;
+	int gameOverScreen = 0;
+	float array[3];
 	int laserCounter = 0;
 	bool existOnScreen = true;
-	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
-	
-	int playerCount;//use this value to count 1 player or 2 player
-	int highestY;
+	bool missileFire=true;
 
 	//modifiers
 	int timeModifier = GAME_BASE_TIME_MODIFIER; //Default value is 1, value affects time - this value will multiply by 1 second to achieve new time
 	int speedModifier = GAME_BASE_SPEED_MODIFIER; //Default value is 1, value affects speed - this value will be multiplied by speed values to achieve new speed
 
-	bool missileFire=true;
-	double secondsPassed;
-	int currentInGameTime;
-
+	int gameStatus= 0;
 
 public:
 	int currentActiveSpaceships; //amt of spaceships currently alive (should be dynamically less or equal to maxActiveSpaceships)
@@ -112,12 +116,15 @@ public:
     void render();      // "
     void releaseAll();
     void resetAll();
-	
 
 	//other functions
+	void loadAudio(std::string source);
+	void loadAllAudio();
 	void initializeTank();
 	void moveSpaceships(bool isMovingRight);
 	void timer_start();
+	void setTanks();
+	void checkGamestatus();
 	void resetShellPos();
 	void launchBossLaser();
 
@@ -129,7 +136,6 @@ public:
 
 	int getSpeedModifier() { return speedModifier; }
 	void setSpeedModifier(int modifyingValue) { speedModifier = modifyingValue; }
-	
-};
 
+};
 #endif
