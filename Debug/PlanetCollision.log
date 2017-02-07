@@ -1,56 +1,57 @@
-﻿Build started 07/02/2017 03:28:44.
+﻿Build started 07/02/2017 03:56:24.
      1>Project "D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\PlanetCollision.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\NPStudent\Source\Repos\gppassignment22 /I"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Assist_Tank.cpp Assist_Tank_bullet.cpp Boss_Spaceship.cpp Cannonball.cpp Descent.cpp Player.cpp Powerup.cpp Spaceship.cpp Spaceship_bullet.cpp entity.cpp game.cpp graphics.cpp image.cpp input.cpp shell.cpp textDX.cpp textureManager.cpp winmain.cpp
-     1>cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
-         Assist_Tank.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\assist_tank.cpp : fatal error C1041: cannot open program database 'd:\stuff\game prog\assignment\gppassignmentlatest\debug\vc120.idb'; if multiple CL.EXE write to the same .PDB file, please use /FS
-         Assist_Tank_bullet.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\assist_tank_bullet.cpp : fatal error C1041: cannot open program database 'd:\stuff\game prog\assignment\gppassignmentlatest\debug\vc120.idb'; if multiple CL.EXE write to the same .PDB file, please use /FS
-         Boss_Spaceship.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\boss_spaceship.cpp : fatal error C1041: cannot open program database 'd:\stuff\game prog\assignment\gppassignmentlatest\debug\vc120.idb'; if multiple CL.EXE write to the same .PDB file, please use /FS
-         Cannonball.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\cannonball.cpp : fatal error C1041: cannot open program database 'd:\stuff\game prog\assignment\gppassignmentlatest\debug\vc120.idb'; if multiple CL.EXE write to the same .PDB file, please use /FS
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\NPStudent\Source\Repos\gppassignment22 /I"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Descent.cpp
          Descent.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp : fatal error C1041: cannot open program database 'd:\stuff\game prog\assignment\gppassignmentlatest\debug\vc120.idb'; if multiple CL.EXE write to the same .PDB file, please use /FS
-         Player.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\player.cpp : fatal error C1041: cannot open program database 'd:\stuff\game prog\assignment\gppassignmentlatest\debug\vc120.idb'; if multiple CL.EXE write to the same .PDB file, please use /FS
-         Powerup.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\powerup.cpp : fatal error C1041: cannot open program database 'd:\stuff\game prog\assignment\gppassignmentlatest\debug\vc120.pdb'; if multiple CL.EXE write to the same .PDB file, please use /FS
-         Spaceship.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\spaceship.cpp : fatal error C1041: cannot open program database 'd:\stuff\game prog\assignment\gppassignmentlatest\debug\vc120.pdb'; if multiple CL.EXE write to the same .PDB file, please use /FS
-         Spaceship_bullet.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\constants.h(131): error C2370: 'WAVE_1_SPACESHIPS_HEALTH' : redefinition; different storage class
-                 d:\stuff\game prog\assignment\gppassignmentlatest\constants.h(121) : see declaration of 'WAVE_1_SPACESHIPS_HEALTH'
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\constants.h(132): error C2370: 'WAVE_2_SPACESHIPS_HEALTH' : redefinition; different storage class
-                 d:\stuff\game prog\assignment\gppassignmentlatest\constants.h(122) : see declaration of 'WAVE_2_SPACESHIPS_HEALTH'
-         entity.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\constants.h(131): error C2370: 'WAVE_1_SPACESHIPS_HEALTH' : redefinition; different storage class
-                 d:\stuff\game prog\assignment\gppassignmentlatest\constants.h(121) : see declaration of 'WAVE_1_SPACESHIPS_HEALTH'
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\constants.h(132): error C2370: 'WAVE_2_SPACESHIPS_HEALTH' : redefinition; different storage class
-                 d:\stuff\game prog\assignment\gppassignmentlatest\constants.h(122) : see declaration of 'WAVE_2_SPACESHIPS_HEALTH'
-         game.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\constants.h(131): error C2370: 'WAVE_1_SPACESHIPS_HEALTH' : redefinition; different storage class
-                 d:\stuff\game prog\assignment\gppassignmentlatest\constants.h(121) : see declaration of 'WAVE_1_SPACESHIPS_HEALTH'
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\constants.h(132): error C2370: 'WAVE_2_SPACESHIPS_HEALTH' : redefinition; different storage class
-                 d:\stuff\game prog\assignment\gppassignmentlatest\constants.h(122) : see declaration of 'WAVE_2_SPACESHIPS_HEALTH'
-         graphics.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\graphics.cpp : fatal error C1041: cannot open program database 'd:\stuff\game prog\assignment\gppassignmentlatest\debug\vc120.idb'; if multiple CL.EXE write to the same .PDB file, please use /FS
-         image.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\image.cpp : fatal error C1041: cannot open program database 'd:\stuff\game prog\assignment\gppassignmentlatest\debug\vc120.idb'; if multiple CL.EXE write to the same .PDB file, please use /FS
-         input.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\input.cpp : fatal error C1041: cannot open program database 'd:\stuff\game prog\assignment\gppassignmentlatest\debug\vc120.idb'; if multiple CL.EXE write to the same .PDB file, please use /FS
-         shell.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\shell.cpp : fatal error C1041: cannot open program database 'd:\stuff\game prog\assignment\gppassignmentlatest\debug\vc120.idb'; if multiple CL.EXE write to the same .PDB file, please use /FS
-         textDX.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\textdx.cpp : fatal error C1041: cannot open program database 'd:\stuff\game prog\assignment\gppassignmentlatest\debug\vc120.idb'; if multiple CL.EXE write to the same .PDB file, please use /FS
-         textureManager.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\texturemanager.cpp : fatal error C1041: cannot open program database 'd:\stuff\game prog\assignment\gppassignmentlatest\debug\vc120.idb'; if multiple CL.EXE write to the same .PDB file, please use /FS
-         winmain.cpp
-     1>d:\stuff\game prog\assignment\gppassignmentlatest\winmain.cpp : fatal error C1041: cannot open program database 'd:\stuff\game prog\assignment\gppassignmentlatest\debug\vc120.idb'; if multiple CL.EXE write to the same .PDB file, please use /FS
-         Generating Code...
-     1>Done Building Project "D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\PlanetCollision.vcxproj" (Build target(s)) -- FAILED.
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(94): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(188): warning C4244: 'argument' : conversion from 'const UINT' to 'float', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(213): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(415): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(826): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(830): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(915): warning C4244: '=' : conversion from 'const double' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(926): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(965): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(988): warning C4244: 'argument' : conversion from 'const double' to 'float', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(995): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1047): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1098): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1138): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1147): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1160): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1266): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1323): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1329): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1459): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1470): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1471): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1609): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>d:\stuff\game prog\assignment\gppassignmentlatest\descent.cpp(1610): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\Debug\Throw Ball Game.exe" /NOLOGO /LIBPATH:"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Lib\x86" d3d9.lib d3dx9.lib winmm.lib xinput.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\Debug\Throw Ball Game.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\Debug\Throw Ball Game.lib" /MACHINE:X86 /SAFESEH:NO Debug\Assist_Tank.obj
+         Debug\Assist_Tank_bullet.obj
+         Debug\Boss_Spaceship.obj
+         Debug\Cannonball.obj
+         Debug\entity.obj
+         Debug\game.obj
+         Debug\gameControl.obj
+         Debug\graphics.obj
+         Debug\guicon.obj
+         Debug\image.obj
+         Debug\input.obj
+         Debug\Player.obj
+         Debug\Powerup.obj
+         Debug\shell.obj
+         Debug\Spaceship.obj
+         Debug\Spaceship_bullet.obj
+         Debug\textDX.obj
+         Debug\Descent.obj
+         Debug\textureManager.obj
+         Debug\waveControl.obj
+         Debug\winmain.obj
+         PlanetCollision.vcxproj -> D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\Debug\Throw Ball Game.exe
+     1>Done Building Project "D:\Stuff\Game prog\ASSIGNMENT\gppassignmentLATEST\PlanetCollision.vcxproj" (Build target(s)).
 
-Build FAILED.
+Build succeeded.
 
-Time Elapsed 00:00:01.46
+Time Elapsed 00:00:01.65

@@ -267,9 +267,6 @@ void Descent::initialize(HWND hwnd)
 
 	initializeTank();
 
-	std::cout << "initialising spaceship array" << std::endl;
-
-	
 	std::async(&Descent::timer_start, this); //run timer thread while main loop is contiuing
 
 	//instantiating counter and boolean variables
@@ -289,22 +286,6 @@ void Descent::initialize(HWND hwnd)
 	isCalculatingPlayerPattern = false;
 	isAllSpaceshipsFiring = false;
 
-	std::ifstream infile;
-	infile.open(HISCORE_FILE);
-
-	if (infile.is_open())
-	{
-		//read the hiscore
-		std::string str;
-		while (std::getline(infile, str))
-
-		hiscore = std::stoi(str);		//sets hiscore to be previous hiscore
-
-		std::cout << "Current hiscore is " << hiscore << std::endl;
-	}
-
-	else
-		std::cout << "'highscore.txt' is missing from the resources folder Please ensure it exists." << std::endl;
 	
 	spawnSpaceships(1);
 
@@ -1544,138 +1525,115 @@ void Descent::timer_start()
 
 //=============================================================================
 // spawn spaceships 
+// waveNumber = No. of wave, relies on this number to pull certain numbers from constants.h
 //=============================================================================
 void Descent::spawnSpaceships(int waveNumber)
 {
+
+	int amountOfRows = 0;
+	int spaceshipHealth = 0;
+
 	switch (waveNumber)
 	{
 	case 1: {
-
-#pragma region Wave 1 Spawn Spaceships
-				//place inside game state wave 1 when created
-
-				int x = 0;	//starting position of first spaceship is a unit length away the left side of the screen
-				int y = 0;					//to be manipulated in first for loop
-
-				//wave one
-				std::cout << "GAME WIDTH DIVIDED BY SHIP WIDTH (spaceships per row):" << GAME_WIDTH / (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS) << std::endl;
-
-				for (int i = 0; i < WAVE_1_SPACESHIPS_AMT_OF_ROWS; i++)
-				{
-					//this for loop spawns at Y
-					y += SPACESHIP_HEIGHT + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//multipled by 2 so rows are one unit height away from each other
-
-					for (int j = 0; j < GAME_WIDTH / (SPACESHIP_WIDTH); j++)
-					{
-						Spaceship* spaceship = new Spaceship();
-
-						//check if current Y can support game_width/spaceship_width amount of ships
-
-						if (x + ((HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_WIDTH)) > GAME_WIDTH - HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS || j >= AMT_OF_SPACESHIPS_PER_ROW)
-						{
-							//if current ship's X is more than game width, shift to next Y, keep current i counter
-
-							x = HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//ship starts as first ship in a new row
-							break;	//means that previous row can no longer support any more spaceships without clipping, breaks and starts new row (Y)
-						}
-
-						else
-						{
-							//this is true if current y can support more ships
-							//create ship at X position of game_width/width*i, current row
-
-							x = (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS*j);
-						}
-
-						spaceship->setX(x);
-						spaceship->setY(y);
-						spaceship->setHealth(WAVE_1_SPACESHIPS_HEALTH);
-
-						if (!spaceship->initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, spaceshipTexture))
-							throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
-
-						array_spaceships.push_back(spaceship);
-						std::cout << "Adding spaceship at row " << i + 1 << "(no. " << j + 1 << " in row) for wave one at x: " << spaceship->getX() << " y: " << spaceship->getY() << "." << std::endl;
-
-						currentActiveSpaceships++;
-
-						std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
-
-						if (currentActiveSpaceships == maxActiveSpaceships)
-							break;
-
-					}
-
-					if (currentActiveSpaceships == maxActiveSpaceships)
-						break;
-
-				}
-
-#pragma endregion
-
-
-
+				amountOfRows = WAVE_1_SPACESHIPS_AMT_OF_ROWS;
+				spaceshipHealth = WAVE_1_SPACESHIPS_HEALTH;
 	}break;
 	case 2: {
-#pragma region Wave 2 Spawn Spaceships
+				amountOfRows = WAVE_2_SPACESHIPS_AMT_OF_ROWS;
+				spaceshipHealth = WAVE_2_SPACESHIPS_HEALTH;						  
+	}break;
 
-		int x = 0;	//starting position of first spaceship is a unit length away the left side of the screen
-		int y = 0;	//to be manipulated in first for loop
-
-		for (int i = 0; i < WAVE_2_SPACESHIPS_AMT_OF_ROWS; i++)
-		{
-		//this for loop spawns at Y
-		y += SPACESHIP_HEIGHT + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//multipled by 2 so rows are one unit height away from each other
-
-		for (int j = 0; j < GAME_WIDTH / (SPACESHIP_WIDTH); j++)
-		{
-		Spaceship* spaceship = new Spaceship();
-
-		//check if current Y can support game_width/spaceship_width amount of ships
-
-		if (x + ((HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_WIDTH)) > GAME_WIDTH - HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS || j >= AMT_OF_SPACESHIPS_PER_ROW)
-		{
-		//if current ship's X is more than game width, shift to next Y, keep current i counter
-
-		x = HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//ship starts as first ship in a new row
-		break;	//means that previous row can no longer support any more spaceships without clipping, breaks and starts new row (Y)
-		}
-
-		else
-		{
-		//this is true if current y can support more ships
-		//create ship at X position of game_width/width*i, current row
-
-		x = (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS*j);
-		}
-
-		spaceship->setX(x);
-		spaceship->setY(y);
-		spaceship->setHealth(WAVE_2_SPACESHIPS_HEALTH);
-
-		if (!spaceship->initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, spaceshipTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
-
-		array_spaceships.push_back(spaceship);
-		std::cout << "Adding spaceship at row " << i + 1 << "(no. " << j + 1 << " in row) for wave one at x: " << spaceship->getX() << " y: " << spaceship->getY() << "." << std::endl;
-
-		currentActiveSpaceships++;
-
-		std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
-
-		if (currentActiveSpaceships == maxActiveSpaceships)
-		break;
-
-		}
-
-		if (currentActiveSpaceships == maxActiveSpaceships)
-		break;
-
-		}
-
-#pragma endregion
-										  
+	case 3: {
+				amountOfRows = WAVE_2_SPACESHIPS_AMT_OF_ROWS;
+				spaceshipHealth = WAVE_3_SPACESHIPS_HEALTH;
 	}break;
 
 	}
+
+#pragma region Spawn Spaceships
+	//place inside game state wave 1 when created
+
+	int x = 0;	//starting position of first spaceship is a unit length away the left side of the screen
+	int y = 0;	//to be manipulated in first for loop
+
+	//wave one
+	std::cout << "GAME WIDTH DIVIDED BY SHIP WIDTH (spaceships per row):" << GAME_WIDTH / (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS) << std::endl;
+
+	for (int i = 0; i < amountOfRows; i++)
+	{
+		//this for loop spawns at Y
+		y += SPACESHIP_HEIGHT + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS;
+
+		for (int j = 0; j < GAME_WIDTH / (SPACESHIP_WIDTH); j++)
+		{
+			Spaceship* spaceship = new Spaceship();
+
+			//check if current Y can support game_width/spaceship_width amount of ships
+
+			if (x + ((HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_WIDTH)) > GAME_WIDTH - HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS
+				|| j >= AMT_OF_SPACESHIPS_PER_ROW)
+			{
+				//if current ship's X is more than game width, shift to next Y, keep current i counter
+
+				x = HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//ship starts as first ship in a new row
+				break;	//means that previous row can no longer support any more spaceships without clipping, breaks and starts new row (Y)
+			}
+
+			else
+			{
+				//this is true if current y can support more ships
+				//create ship at X position of game_width/width*i, current row
+
+				x = (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS*j);
+			}
+
+			spaceship->setX(x);
+			spaceship->setY(y);
+			spaceship->setHealth(spaceshipHealth);
+
+			if (!spaceship->initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, spaceshipTexture))
+				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
+
+			array_spaceships.push_back(spaceship);
+			std::cout << "Adding spaceship at row " << i + 1 << "(no. " << j + 1 << " in row) for wave one at x: " << spaceship->getX() << " y: " << spaceship->getY() << "." << std::endl;
+
+			currentActiveSpaceships++;
+
+			std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
+
+			if (currentActiveSpaceships == maxActiveSpaceships)
+				break;
+		}
+		if (currentActiveSpaceships == maxActiveSpaceships)
+			break;
+
+	}
+
+#pragma endregion
+}
+
+//=============================================================================
+// loads highscore
+// MAY NOT NEED TO BE AN EXTERNAL METHOD
+//=============================================================================
+void Descent::loadHighScore()
+{
+	std::ifstream infile;
+	infile.open(HISCORE_FILE);
+
+	if (infile.is_open())
+	{
+		//read the hiscore
+		std::string str;
+		while (std::getline(infile, str))
+
+			hiscore = std::stoi(str);		//sets hiscore to be previous hiscore
+
+		std::cout << "Current hiscore is " << hiscore << std::endl;
+	}
+
+	else
+		std::cout << "'highscore.txt' is missing from the resources folder Please ensure it exists." << std::endl;
+
 }

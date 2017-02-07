@@ -186,6 +186,8 @@ public:
 
 	void spawnSpaceships(int waveNumber);
 
+	void loadHighScore();
+
 };
 
 #endif

@@ -117,14 +117,18 @@ const int MAX_NO_OF_SPACESHIPS = 60; //number of spaceships allowed to exist at 
 const int AMT_OF_SPACESHIPS_PER_ROW = 5; //number should not be less than GAME_WIDTH/(SPACESHIP_WIDTH + HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS)
 const int WAVE_1_SPACESHIPS_AMT_OF_ROWS = 4;
 const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 6;
-const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 6;
+const int WAVE_3_SPACESHIPS_AMT_OF_ROWS = 6;
 
-const int WAVE_1_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY = 3;		//bullet hell limiter
-const int WAVE_2_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY = 5;		//bullet hell limiter
+const int WAVE_1_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY = 2;		//bullet hell limiter
+const int WAVE_2_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY = 4;		//bullet hell limiter
+const int WAVE_3_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY = 6;		//bullet hell limiter
+
 
 const double WAVE_1_SPACESHIPS_FIRE_CHANCE = 25;				//measured in percentages
 const double WAVE_2_SPACESHIPS_FIRE_CHANCE = 10;					//measured in percentages
 const double WAVE_2_SPACESHIPS_FIRE_INTELLIGENT_CHANCE = 100;	//measured in percentages
+const double WAVE_3_SPACESHIPS_FIRE_CHANCE = 20;					//measured in percentages
+const double WAVE_3_SPACESHIPS_FIRE_INTELLIGENT_CHANCE = 100;	//measured in percentages
 
 const int WAVE_1_SPACESHIPS_HEALTH = 20;
 const int WAVE_2_SPACESHIPS_HEALTH = 20;
