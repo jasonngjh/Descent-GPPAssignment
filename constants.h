@@ -302,7 +302,6 @@ const float BOSSLASER_MASS = 5.0f;
 const char GROUND_TILESET_IMAGE[] = "resources\\images\\ground_tile.png";
 const char CANNONBALL_IMAGE[] = "resources\\images\\cannonball.png";
 const char SPACESHIP_IMAGE[] = "resources\\images\\spaceship.png";
-<<<<<<< HEAD
 const char MENU1_IMAGE[] = "resources\\images\\menu1.png";
 const char PAUSE_IMAGE[] = "resources\\images\\pause.png";
 const char BOSS_SPACESHIP_IMAGE[] = "resources\\images\\boss_spaceship.png";

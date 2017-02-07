@@ -26,6 +26,7 @@ Assist_Tank::Assist_Tank() : Entity()
 bool Assist_Tank::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM)
 {
+	
 	isMovingRight = true;
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
 }

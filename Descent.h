@@ -119,7 +119,6 @@ private:
 	
 	bool initAlready = true;
 	int waveNumber = 1;
-	int playerCount = 1;//use this value to count 1 player or 2 player
 	double secondsPassed;
 	int pauseScreen=0;
 	int gameOverScreen = 0;
@@ -128,7 +127,6 @@ private:
 	bool existOnScreen = true;
 	bool missileFire=true;
 	int gameStatus= 0;
-	double secondsPassed;
 
 	//modifiers
 	int timeModifier = GAME_BASE_TIME_MODIFIER; //Default value is 1, value affects time - this value will multiply by 1 second to achieve new time
@@ -200,23 +198,18 @@ public:
 
 	int getSpeedModifier() { return speedModifier; }
 	void setSpeedModifier(int modifyingValue) { speedModifier = modifyingValue; }
-	
+
 	void acquirePlayerMovementPatterns();
-
 	void applyPowerupEffect(int powerupCode);
-
 	void applyPowerupEffect_timeSlow();
 	void applyPowerupEffect_restoreHealth();
 	void applyPowerupEffect_increaseTankSpeed();
 	void applyPowerupEffect_timeLock();
 	void applyPowerupEffect_maxPower();
 	void applyPowerupEffect_tankAssist();
-
 	void addToScore(int scoreToAdd);
-
 	void spawnSpaceships(int waveNumber);
 	void despawnSpaceships();		
-
 	void loadHighScore();
 
 };

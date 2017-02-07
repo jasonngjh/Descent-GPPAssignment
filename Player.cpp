@@ -25,7 +25,8 @@ Player::Player() : Entity()
 	tankDirection = false;
 	baseStrength = PLAYER_BASE_STRENGTH;
 	health = PLAYER_MAX_HEALTH;
-	
+	tankHealthTexture = new TextureManager();
+	tankHealth = new Image();
 }
 
 //=============================================================================
@@ -44,16 +45,12 @@ Player::~Player()
 bool Player::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM)
 {
-	tankHealthTexture = new TextureManager();
-	tankHealth = new Image();
-
 	if (!tankHealthTexture->initialize(gamePtr->getGraphics(), TANK_HEALTH_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank health texture"));
 
 	if (!tankHealth->initialize(gamePtr->getGraphics(), PLAYER_HEALTH_WIDTH, PLAYER_HEALTH_HEIGHT, PLAYER_HEALTH_TEXTURE_COLUMNS, tankHealthTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank health"));
 
-	std::cout << "initalised tank health" << std::endl;
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
 }
 
