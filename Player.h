@@ -38,8 +38,7 @@ private:
 	float	speed;						// X pixels per second
 	int		tankAngle;
 	bool	tankDirection;
-	TextureManager* tankHealthTexture;
-	Image* tankHealth;
+
 
 public:
 	// constructor
@@ -53,9 +52,6 @@ public:
 	virtual bool initialize(Game *gamePtr, int width, int height, int ncols,
 		TextureManager *textureM);
 	void update(float frameTime);
-	void releaseAll();
-	void resetAll();
-	void initialiseTankHealthbar();
 
 	//setters
 	void setSpeed(float s);
