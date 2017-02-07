@@ -3,3 +3,4 @@
 WaveControl::WaveControl() {
 	waveState = WAVE_STATE::pauseWave;
 }
+WaveControl::~WaveControl(){}

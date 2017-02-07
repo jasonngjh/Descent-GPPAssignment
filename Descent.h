@@ -46,8 +46,8 @@ private:
 	TextDX* pauseText;
 	TextDX* waveNumberText;
 	TextDX* powerup_notification_text;
-	GameControl*	gameControl;
-	WaveControl*	waveControl;
+	GameControl	gameControl;
+	WaveControl	waveControl;
 	GENERAL_STATE currentState;
 
 	TextureManager* shellTexture;
@@ -90,7 +90,6 @@ private:
 	Image* tankHealth;
 
 	Cannonball* cannonball;
-	Spaceship* enemy_spaceship;	//only one for now, testing only
 	Boss_Spaceship* boss;
 	Player* tank;
 	Shell* shell;

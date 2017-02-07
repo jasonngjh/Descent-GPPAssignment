@@ -1,9 +1,63 @@
-﻿Build started 8/2/2017 12:18:07 AM.
+﻿Build started 8/2/2017 1:54:07 AM.
      1>Project "D:\School Stuffs\Year 3\Sem 3.2\Game Programming\Projects\gppassignment2\PlanetCollision.vcxproj" on node 2 (Build target(s)).
-     1>Link:
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Iresources\audioEngine\include /IC:\Users\NPStudent\Source\Repos\gppassignment22 /I"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D SFML_STATIC /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Descent.cpp
+         Descent.cpp
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\shell.h(22): warning C4244: 'initializing' : conversion from 'float' to 'const int', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(139): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(391): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(548): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(658): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(834): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(975): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(979): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1061): warning C4244: '=' : conversion from 'const double' to 'int', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1070): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1109): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1132): warning C4244: 'argument' : conversion from 'const double' to 'float', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1139): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1191): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1242): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1282): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1291): warning C4244: 'initializing' : conversion from 'time_t' to 'int', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1304): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1410): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1467): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1473): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1603): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1614): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1615): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1750): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1751): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1913): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>d:\school stuffs\year 3\sem 3.2\game programming\projects\gppassignment2\descent.cpp(1917): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\School Stuffs\Year 3\Sem 3.2\Game Programming\Projects\gppassignment2\Debug\Throw Ball Game.exe" /NOLOGO /LIBPATH:resources\audioEngine\lib /LIBPATH:"C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\\Lib\x86" d3d9.lib d3dx9.lib winmm.lib xinput.lib "sfml-audio-s-d.lib" "sfml-system-s-d.lib" openal32.lib flac.lib vorbisenc.lib vorbisfile.lib vorbis.lib ogg.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\School Stuffs\Year 3\Sem 3.2\Game Programming\Projects\gppassignment2\Debug\Throw Ball Game.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\School Stuffs\Year 3\Sem 3.2\Game Programming\Projects\gppassignment2\Debug\Throw Ball Game.lib" /MACHINE:X86 /SAFESEH:NO Debug\bosslaser.obj
+         Debug\Audio.obj
+         Debug\Assist_Tank.obj
+         Debug\Assist_Tank_bullet.obj
+         Debug\Boss_Spaceship.obj
+         Debug\Cannonball.obj
+         Debug\entity.obj
+         Debug\game.obj
+         Debug\gameControl.obj
+         Debug\graphics.obj
+         Debug\guicon.obj
+         Debug\image.obj
+         Debug\input.obj
+         Debug\Player.obj
+         Debug\Powerup.obj
+         Debug\shell.obj
+         Debug\Spaceship.obj
+         Debug\Spaceship_bullet.obj
+         Debug\textDX.obj
+         Debug\Descent.obj
+         Debug\textureManager.obj
+         Debug\waveControl.obj
+         Debug\winmain.obj
          PlanetCollision.vcxproj -> D:\School Stuffs\Year 3\Sem 3.2\Game Programming\Projects\gppassignment2\Debug\Throw Ball Game.exe
      1>Done Building Project "D:\School Stuffs\Year 3\Sem 3.2\Game Programming\Projects\gppassignment2\PlanetCollision.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.09
+Time Elapsed 00:00:03.47

@@ -36,8 +36,8 @@ Cannonball::Cannonball() : Entity()
 //=============================================================================
 Cannonball::~Cannonball()
 {
-	delete chargingTexture;
 	delete chargingBar;
+	delete chargingTexture;
 }
 
 //=============================================================================
@@ -345,16 +345,6 @@ void Cannonball::setForcePower(int f)
 int Cannonball::getForcePower()
 {
 	return forcePower;
-}
-
-//=============================================================================
-// The graphics device was lost.
-// Release all reserved video memory so graphics device may be reset.
-//=============================================================================
-void Cannonball::releaseAll()
-{
-	chargingTexture->onLostDevice();
-	return;
 }
 
 //=============================================================================

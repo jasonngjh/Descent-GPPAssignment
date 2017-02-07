@@ -29,8 +29,6 @@ Descent::Descent()
 	waveNumberText = new TextDX();
 	powerup_notification_text = new TextDX();
 
-	gameControl = new GameControl();
-	waveControl = new WaveControl();
 	//textures
 	shellTexture = new TextureManager();
 	bossTexture = new TextureManager();
@@ -49,7 +47,6 @@ Descent::Descent()
 	bossLaserTexture = new TextureManager();
 	assistTankTexture = new TextureManager();
 	assistTankBulletTexture = new TextureManager();
-
 	powerup_timeSlow_texture = new TextureManager();
 	powerup_restoreHealth_texture = new TextureManager();
 	powerup_increaseTankSpeed_texture = new TextureManager();
@@ -61,7 +58,6 @@ Descent::Descent()
 	//images
 	background = new Image();
 	ground = new Image();
-	tank = new Player();
 	cannonball = new Cannonball();
 	menu1 = new Image();
 	tankHealth = new Image();
@@ -72,8 +68,8 @@ Descent::Descent()
 	gamelose = new Image();
 
 	//entities
+	tank = new Player();
 	bosslaser = new BossLaser();
-	enemy_spaceship = new Spaceship();
 	boss = new Boss_Spaceship();
 	shell = new Shell();
 	assistTank = new Assist_Tank();
@@ -86,7 +82,7 @@ Descent::~Descent()
 {
 	SAFE_DELETE(pauseText);
 	SAFE_DELETE(waveNumberText);
-	SAFE_DELETE(gameControl);
+	SAFE_DELETE(powerup_notification_text);
 	SAFE_DELETE(background);
 	SAFE_DELETE(ground);
 	SAFE_DELETE(menu1);
@@ -96,18 +92,35 @@ Descent::~Descent()
 	SAFE_DELETE(turret);
 	SAFE_DELETE(pause);
 	SAFE_DELETE(cannonball);
-	SAFE_DELETE(enemy_spaceship);
 	SAFE_DELETE(tank);
 	SAFE_DELETE(tankHealth);
 	SAFE_DELETE(boss);
 	SAFE_DELETE(shell);
-	for (Spaceship* spaceShip : array_spaceships)
-	{
-		SAFE_DELETE(spaceShip);
-	}
+	SAFE_DELETE(assistTank);
+	SAFE_DELETE(powerup_timeSlow);
+	SAFE_DELETE(powerup_restoreHealth);
+	SAFE_DELETE(powerup_increaseTankSpeed);
+	SAFE_DELETE(powerup_timeLock);
+	SAFE_DELETE(powerup_maxPower);
+	SAFE_DELETE(powerup_passerbyTank);
 	for (Audio* a : audio)
 	{
 		SAFE_DELETE(a);
+	}
+	for (Spaceship* s : array_spaceships){
+		SAFE_DELETE(s);
+	}
+	for (BossLaser* bs : array_bosslaser){
+		SAFE_DELETE(bs);
+	}
+	for (Spaceship_bullet* sb : array_spaceship_bullets){
+		SAFE_DELETE(sb);
+	}
+	for (Powerup* p : array_powerups){
+		SAFE_DELETE(p);
+	}
+	for (Assist_Tank_bullet* atb : array_tank_assist_bullets){
+		SAFE_DELETE(atb);
 	}
 	SAFE_DELETE(powerup_notification_text);
 	deleteAll();
@@ -170,9 +183,6 @@ void Descent::initialize(HWND hwnd)
 	if (!ground->initialize(graphics, 0, 0, 0, groundTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ground tiles"));
 
-	if (!enemy_spaceship->initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, spaceshipTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
-	
 	if (!menu1->initialize(graphics,MENU1_WIDTH, MENU1_HEIGHT, 2, menu1Texture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu"));
 
@@ -294,8 +304,8 @@ void Descent::initialize(HWND hwnd)
 //=============================================================================
 void Descent::update()
 {
-	GENERAL_STATE state = gameControl->getGeneralState();
-	WAVE_STATE waveState = waveControl->getWaveState();
+	GENERAL_STATE state = gameControl.getGeneralState();
+	WAVE_STATE waveState = waveControl.getWaveState();
 	switch (state)
 	{
 	case GENERAL_STATE::menu: {
@@ -308,14 +318,14 @@ void Descent::update()
 			playerCount = 1;
 		}
 		if (input->wasKeyPressed(ENTER_KEY)){
-			gameControl->setGeneralState(GENERAL_STATE::instructions);
+			gameControl.setGeneralState(GENERAL_STATE::instructions);
 		}
 	}break;
 	case GENERAL_STATE::instructions : {
 										   if (input->wasKeyPressed(SPACE_KEY)){
 											   restartGame();
 											   Sleep(300);
-											   gameControl->setGeneralState(GENERAL_STATE::game);		  
+											   gameControl.setGeneralState(GENERAL_STATE::game);		  
 										   }
 	}break;
 
@@ -325,8 +335,6 @@ void Descent::update()
 
 		if (!cannonball->getActive())
 			comboSpaceshipCounter = 0;		//cannonball now inactive, set collateral counter to 0
-
-		enemy_spaceship->update(frameTime);
 
 		if (assistTank->getActive())
 			assistTank->update(frameTime);
@@ -484,7 +492,7 @@ void Descent::update()
 											//std::cout << "pause" << std::endl; 
 										   if (input->isKeyDown(SPACE_KEY))
 										   {
-											   waveControl->setWaveState(WAVE_STATE::wave1);
+											   waveControl.setWaveState(WAVE_STATE::wave1);
 											   maxAmountOfAllowedBulletsPerVolley = WAVE_1_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY;
 										   }
 												
@@ -501,7 +509,7 @@ void Descent::update()
 											
 										if (input->wasKeyPressed(TW_KEY))
 										{
-											waveControl->setWaveState(WAVE_STATE::wave2);
+											waveControl.setWaveState(WAVE_STATE::wave2);
 											maxAmountOfAllowedBulletsPerVolley = WAVE_2_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY;
 
 										}
@@ -517,7 +525,7 @@ void Descent::update()
 
 										if (input->wasKeyPressed(TH_KEY))
 										{
-											waveControl->setWaveState(WAVE_STATE::wave3);
+											waveControl.setWaveState(WAVE_STATE::wave3);
 										}
 
 
@@ -558,7 +566,7 @@ void Descent::update()
 		}
 		if (input->wasKeyPressed(PAUSE_KEY))
 		{
-			gameControl->setGeneralState(GENERAL_STATE::paused);
+			gameControl.setGeneralState(GENERAL_STATE::paused);
 		}
 	}break;
 
@@ -576,9 +584,9 @@ void Descent::update()
 			Sleep(500);
 			switch (pauseScreen)
 			{
-			case 0: gameControl->setGeneralState(GENERAL_STATE::game);
+			case 0: gameControl.setGeneralState(GENERAL_STATE::game);
 				break;
-			case 1: gameControl->setGeneralState(GENERAL_STATE::menu);
+			case 1: gameControl.setGeneralState(GENERAL_STATE::menu);
 				break;
 			}
 			
@@ -614,9 +622,9 @@ void Descent::update()
 										 gameStatus = 0;
 										 switch (gameOverScreen)
 										 {
-										 case 0: gameControl->setGeneralState(GENERAL_STATE::instructions);
+										 case 0: gameControl.setGeneralState(GENERAL_STATE::instructions);
 											 break;
-										 case 1: gameControl->setGeneralState(GENERAL_STATE::menu);
+										 case 1: gameControl.setGeneralState(GENERAL_STATE::menu);
 											 break;
 										 }
 
@@ -634,7 +642,7 @@ void Descent::ai()
 
 	//simple ai for wave 2 shooting
 
-	if (gameControl->getGeneralState() == GENERAL_STATE::game
+	if (gameControl.getGeneralState() == GENERAL_STATE::game
 		&&!isCalculatingPlayerPattern)
 			std::async(&Descent::acquirePlayerMovementPatterns, this);
 	
@@ -774,7 +782,7 @@ void Descent::render()
 	const int BUF_SIZE = 20;
 	static char buffer[BUF_SIZE];
     graphics->spriteBegin();                // begin drawing sprites
-	switch (gameControl->getGeneralState())
+	switch (gameControl.getGeneralState())
 	{
 	case GENERAL_STATE::menu :{
 								 menu1->draw();
@@ -808,14 +816,14 @@ void Descent::render()
 								 for (int i = 0; i < currentActiveTankAssistBullets; i++)
 									 array_tank_assist_bullets[i]->draw();
 									 
-								 switch (waveControl->getWaveState())
+								 switch (waveControl.getWaveState())
 								 {
 								 case WAVE_STATE::pauseWave:{
 																waveNumberText->print("Wave 1", GAME_HEIGHT / 2, GAME_WIDTH / 2); // need to change to picture
 																
 								 }break;
 								 case WAVE_STATE::wave1:{
-															enemy_spaceship->draw(); 
+			
 								 }break;
 								 case WAVE_STATE::wave2:{
 
@@ -879,8 +887,6 @@ void Descent::releaseAll()
 	powerup_timeLock_texture->onLostDevice();
 	powerup_maxPower_texture->onLostDevice();
 	powerup_passerbyTank_texture->onLostDevice();
-	cannonball->releaseAll();
-	
     Game::releaseAll();
     return;
 }
@@ -1067,7 +1073,7 @@ void Descent::applyPowerupEffect_timeSlow()
 	while (loop)
 	{
 
-		if (gameControl->getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
+		if (gameControl.getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
 		{
 			
 			if ((fmod(getSecondsPassed(), SECOND) == 0))
@@ -1136,7 +1142,7 @@ void Descent::applyPowerupEffect_increaseTankSpeed()
 	while (loop)
 	{
 
-		if (gameControl->getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
+		if (gameControl.getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
 		{
 			
 			if ((fmod(getSecondsPassed(), SECOND) == 0))
@@ -1188,7 +1194,7 @@ void Descent::applyPowerupEffect_timeLock()
 	while (loop)
 	{
 
-		if (gameControl->getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
+		if (gameControl.getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
 		{
 			
 			if ((fmod(getSecondsPassed(), SECOND) == 0))
@@ -1239,7 +1245,7 @@ void Descent::applyPowerupEffect_maxPower()
 	while (loop)
 	{
 
-		if (gameControl->getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
+		if (gameControl.getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
 		{
 			
 			if ((fmod(getSecondsPassed(), SECOND) == 0))
@@ -1288,7 +1294,7 @@ void Descent::applyPowerupEffect_tankAssist()
 	while (loop)
 	{
 
-		if (gameControl->getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
+		if (gameControl.getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
 		{
 			
 			if (fmod(getSecondsPassed(), SECOND) == 0)
@@ -1629,7 +1635,7 @@ void Descent::timer_start()
 
 	while (timerLoop)
 	{
-		if (gameControl->getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
+		if (gameControl.getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
 		{
 			setSecondsPassed((clock() - timer) / (double)CLOCKS_PER_SEC);  //convert computer timer to real life seconds
 
@@ -1640,7 +1646,7 @@ void Descent::timer_start()
 			}
 
 			//SIMPLE WAVE 1 SPACESHIP SHOOTING
-			if (waveControl->getWaveState() == WAVE_STATE::wave1
+			if (waveControl.getWaveState() == WAVE_STATE::wave1
 				&& (fmod(getSecondsPassed(), SPACESHIP_ATTACK_FREQUENCY)) == 0
 				&& currentActiveSpaceshipBullets == 0
 				&& !isAllSpaceshipsFiring)
@@ -1651,7 +1657,7 @@ void Descent::timer_start()
 			}
 
 			//ADVANCED WAVE 2 SPACESHIP SHOOTING
-			if (waveControl->getWaveState() == WAVE_STATE::wave2
+			if (waveControl.getWaveState() == WAVE_STATE::wave2
 				&& (fmod(getSecondsPassed(), SPACESHIP_ATTACK_FREQUENCY)) == 0
 				&& !isAllSpaceshipsFiring)
 			{
@@ -1721,7 +1727,7 @@ void Descent::spawnSpaceships(int waveNumber)
 		for (int j = 0; j < GAME_WIDTH / (SPACESHIP_WIDTH); j++)
 		{
 			Spaceship* spaceship = new Spaceship();
-
+			
 			//check if current Y can support game_width/spaceship_width amount of ships
 
 			if (x + ((HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_WIDTH)) > GAME_WIDTH - HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS
@@ -1804,7 +1810,7 @@ void Descent::checkGamestatus()
 	if (tank->getHealth() == 0)
 	{
 		gameStatus = 2;
-		gameControl->setGeneralState(GENERAL_STATE::gameOver);
+		gameControl.setGeneralState(GENERAL_STATE::gameOver);
 	}
 }
 
@@ -1959,7 +1965,7 @@ void Descent::restartGame()
 	gameStatus = 0;
 	currentActiveSpaceships = 0;
 
-	waveControl->setWaveState(WAVE_STATE::pauseWave);
+	waveControl.setWaveState(WAVE_STATE::pauseWave);
 
 	pause->setCurrentFrame(PAUSE_START_FRAME);
 }
