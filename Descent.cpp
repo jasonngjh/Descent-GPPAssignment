@@ -280,12 +280,14 @@ void Descent::initialize(HWND hwnd)
 	currentScore = 0;
 
 	acquiredPlayerSpeed = 0;
+	acquiredPlayerDirectionIsRight = true;
 
 	isAllSpaceshipMovingRight = true;
 	isShipsReadyToShift = false;
 	isPowerupInProgress = false;
 	isPowerupSpawning = false;
 	isCalculatingPlayerPattern = false;
+	isAllSpaceshipsFiring = false;
 
 	std::ifstream infile;
 	infile.open(HISCORE_FILE);
@@ -303,68 +305,8 @@ void Descent::initialize(HWND hwnd)
 
 	else
 		std::cout << "'highscore.txt' is missing from the resources folder Please ensure it exists." << std::endl;
-
-#pragma region Spawn Spaceships
-	//place inside game state wave 1 when created
-
-	int x = 0;	//starting position of first spaceship is a unit length away the left side of the screen
-	int y = 0;					//to be manipulated in first for loop
-
-	//wave one
-	std::cout << "GAME WIDTH DIVIDED BY SHIP WIDTH (spaceships per row):" << GAME_WIDTH / (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS) << std::endl;
-
-	for (int i = 0; i < WAVE_1_SPACESHIPS_AMT_OF_ROWS; i++)
-	{
-		//this for loop spawns at Y
-		y += SPACESHIP_HEIGHT + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//multipled by 2 so rows are one unit height away from each other
-
-		for (int j = 0; j < GAME_WIDTH / (SPACESHIP_WIDTH); j++)
-		{
-			Spaceship* spaceship = new Spaceship();
-
-			//check if current Y can support game_width/spaceship_width amount of ships
-
-			if (x + ((HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_WIDTH)) > GAME_WIDTH - HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS || j >= AMT_OF_SPACESHIPS_PER_ROW)
-			{
-				//if current ship's X is more than game width, shift to next Y, keep current i counter
-
-				x = HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//ship starts as first ship in a new row
-				break;	//means that previous row can no longer support any more spaceships without clipping, breaks and starts new row (Y)
-			}
-
-			else
-			{
-				//this is true if current y can support more ships
-				//create ship at X position of game_width/width*i, current row
-
-				x = (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS*j);
-			}
-
-			spaceship->setX(x);
-			spaceship->setY(y);
-			spaceship->setHealth(SPACESHIP_STARTING_HEALTH);
-
-			if (!spaceship->initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, spaceshipTexture))
-				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
-
-			array_spaceships.push_back(spaceship);
-			std::cout << "Adding spaceship at row " << i + 1 << "(no. " << j + 1 << " in row) for wave one at x: " << spaceship->getX() << " y: " << spaceship->getY() << "." << std::endl;
-
-			currentActiveSpaceships++;
-
-			std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
-
-			if (currentActiveSpaceships == maxActiveSpaceships)
-				break;
-
-		}
-
-		if (currentActiveSpaceships == maxActiveSpaceships)
-			break;
-
-	}
-
-#pragma endregion
+	
+	spawnSpaceships(1);
 
     return;
 }
@@ -468,15 +410,20 @@ void Descent::update()
 
 			if (array_spaceship_bullets[i]->getY() >= GROUND_LEVEL_HEIGHT)			//reaches out of map
 				array_spaceship_bullets[i]->setActive(false);
+		}
+
+		for (int i = 0; i < array_spaceship_bullets.size(); i++)
+		{
 
 			if (!array_spaceship_bullets[i]->getActive())
 			{
 				//bullet not active, remove from game
-				std::cout << "Removed spaceship bullet" << std::endl;
+				//std::cout << "Removed spaceship bullet" << std::endl;
 				array_spaceship_bullets[i]->setVisible(false);
 				delete array_spaceship_bullets[i];
 				array_spaceship_bullets.erase(array_spaceship_bullets.begin() + i);
 				currentActiveSpaceshipBullets--;
+				std::cout << "current amt of bullets left : " << currentActiveSpaceshipBullets << std::endl;
 			}
 
 		}
@@ -577,7 +524,7 @@ void Descent::update()
 
 										shell->update(frameTime, *turret);
 
-										std::cout << "wave 2" << std::endl;
+										//std::cout << "wave 2" << std::endl;
 
 										if (input->wasKeyPressed(TH_KEY))
 										{
@@ -627,19 +574,10 @@ void Descent::ai()
 
 	//simple ai for wave 2 shooting
 
-	//timer feedbacks player movement and speed to AI
-		//DO SOMETHING RELATED 
-
-	//distance to lead target for a bullet travelling at uniform speed with no resistance
-		// where X is equals to target's current position + acquired pattern of speed
-		// shoot at target X = player.positionX + (acquiredSpeedPattern*bulletTravelTime)
-
-	if (!isCalculatingPlayerPattern)
-		std::async(&Descent::acquirePlayerMovementPatterns, this);
-
+	if (gameControl->getGeneralState() == GENERAL_STATE::game
+		&&!isCalculatingPlayerPattern)
+			std::async(&Descent::acquirePlayerMovementPatterns, this);
 	
-
-
 }
 
 //=============================================================================
@@ -775,7 +713,7 @@ void Descent::render()
 														//	std::cout << "wave1" << std::endl;
 								 }break;//draw wave 3 stuff
 								 case WAVE_STATE::wave2:{
-															std::cout << "shell draw" << std::endl;
+															//std::cout << "shell draw" << std::endl;
 															shell->draw();
 															//std::cout << "wave2" << std::endl;
 
@@ -883,12 +821,11 @@ void Descent::acquirePlayerMovementPatterns()
 
 	int positionOriginal = 0;
 	int positionFinal = 0;
-
 	int offsetFromOriginal = 0;
 		
 	positionOriginal = tank->getX() + (tank->getWidth() / 2);
 
-	Sleep(3000);
+	Sleep(1000);		
 
 	positionFinal = tank->getX() + (tank->getWidth() / 2);
 
@@ -899,16 +836,17 @@ void Descent::acquirePlayerMovementPatterns()
 
 	//player's actual speed is distance offset
 
-	//if (offsetFromOriginal < 0)
-	//	offsetFromOriginal = abs(offsetFromOriginal);
+	if (offsetFromOriginal < 0)			//if negative, change to positive
+		offsetFromOriginal = abs(offsetFromOriginal);
 
-	acquiredPlayerSpeed = offsetFromOriginal/3;		//three because of Sleep(3000)
-	std::cout << "acquired player speed :" << acquiredPlayerSpeed << std::endl;
+	acquiredPlayerSpeed = offsetFromOriginal;		//in 1 second, player has moved pO - pF distance
+	acquiredPlayerDirectionIsRight = tank->getTankDirection(); 
+
+	std::cout << "acquired player speed :" << acquiredPlayerSpeed << ". Is player moving right? " << acquiredPlayerDirectionIsRight << std::endl;
 
 	isCalculatingPlayerPattern = false;
 
-	//tweak/refine algorithm later
-	//Sleep(2000);
+	//tweak/refine algorithm next time
 }
 
 //=============================================================================
@@ -1301,10 +1239,12 @@ void Descent::beginSimpleSpaceshipsFiringSequence()
 		
 	//break once max shots is fired or all spaceships iterated through
 
+	isAllSpaceshipsFiring = true;
+
 	for (int i = 0; i < currentActiveSpaceships; i++)
 	{
 
-		if (currentActiveSpaceshipBullets != maxAmountOfAllowedBulletsPerVolley)
+		if (currentActiveSpaceshipBullets <= maxAmountOfAllowedBulletsPerVolley)
 		{
 			//current max shots per volley not yet reached, so shoot more bullets
 			//if false, stop shooting new bullets, end volley
@@ -1327,14 +1267,20 @@ void Descent::beginSimpleSpaceshipsFiringSequence()
 
 				array_spaceship_bullets.push_back(bullet);
 				currentActiveSpaceshipBullets++;
-
+				std::cout << "fired a bullet " << std::endl;
 			}
 
 		}
 
-		else
+		if (currentActiveSpaceshipBullets > maxAmountOfAllowedBulletsPerVolley)
+		{
+			std::cout << "too much bullets, stopped " << currentActiveSpaceshipBullets << " to " << maxAmountOfAllowedBulletsPerVolley << std::endl;
 			break;
+		}
+			
 	}
+
+	isAllSpaceshipsFiring = false;
 
 }
 
@@ -1343,23 +1289,17 @@ void Descent::beginSimpleSpaceshipsFiringSequence()
 //=============================================================================
 void Descent::beginAdvancedSpaceshipsFiringSequence()
 {
-	//run for loop that iterates through every spaceship
-	//for each spaceship, check and compare seed
-	//if chance misses
-	//nothing happens
-	//if chance hit, 
-	//create bullet
-	//set bullet to target X, where x is player position at time of firing
-	//set and calculate bullet degree to relevant X
-	//set bullet active, let update take care of movment
+	isAllSpaceshipsFiring = true;
+
 
 	//break once max shots is fired or all spaceships iterated through
-
+	std::cout << "advance pew pew " << maxAmountOfAllowedBulletsPerVolley << std::endl;
 	for (int i = 0; i < currentActiveSpaceships; i++)
 	{
 
-		if (currentActiveSpaceshipBullets != maxAmountOfAllowedBulletsPerVolley)
+		if (currentActiveSpaceshipBullets < maxAmountOfAllowedBulletsPerVolley)
 		{
+			
 			//current max shots per volley not yet reached, so shoot more bullets
 			//if false, stop shooting new bullets, end volley
 
@@ -1376,11 +1316,22 @@ void Descent::beginAdvancedSpaceshipsFiringSequence()
 				bullet->setY(array_spaceships[i]->getY() + array_spaceships[i]->getHeight());
 				bullet->setActive(true);
 
-				//take current position of player (at time of firing) and fly towards there
-				bullet->setTarget(tank->getX() + (tank->getWidth() / 2)
-					+ (acquiredPlayerSpeed*(bullet->getY()/SPACESHIP_BULLET_SPEED)) );
+				if (acquiredPlayerDirectionIsRight)
+				{
+					//player is moving to the right, aim to the right of player
+					bullet->setTarget(tank->getX() + (tank->getWidth() / 2)
+						+ (acquiredPlayerSpeed*(bullet->getY() / SPACESHIP_BULLET_SPEED)));
+				}
+				else
+				{
+					//player is moving left
+					bullet->setTarget(tank->getX() + (tank->getWidth() / 2)
+						- (acquiredPlayerSpeed*(bullet->getY() / SPACESHIP_BULLET_SPEED)));
+				}
+
+
 				std::cout << "Spaceship shoots at " << bullet->getTarget() << ", player position is "
-					<< tank->getX() << std::endl;
+					<< tank->getX() + (tank->getWidth() / 2) << std::endl;
 				//acquiredPlayerSPeed * bulletY/Spaceship_bullet_speed
 					//this calculates how far the bullet needs to lead the shot
 
@@ -1394,6 +1345,8 @@ void Descent::beginAdvancedSpaceshipsFiringSequence()
 		else
 			break;
 	}
+
+	isAllSpaceshipsFiring = false;
 
 }
 
@@ -1556,34 +1509,23 @@ void Descent::timer_start()
 			//SIMPLE WAVE 1 SPACESHIP SHOOTING
 			if (waveControl->getWaveState() == WAVE_STATE::wave1
 				&& (fmod(getSecondsPassed(), SPACESHIP_ATTACK_FREQUENCY)) == 0
-				&& currentActiveSpaceshipBullets == 0)
+				&& currentActiveSpaceshipBullets == 0
+				&& !isAllSpaceshipsFiring)
 			{	//if wave is wave 1, start simple spaceship shooting
 
-				std::async(&Descent::beginAdvancedSpaceshipsFiringSequence, this);
+				std::async(&Descent::beginSimpleSpaceshipsFiringSequence, this);
 
 			}
 
 			//ADVANCED WAVE 2 SPACESHIP SHOOTING
 			if (waveControl->getWaveState() == WAVE_STATE::wave2
-				&& (fmod(getSecondsPassed(), SPACESHIP_ATTACK_FREQUENCY)) == 0)
+				&& (fmod(getSecondsPassed(), SPACESHIP_ATTACK_FREQUENCY)) == 0
+				&& !isAllSpaceshipsFiring)
 			{
 
-				for (int i = 0; i < currentActiveSpaceships; i++)
-				{
+				std::async(&Descent::beginSimpleSpaceshipsFiringSequence, this);
 
-					double generatedChance = rand() % 100;
-
-					if (WAVE_2_SPACESHIPS_FIRE_CHANCE >= generatedChance)	//pew!
-						std::async(&Descent::beginSimpleSpaceshipsFiringSequence, this);
-
-					generatedChance = rand() % 100;	//regenerates chance
-					if (WAVE_2_SPACESHIPS_FIRE_INTELLIGENT_CHANCE >= generatedChance)	//pew!
-					{
-						//ADVANCED SHOOTING
-						//read from AI to calculate possible player position
-					}
-
-				}
+				std::async(&Descent::beginAdvancedSpaceshipsFiringSequence, this);
 
 			}
 
@@ -1600,3 +1542,140 @@ void Descent::timer_start()
 }
 
 
+//=============================================================================
+// spawn spaceships 
+//=============================================================================
+void Descent::spawnSpaceships(int waveNumber)
+{
+	switch (waveNumber)
+	{
+	case 1: {
+
+#pragma region Wave 1 Spawn Spaceships
+				//place inside game state wave 1 when created
+
+				int x = 0;	//starting position of first spaceship is a unit length away the left side of the screen
+				int y = 0;					//to be manipulated in first for loop
+
+				//wave one
+				std::cout << "GAME WIDTH DIVIDED BY SHIP WIDTH (spaceships per row):" << GAME_WIDTH / (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS) << std::endl;
+
+				for (int i = 0; i < WAVE_1_SPACESHIPS_AMT_OF_ROWS; i++)
+				{
+					//this for loop spawns at Y
+					y += SPACESHIP_HEIGHT + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//multipled by 2 so rows are one unit height away from each other
+
+					for (int j = 0; j < GAME_WIDTH / (SPACESHIP_WIDTH); j++)
+					{
+						Spaceship* spaceship = new Spaceship();
+
+						//check if current Y can support game_width/spaceship_width amount of ships
+
+						if (x + ((HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_WIDTH)) > GAME_WIDTH - HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS || j >= AMT_OF_SPACESHIPS_PER_ROW)
+						{
+							//if current ship's X is more than game width, shift to next Y, keep current i counter
+
+							x = HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//ship starts as first ship in a new row
+							break;	//means that previous row can no longer support any more spaceships without clipping, breaks and starts new row (Y)
+						}
+
+						else
+						{
+							//this is true if current y can support more ships
+							//create ship at X position of game_width/width*i, current row
+
+							x = (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS*j);
+						}
+
+						spaceship->setX(x);
+						spaceship->setY(y);
+						spaceship->setHealth(WAVE_1_SPACESHIPS_HEALTH);
+
+						if (!spaceship->initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, spaceshipTexture))
+							throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
+
+						array_spaceships.push_back(spaceship);
+						std::cout << "Adding spaceship at row " << i + 1 << "(no. " << j + 1 << " in row) for wave one at x: " << spaceship->getX() << " y: " << spaceship->getY() << "." << std::endl;
+
+						currentActiveSpaceships++;
+
+						std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
+
+						if (currentActiveSpaceships == maxActiveSpaceships)
+							break;
+
+					}
+
+					if (currentActiveSpaceships == maxActiveSpaceships)
+						break;
+
+				}
+
+#pragma endregion
+
+
+
+	}break;
+	case 2: {
+#pragma region Wave 2 Spawn Spaceships
+
+		int x = 0;	//starting position of first spaceship is a unit length away the left side of the screen
+		int y = 0;	//to be manipulated in first for loop
+
+		for (int i = 0; i < WAVE_2_SPACESHIPS_AMT_OF_ROWS; i++)
+		{
+		//this for loop spawns at Y
+		y += SPACESHIP_HEIGHT + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//multipled by 2 so rows are one unit height away from each other
+
+		for (int j = 0; j < GAME_WIDTH / (SPACESHIP_WIDTH); j++)
+		{
+		Spaceship* spaceship = new Spaceship();
+
+		//check if current Y can support game_width/spaceship_width amount of ships
+
+		if (x + ((HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_WIDTH)) > GAME_WIDTH - HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS || j >= AMT_OF_SPACESHIPS_PER_ROW)
+		{
+		//if current ship's X is more than game width, shift to next Y, keep current i counter
+
+		x = HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//ship starts as first ship in a new row
+		break;	//means that previous row can no longer support any more spaceships without clipping, breaks and starts new row (Y)
+		}
+
+		else
+		{
+		//this is true if current y can support more ships
+		//create ship at X position of game_width/width*i, current row
+
+		x = (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS*j);
+		}
+
+		spaceship->setX(x);
+		spaceship->setY(y);
+		spaceship->setHealth(WAVE_2_SPACESHIPS_HEALTH);
+
+		if (!spaceship->initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, spaceshipTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
+
+		array_spaceships.push_back(spaceship);
+		std::cout << "Adding spaceship at row " << i + 1 << "(no. " << j + 1 << " in row) for wave one at x: " << spaceship->getX() << " y: " << spaceship->getY() << "." << std::endl;
+
+		currentActiveSpaceships++;
+
+		std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
+
+		if (currentActiveSpaceships == maxActiveSpaceships)
+		break;
+
+		}
+
+		if (currentActiveSpaceships == maxActiveSpaceships)
+		break;
+
+		}
+
+#pragma endregion
+										  
+	}break;
+
+	}
+}

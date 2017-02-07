@@ -93,7 +93,7 @@ const float SPACESHIP_SPEED = 50.0f;
 const float SPACESHIP_ANIMATION_DELAY = 0.1f;		//passively animates
 const int SPACESHIP_STARTING_HEALTH = 5;
 const int SPACESHIP_MOVEMENT_DISTANCE = 29;
-const double SPACESHIP_MOVE_FREQUENCY = 1;
+const double SPACESHIP_MOVE_FREQUENCY = 0;
 const int SPACESHIP_ATTACK_FREQUENCY = 1;
 const double SPACESHIP_CRITICAL_HEALTH_FACTOR = 0.25;
 const int SPACESHIP_REWARD_SCORE = 50;
@@ -107,19 +107,17 @@ const int SPACESHIP_BULLET_HEIGHT = 12;
 const int SPACESHIP_BULLET_TEXTURE_COLUMNS = 2;
 const int SPACESHIP_BULLET_START_FRAME = 0;
 const int SPACESHIP_BULLET_END_FRAME = 1;
-const float SPACESHIP_BULLET_SPEED = 150.0f;
+const float SPACESHIP_BULLET_SPEED = 300.0f;
 const float SPACESHIP_BULLET_ANIMATION_DELAY = 0.2f;
 const int SPACESHIP_BULLET_DAMAGE = 1;
 const int MAX_NO_OF_SPACESHIP_BULLETS = 10;
 
 //spaceship spawn variables
-const int MAX_NO_OF_SPACESHIPS = 60; //number of spaceships allowed to exist
+const int MAX_NO_OF_SPACESHIPS = 60; //number of spaceships allowed to exist at any time
 const int AMT_OF_SPACESHIPS_PER_ROW = 5; //number should not be less than GAME_WIDTH/(SPACESHIP_WIDTH + HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS)
 const int WAVE_1_SPACESHIPS_AMT_OF_ROWS = 4;
 const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 6;
-
-const int WAVE_1_SPACESHIPS_HEALTH = 4;
-const int WAVE_2_SPACESHIPS_HEALTH = 7;
+const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 6;
 
 const int WAVE_1_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY = 3;		//bullet hell limiter
 const int WAVE_2_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY = 5;		//bullet hell limiter
@@ -127,6 +125,10 @@ const int WAVE_2_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY = 5;		//bullet hell 
 const double WAVE_1_SPACESHIPS_FIRE_CHANCE = 25;				//measured in percentages
 const double WAVE_2_SPACESHIPS_FIRE_CHANCE = 10;					//measured in percentages
 const double WAVE_2_SPACESHIPS_FIRE_INTELLIGENT_CHANCE = 100;	//measured in percentages
+
+const int WAVE_1_SPACESHIPS_HEALTH = 20;
+const int WAVE_2_SPACESHIPS_HEALTH = 20;
+const int WAVE_3_SPACESHIPS_HEALTH = 40;
 
 //boss spaceship variables
 const int BOSS_SPACESHIP_WIDTH = 212;
@@ -197,7 +199,7 @@ const int ASSIST_TANK_BULLET_START_FRAME = 0;
 const int ASSIST_TANK_BULLET_END_FRAME = 1;		
 const float ASSIST_TANK_BULLET_SPEED = 800.0f;			
 const float ASSIST_TANK_BULLET_ANIMATION_DELAY = 0.2f;	
-const int ASSIST_TANK_BULLET_DAMAGE = 2;	
+const int ASSIST_TANK_BULLET_DAMAGE = 5;	
 const int MAX_NO_OF_ASSIST_TANK_BULLETS = 1;
 
 //gameplay condition variables (affected by powerups, otherwise they generally stays the same)

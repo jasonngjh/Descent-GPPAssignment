@@ -127,6 +127,7 @@ public:
 	int comboSpaceshipCounter;		//to check how much spaceships has been destroyd by a single cannonball
 
 	int acquiredPlayerSpeed;
+	bool acquiredPlayerDirectionIsRight;
 
 	bool isAllSpaceshipMovingRight;			//keeps track of ship direction
 	bool isShipsReadyToShift;				//keeps track of ship movement, for use in downwards movement
@@ -134,7 +135,7 @@ public:
 	bool isPowerupInProgress;		//checks if there is currently an active powerup
 	bool isPowerupSpawning;
 	bool isCalculatingPlayerPattern;		//to prevent multiple instances of pattern acquirement
-
+	bool isAllSpaceshipsFiring;
     // Constructor
 	Descent();
 
@@ -182,6 +183,8 @@ public:
 	void applyPowerupEffect_tankAssist();
 
 	void addToScore(int scoreToAdd);
+
+	void spawnSpaceships(int waveNumber);
 
 };
 
