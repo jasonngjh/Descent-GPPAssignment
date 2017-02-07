@@ -163,29 +163,29 @@ void Cannonball::update(float frameTime)
 		}	
 	}
 
-	if (spriteData.x > GAME_WIDTH - CannonballNS::WIDTH*getScale())
-	{
-		// position at right screen edge
-		spriteData.x = GAME_WIDTH - CannonballNS::WIDTH*getScale();
-		velocity.x = -velocity.x;               // reverse X direction
-	}
-	else if (spriteData.x < 0)                  // else if hit left screen edge
-	{
-		spriteData.x = 0;                       // position at left screen edge
-		velocity.x = -velocity.x;               // reverse X direction
-	}
-	// if hit bottom screen edge
-	if (spriteData.y > GAME_HEIGHT - CannonballNS::HEIGHT*getScale())
-	{
-		// position at bottom screen edge
-		spriteData.y = GAME_HEIGHT - CannonballNS::HEIGHT*getScale();
-		velocity.y = -velocity.y;               // reverse Y direction
-	}
-	else if (spriteData.y < 0)                  // else if hit top screen edge
-	{
-		spriteData.y = 0;                       // position at top screen edge
-		velocity.y = -velocity.y;               // reverse Y direction
-	}
+		if (spriteData.x > GAME_WIDTH - CannonballNS::WIDTH*getScale())
+		{
+			// position at right screen edge
+			spriteData.x = GAME_WIDTH - CannonballNS::WIDTH*getScale();
+			velocity.x = -velocity.x;               // reverse X direction
+		}
+		else if (spriteData.x < 0)                  // else if hit left screen edge
+		{
+			spriteData.x = 0;                       // position at left screen edge
+			velocity.x = -velocity.x;               // reverse X direction
+		}
+		// if hit bottom screen edge
+		if (spriteData.y > GAME_HEIGHT - CannonballNS::HEIGHT*getScale())
+		{
+			// position at bottom screen edge
+			spriteData.y = GAME_HEIGHT - CannonballNS::HEIGHT*getScale();
+			velocity.y = -velocity.y;               // reverse Y direction
+		}
+		else if (spriteData.y < 0)                  // else if hit top screen edge
+		{
+			spriteData.y = 0;                       // position at top screen edge
+			velocity.y = -velocity.y;               // reverse Y direction
+		}
 
 	
 }

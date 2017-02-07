@@ -7,6 +7,7 @@
 #include "entity.h"
 #include "constants.h"
 #include "Player.h"
+#include <math.h>
 
 namespace CannonballNS
 {

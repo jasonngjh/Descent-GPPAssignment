@@ -12,6 +12,7 @@
 #include "Spaceship.h"
 #include "Boss_Spaceship.h"
 #include "shell.h"
+#include "bosslaser.h"
 
 #include "guicon.h"
 #include "gameControl.h"
@@ -58,7 +59,9 @@ private:
 	TextureManager* tankTexture;
 	TextureManager* turretTexture;
 	TextureManager* smokeTexture;
+	TextureManager* bossLaserTexture;
 
+	BossLaser* bosslaser;
 	Image* background;
 	Image* ground;
 	Image* menu1;
@@ -71,6 +74,11 @@ private:
 	Shell shell1;
 	bool initAlready = true;
 	std::vector<Spaceship*> array_spaceships;
+	std::vector<BossLaser*> array_bosslaser;
+	float array[3];
+
+	int laserCounter = 0;
+	bool existOnScreen = true;
 	const int maxActiveSpaceships = MAX_NO_OF_SPACESHIPS; //amt of spaceships allowed to exist (should be equal to spaceshipArray's size)
 	
 	int playerCount;//use this value to count 1 player or 2 player
@@ -111,6 +119,7 @@ public:
 	void moveSpaceships(bool isMovingRight);
 	void timer_start();
 	void resetShellPos();
+	void launchBossLaser();
 
 	double getSecondsPassed() { return secondsPassed; }
 	void setSecondsPassed(double seconds) { secondsPassed = seconds; }
@@ -120,6 +129,7 @@ public:
 
 	int getSpeedModifier() { return speedModifier; }
 	void setSpeedModifier(int modifyingValue) { speedModifier = modifyingValue; }
+	
 };
 
 #endif

@@ -49,20 +49,30 @@ void Boss_Spaceship::draw()
 void Boss_Spaceship::update(float frameTime)
 {
 	Entity::update(frameTime);
-	if ((spriteData.x+BOSS_SPACESHIP_WIDTH > GAME_WIDTH))
+	spriteData.x += frameTime * velocity.x;     // move ship along X 
+	if (spriteData.x > GAME_WIDTH - Boss_SpaceshipNS::WIDTH*getScale())
 	{
-		leftright = true;
-		while (leftright)
-		spriteData.x-=30*frameTime;
+		// position at right screen edge
+		spriteData.x = GAME_WIDTH - Boss_SpaceshipNS::WIDTH*getScale();
+		velocity.x = -velocity.x;               // reverse X direction
 	}
-	if (spriteData.x<0)
-
+	else if (spriteData.x < 0)                  // else if hit left screen edge
 	{
-		leftright = false;
-		while (!leftright)
-		spriteData.x -=30*frameTime;
+		spriteData.x = 0;                       // position at left screen edge
+		velocity.x = -velocity.x;               // reverse X direction
 	}
-	
+	// if hit bottom screen edge
+	if (spriteData.y > GAME_HEIGHT - Boss_SpaceshipNS::HEIGHT*getScale())
+	{
+		// position at bottom screen edge
+		spriteData.y = GAME_HEIGHT - Boss_SpaceshipNS::HEIGHT*getScale();
+		velocity.y = -velocity.y;               // reverse Y direction
+	}
+	else if (spriteData.y < 0)                  // else if hit top screen edge
+	{
+		spriteData.y = 0;                       // position at top screen edge
+		velocity.y = -velocity.y;               // reverse Y direction
+	}
 }
 
 //additional methods here

@@ -177,8 +177,9 @@ const int BOSSLASER_HEIGHT = 17;
 const int BOSSLASER_START_FRAME = 0;
 const int BOSSLASER_END_FRAME = 1;
 const int BOSSLASER_TEXTURE_COLUMNS = 2;
-const float BOSSLASER_BASE_SPEED = 12.0f;
-const float BOSSLASER_MASS = 5.0f;
+const float BOSSLASER_ANIMATION_DELAY = 0.5f;
+const float BOSSLASER_BASE_SPEED = 300.0f;
+const float BOSSLASER_MASS = 5.0f;	
 // graphic images
 const char EXAMPLE_OBJECT_IMAGE[] = "images\\[PLACEHOLDER].jpg";
 const char GROUND_TILESET_IMAGE[] = "images\\ground_tile.png";

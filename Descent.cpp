@@ -41,7 +41,7 @@ Descent::Descent()
 	tankTexture = new TextureManager();
 	turretTexture = new TextureManager();
 	smokeTexture = new TextureManager();
-
+	bossLaserTexture = new TextureManager();
 	//images
 	background = new Image();
 	ground = new Image();
@@ -49,6 +49,7 @@ Descent::Descent()
 	turret = new Image();
 
 	//entities
+	bosslaser = new BossLaser();
 	cannonball = new Cannonball();
 	boss = new Boss_Spaceship();
 	tank = new Player();
@@ -128,9 +129,11 @@ void Descent::initialize(HWND hwnd)
 											 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell texture"));
 									if (!bossTexture->initialize(graphics, BOSS_SPACESHIP_IMAGE))
 											 throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss texture"));
+									if (!bossLaserTexture->initialize(graphics, BOSSLASER_IMAGE))
+										throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss laser texture"));
+									launchBossLaser();
 										
-									 
-									 
+									
 
 #pragma region Spawn Spaceships
 																//place inside game state wave 1 when created
@@ -209,6 +212,7 @@ void Descent::initialize(HWND hwnd)
 
 	background->setFrames(BACKGROUND_START_FRAME,BACKGROUND_END_FRAME);
 	background->setCurrentFrame(BACKGROUND_START_FRAME);
+	boss->setVelocity(VECTOR2(100, 0)); // VECTOR2(X, Y)
 
 	ground->setX(0);
 	ground->setScale(GAME_WIDTH / ground->getWidth());
@@ -225,6 +229,7 @@ void Descent::initialize(HWND hwnd)
 	currentActiveSpaceships = 0;
 	isAllSpaceshipMovingRight = true;
 	isShipsReadyToShift = false;
+
 
 
 
@@ -387,8 +392,21 @@ void Descent::update()
 										boss->update(frameTime);
 
 										shell->update(frameTime, *tank);
+										if (array_bosslaser.size() != 0){
+											for (int i = 0; i < array_bosslaser.size(); i++)
+											{
 
-										std::cout << "BOSS BATTA " << std::endl;
+												array_bosslaser[i]->update(frameTime);
+												if (array_bosslaser[i]->getY()>= GROUND_LEVEL_HEIGHT)
+												{
+													delete array_bosslaser[i];
+													array_bosslaser.erase(array_bosslaser.begin() + i);
+												}
+											}
+										}
+										else launchBossLaser();
+									//	bosslaser->update(frameTime, tank->getX(),tank->getY());
+										//std::cout << "BOSS BATTA " << std::endl;
 
 										if ((fmod(currentInGameTime,SHELL_SPAWNCOUNTER)==0)&&(shell->getActive() == false))
 										{
@@ -445,7 +463,18 @@ void Descent::collisions()
 		ship1.bounce(collisionVector, planet);
 		ship1.damage(PLANET);
 	}*/
-	
+	for (int i = 0; i < array_bosslaser.size(); i++)
+	{
+
+		if (array_bosslaser[i]->collidesWith(*tank, collisionVector))
+		{
+			std::cout << "bosslaser hit tank" << array_bosslaser[i]<<std::endl;
+			existOnScreen=false;
+			delete array_bosslaser[i];
+			array_bosslaser.erase(array_bosslaser.begin() + i);
+		}
+		
+	}
 	if (shell->collidesWith(*tank, collisionVector))
 	{
 			
@@ -454,12 +483,7 @@ void Descent::collisions()
 			shell->setVisible(false);
 			std::cout << "can u see dis" << std::endl;
 	}
-	if (shell->collidesWith(*cannonball, collisionVector))
-	{
-		std::cout << "cannonball hit shell" << std::endl;
-		shell->setActive(false);
-		shell->setVisible(false);
-	}
+
 	if (cannonball->collidesWith(*shell, collisionVector))
 	{
 		std::cout << "cannonball hit shell" << std::endl;
@@ -525,7 +549,7 @@ void Descent::collisions()
 				{
 					std::cout << "Cannonball is kill" << std::endl;
 					cannonball->setVisible(false);
-					cannonball->setActive(false);
+					//cannonball->setActive(false);
 				}
 
 			}
@@ -575,14 +599,14 @@ void Descent::render()
 								 {
 								 case WAVE_STATE::pauseWave:{
 																waveNumberText->print("Wave 1", GAME_HEIGHT / 2, GAME_WIDTH / 2); // need to change to picture
-																
+
 								 }break;
 								 case WAVE_STATE::wave1:{
 															for (int i = 0; i < currentActiveSpaceships; i++)
 															{
 																array_spaceships[i]->draw();
 															}
-														//	std::cout << "wave1" << std::endl;
+															//	std::cout << "wave1" << std::endl;
 								 }break;//draw wave 3 stuff
 								 case WAVE_STATE::wave2:{
 
@@ -590,19 +614,15 @@ void Descent::render()
 
 								 }break;//draw wave 2 stuff
 								 case WAVE_STATE::wave3:{
-															boss->draw();
-															//std::cout << "draw shell" << std::endl;
-															//if (currentInGameTime%5==0)
-															//{
-																
-																
-																	shell->draw();
-																
-											
 
-															//}
-															
-															//std::cout << "wave3" << std::endl;
+															boss->draw();
+															shell->draw();
+															for (int i = 0; i < array_bosslaser.size(); i++)
+															{
+																array_bosslaser[i]->draw();
+															}
+															//if (!existOnScreen)
+																//std::async(&Descent::launchBossLaser, this);
 															
 								 }break;//draw boss wave stuff
 								 }
@@ -926,4 +946,26 @@ void Descent::resetShellPos()
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
 	shell->setX(boss->getX() + BOSS_SPACESHIP_WIDTH / 2);
 	shell->setY(boss->getY() + BOSS_SPACESHIP_HEIGHT / 2);
+}
+void Descent::launchBossLaser()
+{
+	array[0] = 45;
+	array[1] = 0;
+	array[2] = -45;
+	for (int i = 0; i < 3; i++)
+	{
+		std::cout << "initialising laser number " << i << std::endl;
+		BossLaser* bosslaser = new BossLaser();
+		if (!bosslaser->initialize(this, BossLaserNS::WIDTH, BossLaserNS::HEIGHT, BossLaserNS::TEXTURE_COLS, bossLaserTexture))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising background"));
+		array_bosslaser.push_back(bosslaser);
+		array_bosslaser[i]->setX(boss->getCenterX());
+		array_bosslaser[i]->setY(boss->getY());
+		array_bosslaser[i]->setDegrees(-array[i]);
+		array_bosslaser[i]->setDegree(array[i]);
+		array_bosslaser[i]->setFrames(BossLaserNS::START_FRAME, BossLaserNS::END_FRAME);
+		array_bosslaser[i]->setCurrentFrame(BossLaserNS::START_FRAME);
+		laserCounter++;
+	}
+	existOnScreen = false;
 }

@@ -15,8 +15,7 @@ namespace BossLaserNS
 	const int TEXTURE_COLS = BOSSLASER_TEXTURE_COLUMNS;
 	const int START_FRAME = BOSSLASER_START_FRAME;
 	const int END_FRAME = BOSSLASER_END_FRAME;
-	const float ANIMATION_DELAY = SHELL_ANIMATION_DELAY;
-	const int DAMAGE = SHELL_DAMAGE;
+	const float ANIMATION_DELAY = BOSSLASER_ANIMATION_DELAY;
 	const int X = 0;
 	const int Y = 0;
 }
@@ -25,16 +24,19 @@ class BossLaser : public Entity
 {
 private:
 	bool moving;
-
-
+	float degree;
+	float tx, ty;
 public:
 	BossLaser();
 
 	virtual void draw();
 	virtual bool initialize(Game *gamePtr, int width, int height, int ncols,
 		TextureManager *textureM);
-	void update(float frameTime, Player turret);
+	void update(float frameTime);
+	float getDegree(){ return degree; };
+	void setDegree(float d){ degree = d; }
 
+	
 
 };
 #endif

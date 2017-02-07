@@ -62,7 +62,8 @@ void Shell::update(float frameTime, Player turret)
 	//spriteData.angle += frameTime * ShellNS::ROTATION_RATE;
 
 	//distance = sqrt(pow(turret.getX() - spriteData.x, 2) + pow(turret.getY() - spriteData.y, 2));
-	crosshair.setDegrees(ShellNS::CROSSHAIR_ROTATION_RATE*frameTime);
+
+		crosshair.setDegrees(ShellNS::CROSSHAIR_ROTATION_RATE*frameTime);
 	crosshair.update(frameTime);
 	thrust = 0.25;
 	tx = (turret.getX()+turret.getWidth()/4) - spriteData.x;

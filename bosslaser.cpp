@@ -48,25 +48,30 @@ void BossLaser::draw()
 // typically called once per frame
 // frameTime is used to regulate the speed of movement and animation
 //=============================================================================
-void BossLaser::update(float frameTime, Player turret)
+void BossLaser::update(float frameTime)
 {
 	//http://jsfiddle.net/LyM87/ cannonball physics
 	//if thrown
-	//spriteData.angle += frameTime * ShellNS::ROTATION_RATE;
-
-	//distance = sqrt(pow(turret.getX() - spriteData.x, 2) + pow(turret.getY() - spriteData.y, 2));
-	spriteData.x += velocity.x;
-	spriteData.y += velocity.y;
+	Entity::update(frameTime);
+	velocity.x= (float)(sin(degree)*BOSSLASER_BASE_SPEED);
+	velocity.y = (float)(cos(degree)*BOSSLASER_BASE_SPEED);
+	spriteData.x += velocity.x*frameTime;
+	spriteData.y += velocity.y*frameTime;
+	setFrames(BossLaserNS::START_FRAME, BossLaserNS::END_FRAME);
+	setCurrentFrame(BossLaserNS::START_FRAME);
+	setFrameDelay(BossLaserNS::ANIMATION_DELAY);
+//	spriteData.x += velocity.x;
+//	spriteData.y += velocity.y;
 	if (spriteData.x > GAME_WIDTH - BossLaserNS::WIDTH*getScale())
 	{
 		// position at right screen edge
 		spriteData.x = GAME_WIDTH - BossLaserNS::WIDTH*getScale();
-		velocity.x = -velocity.x;               // reverse X direction
+		velocity.x = -velocity.x*frameTime;               // reverse X direction
 	}
 	else if (spriteData.x < 0)                  // else if hit left screen edge
 	{
 		spriteData.x = 0;                       // position at left screen edge
-		velocity.x = -velocity.x;               // reverse X direction
+		velocity.x = -velocity.x*frameTime;               // reverse X direction
 	}
 	// if hit bottom screen edge
 	if (spriteData.y > GAME_HEIGHT - BossLaserNS::HEIGHT*getScale())
@@ -80,6 +85,11 @@ void BossLaser::update(float frameTime, Player turret)
 		spriteData.y = 0;                       // position at top screen edge
 		velocity.y = -velocity.y;               // reverse Y direction
 	}
+	
+	
+
+
+
 	//crosshair.setCurrentFrame(ShellNS::CROSSHAIR_START_FRAME);
 	//Entity::update(frameTime);
 
