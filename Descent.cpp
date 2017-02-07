@@ -286,8 +286,7 @@ void Descent::initialize(HWND hwnd)
 	isCalculatingPlayerPattern = false;
 	isAllSpaceshipsFiring = false;
 
-	
-	spawnSpaceships(1);
+
 
     return;
 }
@@ -489,11 +488,21 @@ void Descent::update()
 			 }break;
 			 case WAVE_STATE::wave1:{//add wave 1 behaviors
 										//std::cout << "wave 1" << std::endl;
+
+										if (!hasWaveOneSpawned)
+										{
+											despawnSpaceships();
+											spawnSpaceships(1);
+										}
+											
+
 										enemy_spaceship->update(frameTime);
 										if (input->wasKeyPressed(TW_KEY))
 										{
 											waveControl->setWaveState(WAVE_STATE::wave2);
 											maxAmountOfAllowedBulletsPerVolley = WAVE_2_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY;
+
+											
 
 										}
 										
@@ -507,6 +516,14 @@ void Descent::update()
 
 										//std::cout << "wave 2" << std::endl;
 
+										if (!hasWaveTwoSpawned)
+										{
+											despawnSpaceships();
+											spawnSpaceships(2);
+										}
+											
+
+
 										if (input->wasKeyPressed(TH_KEY))
 										{
 											waveControl->setWaveState(WAVE_STATE::wave3);
@@ -517,7 +534,7 @@ void Descent::update()
 			 }break;
 			 case WAVE_STATE::wave3:{//add boss spaceship behaviour
 										//std::cout << "wave 3" << std::endl;
-										
+										despawnSpaceships();
 										boss->setX(GAME_WIDTH / 4);
 										boss->setY(GAME_HEIGHT / 4);
 										boss->update(frameTime);
@@ -1538,15 +1555,18 @@ void Descent::spawnSpaceships(int waveNumber)
 	case 1: {
 				amountOfRows = WAVE_1_SPACESHIPS_AMT_OF_ROWS;
 				spaceshipHealth = WAVE_1_SPACESHIPS_HEALTH;
+				hasWaveOneSpawned = true;
 	}break;
 	case 2: {
 				amountOfRows = WAVE_2_SPACESHIPS_AMT_OF_ROWS;
-				spaceshipHealth = WAVE_2_SPACESHIPS_HEALTH;						  
+				spaceshipHealth = WAVE_2_SPACESHIPS_HEALTH;		
+				hasWaveTwoSpawned = true;
 	}break;
 
 	case 3: {
-				amountOfRows = WAVE_2_SPACESHIPS_AMT_OF_ROWS;
+				amountOfRows = WAVE_3_SPACESHIPS_AMT_OF_ROWS;
 				spaceshipHealth = WAVE_3_SPACESHIPS_HEALTH;
+				hasWaveThreeSpawned = true;
 	}break;
 
 	}
@@ -1612,6 +1632,30 @@ void Descent::spawnSpaceships(int waveNumber)
 
 #pragma endregion
 }
+
+//=============================================================================
+// cleans up spaceship arrays
+// call before major changes to spaceship array
+// INDISCRIMINATELY removes ALL spaceships regardless of activeness
+//=============================================================================
+void Descent::despawnSpaceships()
+{
+	std::cout << array_spaceships.size() << std::endl;
+	std::cout << currentActiveSpaceships << std::endl;
+	for (int i = currentActiveSpaceships-1; i >= 0; i--)
+	{
+		array_spaceships[i]->setVisible(false);
+		std::cout << "Spaceship " << i << " is deleted" << std::endl;
+		delete array_spaceships[i];
+		array_spaceships.erase(array_spaceships.begin() + i);
+		currentActiveSpaceships--;
+	}
+	std::cout << array_spaceships.size() << std::endl;
+	std::cout << currentActiveSpaceships << std::endl;
+	//currentActiveSpaceships = 0;
+
+}
+
 
 //=============================================================================
 // loads highscore

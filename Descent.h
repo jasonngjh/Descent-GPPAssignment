@@ -136,6 +136,11 @@ public:
 	bool isPowerupSpawning;
 	bool isCalculatingPlayerPattern;		//to prevent multiple instances of pattern acquirement
 	bool isAllSpaceshipsFiring;
+
+	bool hasWaveOneSpawned = false;
+	bool hasWaveTwoSpawned = false;
+	bool hasWaveThreeSpawned = false;
+
     // Constructor
 	Descent();
 
@@ -185,6 +190,7 @@ public:
 	void addToScore(int scoreToAdd);
 
 	void spawnSpaceships(int waveNumber);
+	void despawnSpaceships();		
 
 	void loadHighScore();
 
