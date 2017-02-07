@@ -58,6 +58,7 @@ const float PLAYER_ANIMATION_DELAY = 0.2f;		//note: make player animate only whe
 const float PLAYER_BASE_STRENGTH = 25.0f;		//base strength, related to player throwing
 const float PLAYER_BASE_SPEED = 100.0f;
 const float PLAYER_MAX_HEALTH = 100;			//for dynamic health values, should represent health as a number
+const int PLAYER_DAMAGE_TAKEN_MODIFIER = 1;
 
 //player(tank) health
 const int PLAYER_HEALTH_WIDTH = 28;
@@ -110,7 +111,7 @@ const int SPACESHIP_MOVEMENT_DISTANCE = 29;
 const double SPACESHIP_MOVE_FREQUENCY = 0;
 const int SPACESHIP_ATTACK_FREQUENCY = 1;
 const double SPACESHIP_CRITICAL_HEALTH_FACTOR = 0.25;
-const int SPACESHIP_REWARD_SCORE = 50;
+const int SPACESHIP_REWARD_SCORE = 333;
 const double SPACESHIP_REWARD_COMBO_MULTIPLIER = 1;		//amt of points multiplied for collateral kills
 const int HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 80;	//this affects how much ships can be created in a row, if values are too high will lead to weird spaceship orientation
 const int VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 20;
@@ -123,7 +124,7 @@ const int SPACESHIP_BULLET_START_FRAME = 0;
 const int SPACESHIP_BULLET_END_FRAME = 1;
 const float SPACESHIP_BULLET_SPEED = 300.0f;
 const float SPACESHIP_BULLET_ANIMATION_DELAY = 0.2f;
-const int SPACESHIP_BULLET_DAMAGE = 25;
+const int SPACESHIP_BULLET_DAMAGE = 1;
 const int MAX_NO_OF_SPACESHIP_BULLETS = 10;
 
 //spaceship spawn variables
@@ -180,11 +181,12 @@ const double POWERUP_TIME_SLOW_MULTIPLER = 2; //the bigger the number the slower
 const int POWERUP_TIME_SLOW_DURATION = 10;
 const int POWERUP_TIME_SLOW_CODE = 1;
 
-const int POWERUP_RESTORE_HEALTH_VALUE = 5;
+const int POWERUP_SHIELD_DAMAGE_MODIFIER = 0;	//damageTaken*(this value)
+const int POWERUP_SHIELD_DURATION = 5;
 const int POWERUP_RESTORE_HEALTH_CODE = 2;
 
 const double POWERUP_INCREASE_TANK_SPEED_FACTOR = 2; //the higher the number the faster (too high = too fast)
-const int POWERUP_INCREASE_TANK_SPEED_DURATION = 9;
+const int POWERUP_INCREASE_TANK_SPEED_DURATION = 5;
 const int POWERUP_INCREASE_TANK_SPEED_CODE = 3;
 
 const int POWERUP_TIME_LOCK_DURATION = 5; //in seconds
@@ -192,7 +194,7 @@ const int POWERUP_TIME_LOCK_FACTOR = 0; //anything that is not 0 means this isn'
 const int POWERUP_TIME_LOCK_CODE = 4;
 const int POWERUP_TIME_LOCK_UNLOCK_SOUND_DURATION = 3;
 
-const int POWERUP_MAX_POWER_DURATION = 10;
+const int POWERUP_MAX_POWER_DURATION = 5;
 const int POWERUP_MAX_POWER_CODE = 5;
 
 const int POWERUP_TANK_ASSIST_DURATION = 10;			//spawns an allied tank that moves across X at ground level and periodically shoots weak bullets at spaceships, cannot be destroyed but is temporary
@@ -222,7 +224,7 @@ const int MAX_NO_OF_ASSIST_TANK_BULLETS = 1;
 
 //gameplay condition variables (affected by powerups, otherwise they generally stays the same)
 const int GROUND_LEVEL_HEIGHT = GAME_HEIGHT - GAME_HEIGHT / 10;			//no objects may go beyond this line, essentially means 'ground level'
-const int GAMEOVER_SPACESHIP_DISTANCE = GROUND_LEVEL_HEIGHT - 200;		//when spaceship reaches here, game over, boom
+const int GAMEOVER_SPACESHIP_DISTANCE = GROUND_LEVEL_HEIGHT - 150;		//when spaceship reaches here, game over, boom
 const int SKY_LEVEL_DIVIDER = 78;
 const int GROUND = 560;
 

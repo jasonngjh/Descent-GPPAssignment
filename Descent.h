@@ -90,7 +90,6 @@ private:
 	Image* tankHealth;
 
 	Cannonball* cannonball;
-	Spaceship* enemy_spaceship;	//only one for now, testing only
 	Boss_Spaceship* boss;
 	Player* tank;
 	Shell* shell;
@@ -135,7 +134,7 @@ private:
 	//modifiers
 	int timeModifier = GAME_BASE_TIME_MODIFIER; //Default value is 1, value affects time - this value will multiply by 1 second to achieve new time
 	int speedModifier = GAME_BASE_SPEED_MODIFIER; //Default value is 1, value affects speed - this value will be multiplied by speed values to achieve new speed
-
+	double playerDamageTakenModifier = PLAYER_DAMAGE_TAKEN_MODIFIER;
 public:
 	int currentActiveSpaceships;			//amt of spaceships currently alive (should be dynamically less or equal to maxActiveSpaceships)
 	int currentActiveSpaceshipBullets;		//amt of spaceship bullets active
@@ -203,12 +202,15 @@ public:
 	int getSpeedModifier() { return speedModifier; }
 	void setSpeedModifier(int modifyingValue) { speedModifier = modifyingValue; }
 
+	double getPlayerDamageTakenModifier() { return playerDamageTakenModifier; }
+	void setPlayerDamageTakenModifier(double modifyingValue) { playerDamageTakenModifier = modifyingValue; }
+
 	void acquirePlayerMovementPatterns();
 
 	void applyPowerupEffect(int powerupCode);
 
 	void applyPowerupEffect_timeSlow();
-	void applyPowerupEffect_restoreHealth();
+	void applyPowerupEffect_shield();
 	void applyPowerupEffect_increaseTankSpeed();
 	void applyPowerupEffect_timeLock();
 	void applyPowerupEffect_maxPower();
