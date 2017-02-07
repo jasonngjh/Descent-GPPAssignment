@@ -53,6 +53,7 @@ bool Player::initialize(Game *gamePtr, int width, int height, int ncols,
 	if (!tankHealth->initialize(gamePtr->getGraphics(), PLAYER_HEALTH_WIDTH, PLAYER_HEALTH_HEIGHT, PLAYER_HEALTH_TEXTURE_COLUMNS, tankHealthTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank health"));
 
+	std::cout << "initalised tank health" << std::endl;
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
 }
 
