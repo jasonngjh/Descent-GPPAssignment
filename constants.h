@@ -229,7 +229,7 @@ const char INSTRUCTION_IMAGE[] = "resources\\images\\instruction.png";
 const char TURRET_IMAGE[] = "resources\\images\\turret.png";
 const char SHELL_IMAGE[] = "resources\\images\\shell.png";
 const char CHARGINGBAR_IMAGE[] = "resources\\images\\chargingbar.png";
-const char BOSSLASER_IMAGE[]="images\\bosslaser.png";
+const char BOSSLASER_IMAGE[]="resources\\images\\bosslaser.png";
 const char GAME_WIN_IMAGE[] = "resources\\images\\gamewin.png";
 const char GAME_LOSE_IMAGE[] = "resources\\images\\gamelose.png";
 

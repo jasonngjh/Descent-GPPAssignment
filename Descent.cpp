@@ -74,7 +74,6 @@ Descent::~Descent()
 	SAFE_DELETE(pauseText);
 	SAFE_DELETE(waveNumberText);
 	delete gameControl;
-	//delete waveControl;
 	delete background;
 	delete ground;
 	delete menu1;
@@ -189,7 +188,10 @@ void Descent::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing game lose image"));
 
 	if (!bossLaserTexture->initialize(graphics, BOSSLASER_IMAGE))
-										throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss laser texture"));
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss laser texture"));
+	if (!shell->initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, shellTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
+
 	launchBossLaser();
 									
 	background->setFrames(BACKGROUND_START_FRAME,BACKGROUND_END_FRAME);
@@ -293,7 +295,6 @@ void Descent::initialize(HWND hwnd)
 	
 	std::async(&Descent::timer_start, this); //run timer thread while main loop is contiuing
 
-
     return;
 }
 
@@ -302,9 +303,6 @@ void Descent::initialize(HWND hwnd)
 //=============================================================================
 void Descent::update()
 {
-	//exampleObject.update(frameTime);
-	//other update mechanics here
-
 	GENERAL_STATE state = gameControl->getGeneralState();
 	WAVE_STATE waveState = waveControl->getWaveState();
 	switch (state)
@@ -320,7 +318,6 @@ void Descent::update()
 		}
 		if (input->wasKeyPressed(ENTER_KEY)){
 			gameControl->setGeneralState(GENERAL_STATE::instructions);
-			//playerCount=number of players to initialise
 		}
 	}break;
 	case GENERAL_STATE::instructions : {
@@ -347,7 +344,6 @@ void Descent::update()
 	// checkpoints: player health = 0 -> change to end game screen
 	// if boss die -> change to end game screen
 	// if esc(quit pressed) -> change to end game screen
-		tank->update(frameTime);
 
 		if (input->isKeyDown(LEFT_KEY))
 		{
@@ -357,6 +353,7 @@ void Descent::update()
 		{
 			turret->setX(tank->getX() + 18.0f);
 		}
+		tank->update(frameTime);
 
 		if (input->wasKeyPressed(SPACE_KEY))
 		{
@@ -393,14 +390,11 @@ void Descent::update()
 												waveControl->setWaveState(WAVE_STATE::wave1);
 			 }break;
 			 case WAVE_STATE::wave1:{//add wave 1 behaviors
-										//std::cout << "wave 1" << std::endl;
 										enemy_spaceship->update(frameTime);
 										if (input->wasKeyPressed(TW_KEY))
 										{
 											waveControl->setWaveState(WAVE_STATE::wave2);
 										}
-										
-										 
 			 }break;
 			 case WAVE_STATE::wave2:{//add wave 2 enemy behavior
 										std::cout << "wave 2" << std::endl;
@@ -416,15 +410,12 @@ void Descent::update()
 											std::cout << "Initialising boss" << std::endl;
 											if (!boss->initialize(this, Boss_SpaceshipNS::WIDTH, Boss_SpaceshipNS::HEIGHT, Boss_SpaceshipNS::TEXTURE_COLS, bossTexture))
 												throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss game object"));
-											if (!shell->initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, shellTexture))
-												throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
-											
 											initAlready = false;
 											boss->setActive(true);
 										}
 										boss->update(frameTime);
-
 										shell->update(frameTime, *tank);
+
 										if (array_bosslaser.size() != 0){
 											for (int i = 0; i < array_bosslaser.size(); i++)
 											{
@@ -438,23 +429,17 @@ void Descent::update()
 											}
 										}
 										else launchBossLaser();
-									//	bosslaser->update(frameTime, tank->getX(),tank->getY());
-										//std::cout << "BOSS BATTA " << std::endl;
 
-										if ((fmod(currentInGameTime,SHELL_SPAWNCOUNTER)==0)&&(shell->getActive() == false))
+										if ((fmod(secondsPassed, SHELL_SPAWNCOUNTER) == 0) && (shell->getActive() == false))
 										{
 											resetShellPos();
 										}
 			 }break;						 
 		}
-		
 		if (input->wasKeyPressed(PAUSE_KEY))
 		{
-
 			gameControl->setGeneralState(GENERAL_STATE::paused);
 		}
-
-		
 	}break;
 
 	case GENERAL_STATE::paused:{
@@ -572,7 +557,7 @@ void Descent::collisions()
 			//std::cout << cannonball->getDamageLeft() + "COLLIDE BOSSSHIP" << std::endl;
 		
 		cannonball->hit(bossShip);
-		boss->setHealth((boss->getHealth() - cannonball->getDamageLeft()));
+		boss->setHealth((boss->getHealth() - cannonball->getForcePower()));
 		//boss->setVisible(false);
 		std::cout << "Boss HP Left:" <<(int)boss->getHealth()<< std::endl;
 	}	
@@ -647,14 +632,14 @@ void Descent::render()
 								 instructionScreen->draw();
 	}break;
 	case GENERAL_STATE::game:{
-								dxFont.setFontColor(gameNS::FONT_COLOR);
+								 dxFont.setFontColor(gameNS::FONT_COLOR);
 								 background->draw();
-								 ground->draw();    
-								 _snprintf_s(buffer, BUF_SIZE, "Seconds Passed %d ", (int)getSecondsPassed());
-								 dxFont.print(buffer, GAME_WIDTH - 200, GAME_HEIGHT - 50);								 // add the object to the scene
+								 ground->draw();    	
 								 cannonball->draw();					//in real game, Cannonball should be drawn later, when wormhole appears
 								 turret->draw();
 								 tank->draw();
+								 _snprintf_s(buffer, BUF_SIZE, "Seconds Passed %d ", (int)getSecondsPassed());
+								 dxFont.print(buffer, GAME_WIDTH - 200, GAME_HEIGHT - 50);
 
 								 for (int i = 0; i < currentActiveSpaceships; i++)
 								 {
@@ -669,13 +654,9 @@ void Descent::render()
 								 }break;
 								 case WAVE_STATE::wave1:{
 															enemy_spaceship->draw(); 
-														//	std::cout << "wave1" << std::endl;
-								 }break;//draw wave 3 stuff
+								 }break;
 								 case WAVE_STATE::wave2:{
-															std::cout << "shell draw" << std::endl;
-															shell->draw();
-															//std::cout << "wave2" << std::endl;
-
+															
 								 }break;//draw wave 2 stuff
 								 case WAVE_STATE::wave3:{
 															boss->draw();
@@ -684,7 +665,7 @@ void Descent::render()
 															{
 																array_bosslaser[i]->draw();
 															}
-								 }break;//draw boss wave stuff
+								 }break;
 								 }
 								 
 	}break;
@@ -703,8 +684,6 @@ void Descent::render()
 									 }
 	}break;
 	}
-    
-
     graphics->spriteEnd();                  // end drawing sprites
 }
 
@@ -1035,8 +1014,6 @@ void Descent::resetShellPos()
 {
 	shell->setActive(true);
 	shell->setVisible(true);
-	//if (!shellTexture->initialize(graphics, SHELL_IMAGE))
-		//throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell texture"));
 	if (!shell->initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, shellTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
 	shell->setX(boss->getX() + BOSS_SPACESHIP_WIDTH / 2);

@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "Spaceship.h"
 #include "Boss_Spaceship.h"
+#include "bosslaser.h"
 #include "shell.h"
 
 #include "guicon.h"
