@@ -20,7 +20,6 @@ if 2 player, color code them red and blue for clarity
 
 #include "Descent.h"
 
-
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -40,23 +39,26 @@ Descent::Descent()
 	menu1Texture = new TextureManager();
 	tankTexture = new TextureManager();
 	turretTexture = new TextureManager();
-	smokeTexture = new TextureManager();
 	pauseTexture = new TextureManager();
 	instructionTexture = new TextureManager();
+	gamewinTexture = new TextureManager();
+	gameloseTexture = new TextureManager();
 
 	//images
 	background = new Image();
 	ground = new Image();
+	tank = new Player();
+	cannonball = new Cannonball();
 	menu1 = new Image();
 	turret = new Image();
 	pause = new Image();
 	instructionScreen = new Image();
+	gamewin = new Image();
+	gamelose = new Image();
 
 	//entities
-	cannonball = new Cannonball();
 	enemy_spaceship = new Spaceship();
 	boss = new Boss_Spaceship();
-	tank = new Player();
 	shell = new Shell();
 
 }
@@ -74,11 +76,14 @@ Descent::~Descent()
 	delete background;
 	delete ground;
 	delete menu1;
+	delete gamewin;
+	delete gamelose;
 	delete instructionScreen;
 	delete turret;
 	delete pause;
 	delete cannonball;
 	delete enemy_spaceship;
+	delete tank;
 	delete boss;
 	delete shell;
 	for (Spaceship* spaceShip : array_spaceships)
@@ -126,14 +131,16 @@ void Descent::initialize(HWND hwnd)
 	if (!tankTexture->initialize(graphics, TANK_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank texture"));
 
-	if (!cannonball->initialize(this, CannonballNS::WIDTH, CannonballNS::HEIGHT, CannonballNS::TEXTURE_COLS, cannonballTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Cannonball game object"));
-
 	if (!backgroundTexture->initialize(graphics, BKGRND_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing background texture"));
 
 	if (!instructionTexture->initialize(graphics, INSTRUCTION_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing instruction texture"));
+
+	if (!tank->initialize(this, PlayerNS::WIDTH, PlayerNS::HEIGHT, PlayerNS::TEXTURE_COLS, tankTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank"));
+	if (!cannonball->initialize(this, CannonballNS::WIDTH, CannonballNS::HEIGHT, CannonballNS::TEXTURE_COLS, cannonballTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Cannonball game object"));
 	
 	if (!ground->initialize(graphics, 0, 0, 0, groundTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ground tiles"));
@@ -146,9 +153,6 @@ void Descent::initialize(HWND hwnd)
 
 	if (!pause->initialize(graphics, PAUSE_WIDTH, PAUSE_HEIGHT, 2, pauseTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pause screen"));
-
-	if (!tank->initialize(this,PlayerNS::WIDTH, PlayerNS::HEIGHT, PlayerNS::TEXTURE_COLS, tankTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank"));
 
 	if (!turretTexture->initialize(graphics, TURRET_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing turret texture"));
@@ -166,13 +170,20 @@ void Descent::initialize(HWND hwnd)
 	if (!boss->initialize(this, Boss_SpaceshipNS::WIDTH, Boss_SpaceshipNS::HEIGHT, Boss_SpaceshipNS::TEXTURE_COLS, bossTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss game object"));
 
-	if (!smokeTexture->initialize(graphics, SMOKE_IMAGE))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing smoke texture"));
-
 	if (!shellTexture->initialize(graphics, SHELL_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell texture"));
 	if (!shell->initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, shellTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
+
+	if (!gamewinTexture->initialize(graphics, GAME_WIN_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing game win texture"));
+	if (!gamewin->initialize(graphics, WINLOSE_WIDTH, WINLOSE_HEIGHT, WINLOSE_TEXTURE_COLUMNS, gamewinTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing game win image"));
+
+	if (!gameloseTexture->initialize(graphics, GAME_LOSE_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing game lose texture"));
+	if (!gamelose->initialize(graphics, WINLOSE_WIDTH, WINLOSE_HEIGHT, WINLOSE_TEXTURE_COLUMNS, gameloseTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing game lose image"));
 
 	background->setFrames(BACKGROUND_START_FRAME,BACKGROUND_END_FRAME);
 	background->setCurrentFrame(BACKGROUND_START_FRAME);
@@ -184,6 +195,8 @@ void Descent::initialize(HWND hwnd)
 	ground->setX(0);
 	ground->setScale((float)(GAME_WIDTH / ground->getWidth()));
 	ground->setY((int)GROUND_LEVEL_HEIGHT);		//sets ground to 3/4 of game width
+
+	initializeTank();
 
 	enemy_spaceship->setFrames(SpaceshipNS::START_FRAME, SpaceshipNS::END_FRAME);
 	enemy_spaceship->setCurrentFrame(SpaceshipNS::START_FRAME);
@@ -203,8 +216,6 @@ void Descent::initialize(HWND hwnd)
 	shell->setY(boss->getY()+BOSS_SPACESHIP_HEIGHT/2);
 	
 #pragma endregion
-
-	initializeTank();
 
 	std::cout << "initialising spaceship array" << std::endl;
 #pragma region Spawn Spaceships
@@ -310,7 +321,7 @@ void Descent::update()
 
 	case GENERAL_STATE::game:{
 		background->update(frameTime);
-		tank->update(frameTime);
+		checkGamestatus();
 
 		if (currentActiveSpaceships > 0)
 		{
@@ -325,13 +336,14 @@ void Descent::update()
 	// checkpoints: player health = 0 -> change to end game screen
 	// if boss die -> change to end game screen
 	// if esc(quit pressed) -> change to end game screen
-	
+		tank->update(frameTime);
+
 		if (input->isKeyDown(LEFT_KEY))
 		{
 			turret->setX(tank->getX() + 28.0f);
 		}
 		if (input->isKeyDown(RIGHT_KEY))
-		{		
+		{
 			turret->setX(tank->getX() + 18.0f);
 		}
 
@@ -339,8 +351,8 @@ void Descent::update()
 		{
 			cannonball->getTank(tank);
 		}
-		 cannonball->update(frameTime);
-		 cannonball->updateChargingBar(frameTime, tank->getX());
+		cannonball->update(frameTime);
+		cannonball->updateChargingBar(frameTime, tank->getX());
 
 		if (input->wasKeyPressed(UP_KEY) || (input->wasKeyPressed(DOWN_KEY)))
 		{
@@ -362,7 +374,7 @@ void Descent::update()
 				break;
 			}
 		}
-
+		
 		 switch (waveState){
 			case WAVE_STATE::pauseWave:{
 											//std::cout << "pause" << std::endl; 
@@ -434,6 +446,45 @@ void Descent::update()
 			
 		}
 	}break;
+	case GENERAL_STATE::gameOver:{
+									 if (gameStatus == 1)
+									 {
+										 gamewin->update(frameTime);
+										 if (input->isKeyDown(DOWN_KEY)){
+											 gamewin->setCurrentFrame(WINLOSE_END_FRAME);
+											 gameOverScreen = 1;
+										 }
+										 else if (input->isKeyDown(UP_KEY)){
+											 gamewin->setCurrentFrame(WINLOSE_START_FRAME);
+											 gameOverScreen = 0;
+										 }
+									 }
+									 else if (gameStatus == 2)
+									 {
+										 gamelose->update(frameTime);
+										 if (input->isKeyDown(DOWN_KEY)){
+											 gamelose->setCurrentFrame(WINLOSE_END_FRAME);
+											 gameOverScreen = 1;
+										 }
+										 else if (input->isKeyDown(UP_KEY)){
+											 gamelose->setCurrentFrame(WINLOSE_START_FRAME);
+											 gameOverScreen = 0;
+										 }
+									 }
+									 if (input->wasKeyPressed(ENTER_KEY)){
+										 Sleep(500);
+										 gameStatus = 0;
+										 switch (gameOverScreen)
+										 {
+										 case 0: gameControl->setGeneralState(GENERAL_STATE::instructions);
+											 break;
+										 case 1: gameControl->setGeneralState(GENERAL_STATE::menu);
+											 break;
+										 }
+
+									 }
+	}break;
+
 	}
 }
 
@@ -535,8 +586,7 @@ void Descent::render()
 								 cannonball->draw();					//in real game, Cannonball should be drawn later, when wormhole appears
 								 turret->draw();
 								 tank->draw();
-								 
-								 
+
 								 for (int i = 0; i < currentActiveSpaceships; i++)
 								 {
 									 array_spaceships[i]->draw();
@@ -571,6 +621,16 @@ void Descent::render()
 								   pauseText->print("Paused", GAME_HEIGHT / 2, GAME_WIDTH / 2);
 								   pause->draw();
 	}break;
+	case GENERAL_STATE::gameOver:{
+									 if (gameStatus == 1)
+									 {
+										 gamewin->draw();
+									 }
+									 else if (gameStatus ==2)
+									 {
+										 gamelose->draw();
+									 }
+	}break;
 	}
     
 
@@ -584,6 +644,8 @@ void Descent::render()
 void Descent::releaseAll()
 {
 	//exampleTexture->onLostDevice();
+	gamewinTexture->onLostDevice();
+	gameloseTexture->onLostDevice();
 	pauseTexture->onLostDevice();
 	instructionTexture->onLostDevice();
 	backgroundTexture->onLostDevice();
@@ -592,7 +654,6 @@ void Descent::releaseAll()
 	spaceshipTexture->onLostDevice();
 	tankTexture->onLostDevice();
 	turretTexture->onLostDevice();
-	smokeTexture->onLostDevice();
 	cannonball->releaseAll();
 	tank->releaseAll();
     Game::releaseAll();
@@ -606,6 +667,8 @@ void Descent::releaseAll()
 void Descent::resetAll()
 {
     //exampleTexture->onResetDevice();
+	gamewinTexture->onResetDevice();
+	gameloseTexture->onResetDevice();
 	pauseTexture->onResetDevice();
 	instructionTexture->onResetDevice();
 	backgroundTexture->onResetDevice();
@@ -614,7 +677,6 @@ void Descent::resetAll()
 	spaceshipTexture->onResetDevice();
 	tankTexture->onResetDevice();
 	turretTexture->onResetDevice();
-	smokeTexture->onResetDevice();
 	cannonball->resetAll();
 	tank->resetAll();
     Game::resetAll();
@@ -636,14 +698,9 @@ void Descent::initializeTank()
 {
 	tank->setFrames(PlayerNS::START_FRAME, PlayerNS::END_FRAME);
 	tank->setCurrentFrame(PlayerNS::START_FRAME);
-	/*if (playerCount == 1)
-	{*/
-		tank->setX(GAME_WIDTH / 2);
-		tank->setY(GROUND_LEVEL_HEIGHT - PLAYER_HEIGHT + 2.0f);
-	/*}
-	else
-	{
-	}*/
+
+	tank->setX(GAME_WIDTH / 2);
+	tank->setY(GROUND_LEVEL_HEIGHT - PLAYER_HEIGHT + 2.0f);
 	tank->flipHorizontal(false);
 	tank->initialiseTankHealthbar();
 
@@ -653,7 +710,8 @@ void Descent::initializeTank()
 
 	cannonball->setX(tank->getX());
 	cannonball->setY(tank->getY());
-	cannonball->initialiseChargingbar(tank->getX(),tank->getY());
+	cannonball->initialiseChargingbar(tank->getX(), tank->getY());
+
 }
 
 //=============================================================================
@@ -899,4 +957,17 @@ void Descent::loadAllAudio()
 	loadAudio("resources\\music\\background.ogg");
 	loadAudio("resources\\music\\tankMoving.wav");
 	loadAudio("resources\\music\\explode.wav");
+}
+
+//=============================================================================
+// checkGameStatus
+// see if win or lose
+//=============================================================================
+void Descent::checkGamestatus()
+{
+	if (tank->getHealth() == 0)
+	{
+		gameStatus = 2;
+		gameControl->setGeneralState(GENERAL_STATE::gameOver);
+	}
 }

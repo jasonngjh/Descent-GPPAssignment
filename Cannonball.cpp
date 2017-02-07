@@ -92,7 +92,7 @@ void Cannonball::update(float frameTime)
 		}
 	}
 
-	if ((spriteData.y > GROUND_LEVEL_HEIGHT))
+	if ((spriteData.y > GROUND))
 	{
 		hit(land);
 	}
@@ -373,6 +373,7 @@ void Cannonball::resetAll()
 void Cannonball::initialiseChargingbar(float x, float y)
 {
 	chargingBar->setCurrentFrame(6);
+	chargingBar->setScale(2);
 	chargingBar->setX(x + 10.0f);
 	chargingBar->setY(y + 90.0f);
 }

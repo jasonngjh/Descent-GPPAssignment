@@ -169,6 +169,13 @@ const int INSTRUCTIONS_TEXTURE_COLUMNS = 0;
 const int INSTRUCTIONS_START_FRAME = 0;
 const int INSTRUCTIONS_END_FRAME = 0;
 
+//game win/lose frames
+const int WINLOSE_WIDTH = GAME_WIDTH;
+const int WINLOSE_HEIGHT = GAME_HEIGHT;
+const int WINLOSE_TEXTURE_COLUMNS = 2;
+const int WINLOSE_START_FRAME = 0;
+const int WINLOSE_END_FRAME = 1;
+
 //turret frames
 const int TURRET_WIDTH = 35;
 const int TURRET_HEIGHT = 35;
@@ -210,13 +217,13 @@ const char BOSS_SPACESHIP_IMAGE[] = "resources\\images\\boss_spaceship.png";
 const char TANK_IMAGE[] = "resources\\images\\tank.png";
 const char TANK2_IMAGE[] = "resources\\images\\tank2.png";
 const char TANK_HEALTH_IMAGE[] = "resources\\images\\tankHealth.png";
-const char TANK2_HEALHT_IMAGE[] = "resources\\images\\tank2Health.png";
 const char BKGRND_IMAGE[] = "resources\\images\\background.png";
 const char INSTRUCTION_IMAGE[] = "resources\\images\\instruction.png";
 const char TURRET_IMAGE[] = "resources\\images\\turret.png";
-const char SMOKE_IMAGE[] = "resources\\images\\smoke.png";
 const char SHELL_IMAGE[] = "resources\\images\\shell.png";
 const char CHARGINGBAR_IMAGE[] = "resources\\images\\chargingbar.png";
+const char GAME_WIN_IMAGE[] = "resources\\images\\gamewin.png";
+const char GAME_LOSE_IMAGE[] = "resources\\images\\gamelose.png";
 
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
@@ -229,12 +236,18 @@ const UCHAR SPACE_KEY = VK_SPACE;
 const UCHAR UP_KEY = VK_UP;
 const UCHAR LEFT_KEY = VK_LEFT;
 const UCHAR RIGHT_KEY = VK_RIGHT;
+const UCHAR M_KEY = 0x4D;
 const UCHAR TAB_KEY = VK_TAB;
 const UCHAR PAUSE_KEY = 0x50;
 //note - might want to change the following to more obvious names
 const UCHAR O_KEY = 0x31;					//number 1
 const UCHAR TW_KEY = 0x32;					//number 2
 const UCHAR TH_KEY = 0x33;					//number 3
+const UCHAR W_KEY = 0x57;
+const UCHAR A_KEY = 0x41;
+const UCHAR S_KEY = 0x53;
+const UCHAR D_KEY = 0x44;
+const UCHAR F_KEY = 0x46;
 
 enum hitWho{land,spaceShip,bossShip,player};
 

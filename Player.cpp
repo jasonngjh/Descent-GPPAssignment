@@ -145,15 +145,22 @@ void Player::update(float frameTime)
 		health = 0;
 	if (health > PLAYER_MAX_HEALTH)
 		health = PLAYER_MAX_HEALTH;
-	if ((health <= PLAYER_MAX_HEALTH) && (health > (3 * PLAYER_MAX_HEALTH / 4))) // 100% to 76%
-		tankHealth->setCurrentFrame(0);
-	if ((health <= (3 * PLAYER_MAX_HEALTH / 4)) && (health > (PLAYER_MAX_HEALTH / 2))) //75% to 51%
-		tankHealth->setCurrentFrame(1);
-	if ((health <= (PLAYER_MAX_HEALTH / 2)) && (health > PLAYER_MAX_HEALTH / 4)) //50% to26%
-		tankHealth->setCurrentFrame(2);
-	if ((health <= PLAYER_MAX_HEALTH /4) && (health > 0)) //25% to 1%
+
+	if (health < (0.1 * PLAYER_MAX_HEALTH)) //less than 10%
+		tankHealth->setCurrentFrame(6);
+	else if (health < (0.25 * PLAYER_MAX_HEALTH)) // less than 25%
+		tankHealth->setCurrentFrame(5);
+	else if (health < (0.5* PLAYER_MAX_HEALTH)) // less than 50%
+		tankHealth->setCurrentFrame(4);
+	else if (health < (0.6 * PLAYER_MAX_HEALTH)) // less than 60%
 		tankHealth->setCurrentFrame(3);
-	if (health == 0)
+	else if (health < (0.8 * PLAYER_MAX_HEALTH)) //less than 80%
+		tankHealth->setCurrentFrame(2);
+	else if (health < PLAYER_MAX_HEALTH) // less than 100%
+		tankHealth->setCurrentFrame(1);
+	else if (health == PLAYER_MAX_HEALTH) // 100%
+		tankHealth->setCurrentFrame(0);
+	else if (health == 0)
 		tankHealth->setVisible(false); //GAMES END HERE
 
 	tankHealth->update(frameTime);
@@ -241,7 +248,7 @@ void Player::initialiseTankHealthbar()
 // setHealth
 // set health
 //=============================================================================
-void Player::setHealth(int h)
+void Player::setHealth(double h)
 {
 	health = h;
 }
@@ -250,7 +257,7 @@ void Player::setHealth(int h)
 // getHealth
 // return health
 //=============================================================================
-int Player::getHealth()
+double Player::getHealth()
 {
 	return health;
 }

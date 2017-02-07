@@ -4,7 +4,7 @@ enum class GENERAL_STATE {
 	menu ,
 	game ,
 	paused ,
-	gameOver ,
+	gameOver,
 	gameClear ,
 	instructions,
 	credits ,

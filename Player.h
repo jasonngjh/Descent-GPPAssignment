@@ -34,7 +34,7 @@ private:
 	
 	float baseStrength;
 	bool	isAlive = true;
-	int		health;
+	double		health;
 	float	speed;						// X pixels per second
 	int		tankAngle;
 	bool	tankDirection;
@@ -60,13 +60,13 @@ public:
 	//setters
 	void setSpeed(float s);
 	void setTankAngle(int a);
-	void setHealth(int h);
+	void setHealth(double h);
 
 	//getters
 	float getSpeed();
 	int getTankAngle();
 	bool getTankDirection();
-	int getHealth();
+	double getHealth();
 };
 #endif
 

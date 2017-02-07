@@ -61,12 +61,10 @@ public:
 	void hit(hitWho);
 	void setCannonballIsHeld(int playerNo)
 	{
-
 		if (playerNumber == 1 || playerNumber == 2)
 			playerNumber = playerNo;
 		else
-			playerNumber = 0;
-		
+			playerNumber = 0;	
 	}
 	void getTank(Player* tank);
 	void playerCannonball();
