@@ -58,10 +58,12 @@ private:
 	TextureManager* spaceshipTexture;
 	TextureManager* spaceship_bulletTexture;
 	TextureManager* menu1Texture;
+
 	TextureManager* tankTexture;
-	TextureManager* tank2Texture;
+	TextureManager* tankHealthTexture;
+	TextureManager* loadingTexture;
+
 	TextureManager* turretTexture;
-	TextureManager* smokeTexture;
 	TextureManager* pauseTexture;
 	TextureManager* instructionTexture;
 	TextureManager* gamewinTexture;
@@ -70,20 +72,22 @@ private:
 	TextureManager* assistTankTexture;
 	TextureManager* assistTankBulletTexture;
 	TextureManager* powerup_timeSlow_texture;
-	TextureManager* powerup_restoreHealth_texture;
+	TextureManager* powerup_shield_texture;
 	TextureManager* powerup_increaseTankSpeed_texture;
 	TextureManager* powerup_timeLock_texture;
 	TextureManager* powerup_maxPower_texture;
 	TextureManager* powerup_passerbyTank_texture;
-	
+
 	Image* background;
 	Image* pause;
 	Image* instructionScreen;
+	Image* loading;
 	Image* ground;
 	Image* menu1;
 	Image* turret;
 	Image* gamewin;
 	Image* gamelose;
+	Image* tankHealth;
 
 	Cannonball* cannonball;
 	Spaceship* enemy_spaceship;	//only one for now, testing only
@@ -93,7 +97,7 @@ private:
 	Assist_Tank* assistTank;
 
 	Powerup* powerup_timeSlow;
-	Powerup* powerup_restoreHealth;
+	Powerup* powerup_shield;
 	Powerup* powerup_increaseTankSpeed;
 	Powerup* powerup_timeLock;
 	Powerup* powerup_maxPower;
@@ -113,22 +117,20 @@ private:
 	const int maxActivePowerups = MAX_NO_OF_POWERUPS;
 	const int maxActiveAssistTankBullets = MAX_NO_OF_ASSIST_TANK_BULLETS;
 
-	int playerCount;//use this value to count 1 player or 2 player
 	int highestY;
 	int currentScore;
-	
+
 	bool initAlready = true;
 	int waveNumber = 1;
 	int playerCount = 1;//use this value to count 1 player or 2 player
 	double secondsPassed;
-	int pauseScreen=0;
+	int pauseScreen = 0;
 	int gameOverScreen = 0;
 	float array[3];
 	int laserCounter = 0;
 	bool existOnScreen = true;
-	bool missileFire=true;
-	int gameStatus= 0;
-	double secondsPassed;
+	bool missileFire = true;
+	int gameStatus = 0;
 
 	//modifiers
 	int timeModifier = GAME_BASE_TIME_MODIFIER; //Default value is 1, value affects time - this value will multiply by 1 second to achieve new time
@@ -160,20 +162,20 @@ public:
 	bool hasWaveTwoSpawned = false;
 	bool hasWaveThreeSpawned = false;
 
-    // Constructor
+	// Constructor
 	Descent();
 
-    // Destructor
+	// Destructor
 	virtual ~Descent();
 
-    // Initialize the game
-    void initialize(HWND hwnd);
-    void update();      // must override pure virtual from Game
-    void ai();          // "
-    void collisions();  // "
-    void render();      // "
-    void releaseAll();
-    void resetAll();
+	// Initialize the game
+	void initialize(HWND hwnd);
+	void update();      // must override pure virtual from Game
+	void ai();          // "
+	void collisions();  // "
+	void render();      // "
+	void releaseAll();
+	void resetAll();
 
 	//other functions
 	void loadAudio(std::string source);
@@ -200,7 +202,7 @@ public:
 
 	int getSpeedModifier() { return speedModifier; }
 	void setSpeedModifier(int modifyingValue) { speedModifier = modifyingValue; }
-	
+
 	void acquirePlayerMovementPatterns();
 
 	void applyPowerupEffect(int powerupCode);
@@ -215,7 +217,13 @@ public:
 	void addToScore(int scoreToAdd);
 
 	void spawnSpaceships(int waveNumber);
-	void despawnSpaceships();		
+
+	void despawnSpaceships();
+	void despawnPowerups();
+	void despawnPowerupsDrawingSpace();
+	void despawnSpaceshipBullets();
+	void despawnAssistTankBullets();
+
 
 	void loadHighScore();
 

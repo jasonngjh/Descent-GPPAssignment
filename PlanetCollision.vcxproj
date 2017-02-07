@@ -116,7 +116,6 @@
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <ClInclude Include="bosslaser.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Assist_Tank.h" />
