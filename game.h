@@ -14,6 +14,12 @@
 #include "constants.h"
 #include "gameError.h"
 #include "textDX.h"
+namespace gameNS
+{
+	const char FONT[] = "Invasion2000";  // font
+	const int POINT_SIZE = 16;          // point size
+	const COLOR_ARGB FONT_COLOR = SETCOLOR_ARGB(255, 255, 255, 255);    // white
+}
 
 class Game
 {

@@ -2,7 +2,7 @@
 #define _GAMECONTROL_H
 enum class GENERAL_STATE {
 	menu ,
-	game ,
+	game,
 	paused ,
 	gameOver,
 	gameClear ,

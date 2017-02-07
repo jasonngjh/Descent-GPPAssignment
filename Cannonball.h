@@ -11,6 +11,7 @@
 #include <math.h>
 #include <ctime>
 #include "Player.h"
+#include <math.h>
 
 namespace CannonballNS
 {

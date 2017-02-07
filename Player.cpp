@@ -20,12 +20,13 @@ Player::Player() : Entity()
 	radius = PlayerNS::WIDTH / 2.0;
 	mass = PlayerNS::MASS;
 	collisionType = entityNS::CIRCLE;
-	speed = 100.0f;
+	speed = PLAYER_BASE_SPEED;
 	tankAngle = 90;
 	tankDirection = false;
 	baseStrength = PLAYER_BASE_STRENGTH;
 	health = PLAYER_MAX_HEALTH;
-	
+	tankHealthTexture = new TextureManager();
+	tankHealth = new Image();
 }
 
 //=============================================================================
@@ -44,9 +45,6 @@ Player::~Player()
 bool Player::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM)
 {
-	tankHealthTexture = new TextureManager();
-	tankHealth = new Image();
-
 	if (!tankHealthTexture->initialize(gamePtr->getGraphics(), TANK_HEALTH_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank health texture"));
 
