@@ -1803,7 +1803,7 @@ void Descent::checkGamestatus()
 {
 	if (tank->getHealth() == 0)
 	{
-		gameStatus = 1;
+		gameStatus = 2;
 		gameControl->setGeneralState(GENERAL_STATE::gameOver);
 	}
 }
