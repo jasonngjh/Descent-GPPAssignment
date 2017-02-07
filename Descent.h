@@ -75,15 +75,19 @@ private:
 	TextureManager* powerup_timeLock_texture;
 	TextureManager* powerup_maxPower_texture;
 	TextureManager* powerup_passerbyTank_texture;
-	
+	TextureManager* tankHealthTexture;
+	TextureManager* loadingTexture;
+
 	Image* background;
 	Image* pause;
 	Image* instructionScreen;
+	Image* loading;
 	Image* ground;
 	Image* menu1;
 	Image* turret;
 	Image* gamewin;
 	Image* gamelose;
+	Image* tankHealth;
 
 	Cannonball* cannonball;
 	Spaceship* enemy_spaceship;	//only one for now, testing only
@@ -186,6 +190,7 @@ public:
 	void resetShellPos();
 	void launchBossLaser();
 	void powerup_timer_start();
+	void restartGame();
 
 	void beginSimpleSpaceshipsFiringSequence();
 	void beginAdvancedSpaceshipsFiringSequence();

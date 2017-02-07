@@ -56,6 +56,7 @@ Descent::Descent()
 	powerup_timeLock_texture = new TextureManager();
 	powerup_maxPower_texture = new TextureManager();
 	powerup_passerbyTank_texture = new TextureManager();
+	tankHealthTexture = new TextureManager();
 
 	//images
 	background = new Image();
@@ -63,6 +64,7 @@ Descent::Descent()
 	tank = new Player();
 	cannonball = new Cannonball();
 	menu1 = new Image();
+	tankHealth = new Image();
 	turret = new Image();
 	pause = new Image();
 	instructionScreen = new Image();
@@ -85,26 +87,27 @@ Descent::~Descent()
 	SAFE_DELETE(pauseText);
 	SAFE_DELETE(waveNumberText);
 	SAFE_DELETE(gameControl);
-	delete background;
-	delete ground;
-	delete menu1;
-	delete gamewin;
-	delete gamelose;
-	delete instructionScreen;
-	delete turret;
-	delete pause;
-	delete cannonball;
-	delete enemy_spaceship;
-	delete tank;
-	delete boss;
-	delete shell;
+	SAFE_DELETE(background);
+	SAFE_DELETE(ground);
+	SAFE_DELETE(menu1);
+	SAFE_DELETE(gamewin);
+	SAFE_DELETE(gamelose);
+	SAFE_DELETE(instructionScreen);
+	SAFE_DELETE(turret);
+	SAFE_DELETE(pause);
+	SAFE_DELETE(cannonball);
+	SAFE_DELETE(enemy_spaceship);
+	SAFE_DELETE(tank);
+	SAFE_DELETE(tankHealth);
+	SAFE_DELETE(boss);
+	SAFE_DELETE(shell);
 	for (Spaceship* spaceShip : array_spaceships)
 	{
-		delete spaceShip;
+		SAFE_DELETE(spaceShip);
 	}
 	for (Audio* a : audio)
 	{
-		delete a;
+		SAFE_DELETE(a);
 	}
 	SAFE_DELETE(powerup_notification_text);
 	deleteAll();
@@ -182,6 +185,13 @@ void Descent::initialize(HWND hwnd)
 	if (!turret->initialize(graphics, TURRET_WIDTH, TURRET_HEIGHT, TURRET_TEXTURE_COLUMNS, turretTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing turret"));
 
+	if (!tankHealthTexture->initialize(graphics, TANK_HEALTH_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank health texture"));
+
+	if (!tankHealth->initialize(graphics, PLAYER_HEALTH_WIDTH, PLAYER_HEALTH_HEIGHT, PLAYER_HEALTH_TEXTURE_COLUMNS, tankHealthTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank health"));
+
+
 	if (!background->initialize(graphics, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, BACKGROUND_TEXTURE_COLS, backgroundTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error initialising background"));
 
@@ -236,7 +246,6 @@ void Descent::initialize(HWND hwnd)
 						
 	background->setFrames(BACKGROUND_START_FRAME,BACKGROUND_END_FRAME);
 	background->setCurrentFrame(BACKGROUND_START_FRAME);
-	boss->setVelocity(VECTOR2(100, 0)); // VECTOR2(X, Y)
 
 	loadAllAudio();
 	audio[0]->setLoop(true); // background music
@@ -245,35 +254,6 @@ void Descent::initialize(HWND hwnd)
 	ground->setX(0);
 	ground->setScale((float)(GAME_WIDTH / ground->getWidth()));
 	ground->setY((int)GROUND_LEVEL_HEIGHT);		//sets ground to 3/4 of game width
-
-	initializeTank();
-
-	enemy_spaceship->setFrames(SpaceshipNS::START_FRAME, SpaceshipNS::END_FRAME);
-	enemy_spaceship->setCurrentFrame(SpaceshipNS::START_FRAME);
-	enemy_spaceship->setX(1);
-	enemy_spaceship->setY(1);
-	enemy_spaceship->setHealth(2); //for testing only
-	enemy_spaceship->setIsAtCritical(true);
-
-	launchBossLaser();
-	boss->setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
-	boss->setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
-	boss->setX(GAME_WIDTH / 4+45);
-	boss->setY(20);
-	boss->setScale(0.75);
-	currentActiveSpaceships = 0;
-	isAllSpaceshipMovingRight = true;
-	isShipsReadyToShift = false;
-	
-	shell->setX(boss->getX() + BOSS_SPACESHIP_WIDTH / 2);
-	shell->setY(boss->getY() + BOSS_SPACESHIP_HEIGHT / 2);
-	shell->setScale(0.045);
-
-	assistTank->setFrames(ASSIST_TANK_START_FRAME, ASSIST_TANK_END_FRAME);
-	assistTank->setCurrentFrame(ASSIST_TANK_START_FRAME);
-	assistTank->setX(ASSIST_TANK_WIDTH);
-	assistTank->setY(GROUND_LEVEL_HEIGHT - ASSIST_TANK_HEIGHT);
-	assistTank->setActive(false);
 
 	std::cout << "initialising spaceship array" << std::endl;
 
@@ -374,6 +354,7 @@ void Descent::update()
 	}break;
 	case GENERAL_STATE::instructions : {
 										   if (input->wasKeyPressed(SPACE_KEY)){
+											   restartGame();
 											   Sleep(300);
 											   gameControl->setGeneralState(GENERAL_STATE::game);		  
 										   }
@@ -482,11 +463,13 @@ void Descent::update()
 
 		if (input->isKeyDown(LEFT_KEY))
 		{
-			turret->setX(tank->getX() + 28.0f);
+			turret->setX(tank->getX() + 28.0f); 
+			tankHealth->setX(tank->getX() + 10.0f);
 		}
 		if (input->isKeyDown(RIGHT_KEY))
 		{
 			turret->setX(tank->getX() + 18.0f);
+			tankHealth->setX(tank->getX() + 10.0f);
 		}
 		tank->update(frameTime);
 
@@ -517,6 +500,25 @@ void Descent::update()
 				break;
 			}
 		}
+
+		if (tank->getHealth() < (0.1 * PLAYER_MAX_HEALTH)) //less than 10%
+			tankHealth->setCurrentFrame(6);
+		else if (tank->getHealth() < (0.25 * PLAYER_MAX_HEALTH)) // less than 25%
+			tankHealth->setCurrentFrame(5);
+		else if (tank->getHealth() < (0.5* PLAYER_MAX_HEALTH)) // less than 50%
+			tankHealth->setCurrentFrame(4);
+		else if (tank->getHealth() < (0.6 * PLAYER_MAX_HEALTH)) // less than 60%
+			tankHealth->setCurrentFrame(3);
+		else if (tank->getHealth() < (0.8 * PLAYER_MAX_HEALTH)) //less than 80%
+			tankHealth->setCurrentFrame(2);
+		else if (tank->getHealth() < PLAYER_MAX_HEALTH) // less than 100%
+			tankHealth->setCurrentFrame(1);
+		else if (tank->getHealth() == PLAYER_MAX_HEALTH) // 100%
+			tankHealth->setCurrentFrame(0);
+		else if (tank->getHealth() == 0)
+			tankHealth->setVisible(false); //GAMES END HERE
+
+		tankHealth->update(frameTime);
 		
 		 switch (waveState){
 			case WAVE_STATE::pauseWave:{
@@ -828,6 +830,7 @@ void Descent::render()
 								 cannonball->draw();
 								 turret->draw();
 								 tank->draw();
+								 tankHealth->draw();
 								 _snprintf_s(buffer, BUF_SIZE, "Seconds Passed %d ", (int)getSecondsPassed());
 								 dxFont.print(buffer, GAME_WIDTH - 200, GAME_HEIGHT - 50);
 
@@ -905,6 +908,7 @@ void Descent::releaseAll()
 	spaceship_bulletTexture->onLostDevice();
 	tankTexture->onLostDevice();
 	turretTexture->onLostDevice();
+	tankHealthTexture->onLostDevice();
 	bossLaserTexture->onLostDevice();
 	shellTexture->onLostDevice();
 	bossTexture->onLostDevice();
@@ -916,7 +920,6 @@ void Descent::releaseAll()
 	powerup_timeLock_texture->onLostDevice();
 	powerup_maxPower_texture->onLostDevice();
 	powerup_passerbyTank_texture->onLostDevice();
-	tank->releaseAll();
 	cannonball->releaseAll();
 	
     Game::releaseAll();
@@ -941,6 +944,7 @@ void Descent::resetAll()
 	spaceship_bulletTexture->onResetDevice();
 	tankTexture->onResetDevice();
 	turretTexture->onResetDevice();
+	tankHealthTexture->onResetDevice();
 	bossLaserTexture->onResetDevice();
 	shellTexture->onResetDevice();
 	bossTexture->onResetDevice();
@@ -953,7 +957,6 @@ void Descent::resetAll()
 	powerup_maxPower_texture->onResetDevice();
 	powerup_passerbyTank_texture->onResetDevice();
 	cannonball->resetAll();
-	tank->resetAll();
     Game::resetAll();
     return;
 }
@@ -976,8 +979,12 @@ void Descent::initializeTank()
 
 	tank->setX(GAME_WIDTH / 2);
 	tank->setY(GROUND_LEVEL_HEIGHT - PLAYER_HEIGHT + 2.0f);
-	tank->flipHorizontal(false);
-	tank->initialiseTankHealthbar();
+	tank->flipHorizontal(false); 
+
+	tankHealth->setCurrentFrame(0);
+	tankHealth->setScale(2);
+	tankHealth->setX(tank->getX() + 10.0f);
+	tankHealth->setY(tank->getY() + 70.0f);
 
 	turret->setCurrentFrame(3);
 	turret->setX(tank->getX() + 28.0f);
@@ -1040,41 +1047,41 @@ void Descent::applyPowerupEffect(int powerupCode)
 	case POWERUP_TIME_SLOW_CODE:
 	{
 							//apply effect for time slow 
-							mciSendString("play resources\\music\\powerup_timeSlow_soundeffect.wav", NULL, 0, NULL);
+							audio[4]->play();
 							std::async(&Descent::applyPowerupEffect_timeSlow, this);
 							//add to score
 	}break;
 
 	case POWERUP_RESTORE_HEALTH_CODE:
 	{
-							mciSendString("play resources\\music\\powerup_restoreHealth_soundeffect.wav", NULL, 0, NULL);
+							audio[5]->play();
 							std::async(&Descent:: applyPowerupEffect_restoreHealth, this);
 							//this doesn't *need* to be in a thread, but if not it makes everything expire faster for some reason
 	}break;
 
 	case POWERUP_INCREASE_TANK_SPEED_CODE:
 	{
-							mciSendString("play resources\\music\\powerup_increaseTankSpeed_soundeffect.wav", NULL, 0, NULL);
+											 audio[6]->play();
 							std::async(&Descent::applyPowerupEffect_increaseTankSpeed, this);
 
 	}break;
 
 	case POWERUP_TIME_LOCK_CODE:
 	{
-							mciSendString("play resources\\music\\powerup_timeLock_locking_soundeffect.wav", NULL, 0, NULL);
+								   audio[7]->play();
 							std::async(&Descent::applyPowerupEffect_timeLock, this);
 
 	}break;
 
 	case POWERUP_MAX_POWER_CODE:
 	{
-							mciSendString("play resources\\music\\powerup_maxPower_soundeffect.wav", NULL, 0, NULL);
+								   audio[8]->play();
 							std::async(&Descent::applyPowerupEffect_maxPower, this);
 	}break;
 
 	case POWERUP_TANK_ASSIST_CODE:
 	{
-							mciSendString("play resources\\music\\powerup_tankAssist_soundeffect.wav", NULL, 0, NULL);
+							
 							std::async(&Descent::applyPowerupEffect_tankAssist, this);
 	}break;
 
@@ -1233,7 +1240,7 @@ void Descent::applyPowerupEffect_timeLock()
 			}
 
 			if (seconds == (POWERUP_TIME_LOCK_DURATION - POWERUP_TIME_LOCK_UNLOCK_SOUND_DURATION))
-				mciSendString("play resources\\music\\powerup_timeLock_unlocking_soundeffect.wav", NULL, 0, NULL);
+				audio[10]->play();
 
 			if (seconds == POWERUP_TIME_LOCK_DURATION)
 			{
@@ -1645,7 +1652,7 @@ void Descent::spawnPowerup()
 	array_powerups.push_back(powerup);
 	currentActivePowerups++;
 
-	mciSendString("play resources\\music\\powerup_spawn_soundeffect.wav", NULL, 0, NULL);
+	audio[3]->play();
 
 	array_powerups[currentActivePowerups - 1]->beginExpireCountdown();
 
@@ -1818,9 +1825,17 @@ void Descent::resetShellPos()
 //=============================================================================
 void Descent::loadAllAudio()
 {
-	loadAudio("resources\\music\\background.ogg");
-	loadAudio("resources\\music\\tankMoving.wav");
-	loadAudio("resources\\music\\explode.wav");
+	loadAudio("resources\\music\\background.ogg"); //0
+	loadAudio("resources\\music\\tankMoving.wav"); //1
+	loadAudio("resources\\music\\explode.wav"); //2
+	loadAudio("resources\\music\\powerup_spawn_soundeffect.wav"); //3
+	loadAudio("resources\\music\\powerup_timeSlow_soundeffect.wav"); //4
+	loadAudio("resources\\music\\powerup_restoreHealth_soundeffect.wav"); //5
+	loadAudio("resources\\music\\powerup_increaseTankSpeed_soundeffect.wav"); //6
+	loadAudio("resources\\music\\powerup_timeLock_locking_soundeffect.wav"); //7
+	loadAudio("resources\\music\\powerup_maxPower_soundeffect.wav"); //8
+	loadAudio("resources\\music\\powerup_tankAssist_soundeffect.wav"); //9
+	loadAudio("resources\\music\\powerup_timeLock_unlocking_soundeffect.wav"); //10
 }
 
 //=============================================================================
@@ -1906,4 +1921,39 @@ void Descent::loadHighScore()
 	}
 	else
 		std::cout << "'highscore.txt' is missing from the resources folder Please ensure it exists." << std::endl;
+}
+
+//=============================================================================
+// restart Game
+//=============================================================================
+void Descent::restartGame()
+{
+	initializeTank();
+	enemy_spaceship->setFrames(SpaceshipNS::START_FRAME, SpaceshipNS::END_FRAME);
+	enemy_spaceship->setCurrentFrame(SpaceshipNS::START_FRAME);
+	enemy_spaceship->setX(1);
+	enemy_spaceship->setY(1);
+	enemy_spaceship->setHealth(2); //for testing only
+	enemy_spaceship->setIsAtCritical(true);
+
+	boss->setVelocity(VECTOR2(100, 0)); // VECTOR2(X, Y)
+	launchBossLaser();
+	boss->setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
+	boss->setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
+	boss->setX(GAME_WIDTH / 4 + 45);
+	boss->setY(20);
+	boss->setScale(0.75);
+	currentActiveSpaceships = 0;
+	isAllSpaceshipMovingRight = true;
+	isShipsReadyToShift = false;
+
+	shell->setX(boss->getX() + BOSS_SPACESHIP_WIDTH / 2);
+	shell->setY(boss->getY() + BOSS_SPACESHIP_HEIGHT / 2);
+	shell->setScale(0.045);
+
+	assistTank->setFrames(ASSIST_TANK_START_FRAME, ASSIST_TANK_END_FRAME);
+	assistTank->setCurrentFrame(ASSIST_TANK_START_FRAME);
+	assistTank->setX(ASSIST_TANK_WIDTH);
+	assistTank->setY(GROUND_LEVEL_HEIGHT - ASSIST_TANK_HEIGHT);
+	assistTank->setActive(false);
 }
