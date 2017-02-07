@@ -49,7 +49,9 @@ void Assist_Tank_bullet::update(float frameTime)
 
 		Entity::update(frameTime);
 		//moves the tank left and right
+
 		spriteData.y -= frameTime*ASSIST_TANK_BULLET_SPEED;	//flies up
+		
 	}
 
 }

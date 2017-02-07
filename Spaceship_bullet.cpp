@@ -43,5 +43,16 @@ void Spaceship_bullet::draw()
 //=============================================================================
 void Spaceship_bullet::update(float frameTime)
 {
+	if (active)
+	{
+		Entity::update(frameTime);
 
+		if (spriteData.x > targetX)
+			spriteData.x -= frameTime*SPACESHIP_BULLET_SPEED;
+		if (spriteData.x < targetX)
+			spriteData.x += frameTime*SPACESHIP_BULLET_SPEED;
+
+		spriteData.y += frameTime*SPACESHIP_BULLET_SPEED;	//flies down
+
+	}
 }

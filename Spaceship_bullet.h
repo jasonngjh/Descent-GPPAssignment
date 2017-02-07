@@ -31,10 +31,13 @@ private:
 
 	bool	isAlive;
 	float	speed = SPACESHIP_BULLET_SPEED;						// X pixels per second
+	int		targetX;
 
 public:
 	// constructor
 	Spaceship_bullet();
+
+	//~Spaceship_bullet();
 
 	int damage = SPACESHIP_BULLET_DAMAGE;
 
@@ -46,6 +49,10 @@ public:
 
 	void setSpeed(float s) { speed = s; }
 	float getSpeed() { return speed; }
+
+	void setTarget(int x) { targetX = x; }
+	int getTarget() { return targetX; }
+
 
 };
 #endif

@@ -93,7 +93,7 @@ const float SPACESHIP_SPEED = 50.0f;
 const float SPACESHIP_ANIMATION_DELAY = 0.1f;		//passively animates
 const int SPACESHIP_STARTING_HEALTH = 5;
 const int SPACESHIP_MOVEMENT_DISTANCE = 29;
-const int SPACESHIP_MOVE_FREQUENCY = 2;
+const double SPACESHIP_MOVE_FREQUENCY = 1;
 const int SPACESHIP_ATTACK_FREQUENCY = 1;
 const double SPACESHIP_CRITICAL_HEALTH_FACTOR = 0.25;
 const int SPACESHIP_REWARD_SCORE = 50;
@@ -121,9 +121,12 @@ const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 6;
 const int WAVE_1_SPACESHIPS_HEALTH = 4;
 const int WAVE_2_SPACESHIPS_HEALTH = 7;
 
-const double WAVE_1_SPACESHIPS_FIRE_CHANCE = 0.02;		//measured in percentages
-const double WAVE_2_SPACESHIPS_FIRE_CHANCE = 0.04;		//measured in percentages
-const double WAVE_2_SPACESHIPS_FIRE_INTELLIGENT_CHANCE = 0.02;
+const int WAVE_1_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY = 3;		//bullet hell limiter
+const int WAVE_2_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY = 5;		//bullet hell limiter
+
+const double WAVE_1_SPACESHIPS_FIRE_CHANCE = 25;				//measured in percentages
+const double WAVE_2_SPACESHIPS_FIRE_CHANCE = 10;					//measured in percentages
+const double WAVE_2_SPACESHIPS_FIRE_INTELLIGENT_CHANCE = 100;	//measured in percentages
 
 //boss spaceship variables
 const int BOSS_SPACESHIP_WIDTH = 212;
@@ -249,6 +252,7 @@ const int BACKGROUND_END_FRAME = 3;
 const char GROUND_TILESET_IMAGE[] = "resources\\images\\ground_tile.png";
 const char CANNONBALL_IMAGE[] = "resources\\images\\cannonball.png";
 const char SPACESHIP_IMAGE[] = "resources\\images\\spaceship.png";
+const char SPACESHIP_BULLET_IMAGE[] = "resources\\images\\spaceship_bullet.png";
 const char MENU1_IMAGE[] = "resources\\images\\menu1.png";
 const char BOSS_SPACESHIP_IMAGE[] = "resources\\images\\boss_spaceship.png";
 const char TANK_IMAGE[] = "resources\\images\\tank.png";

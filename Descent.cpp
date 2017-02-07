@@ -39,6 +39,7 @@ Descent::Descent()
 	groundTexture = new TextureManager();
 	cannonballTexture = new TextureManager();
 	spaceshipTexture = new TextureManager();
+	spaceship_bulletTexture = new TextureManager();
 	menu1Texture = new TextureManager();
 	tankTexture = new TextureManager();
 	turretTexture = new TextureManager();
@@ -111,6 +112,10 @@ void Descent::initialize(HWND hwnd)
 
 	if (!spaceshipTexture->initialize(graphics, SPACESHIP_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship texture"));
+
+	if (!spaceship_bulletTexture->initialize(graphics, SPACESHIP_BULLET_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship bullet texture"));
+
 	if (!menu1Texture->initialize(graphics, MENU1_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu texture"));
 
@@ -193,10 +198,7 @@ void Descent::initialize(HWND hwnd)
 	enemy_spaceship->setHealth(2); //for testing only
 	enemy_spaceship->setIsAtCritical(true);
 
-	currentActiveSpaceships = 0;
-	currentActiveTankAssistBullets = 0;
-	isAllSpaceshipMovingRight = true;
-	isShipsReadyToShift = false;
+	
 
 	//setting boss variables
 
@@ -266,71 +268,24 @@ void Descent::initialize(HWND hwnd)
 	initializeTank();
 
 	std::cout << "initialising spaceship array" << std::endl;
-#pragma region Spawn Spaceships
-	//place inside game state wave 1 when created
 
-	int x = 0;	//starting position of first spaceship is a unit length away the left side of the screen
-	int y = 0;					//to be manipulated in first for loop
-
-	//wave one
-	std::cout << "GAME WIDTH DIVIDED BY SHIP WIDTH (spaceships per row):" << GAME_WIDTH / (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS) << std::endl;
-
-	for (int i = 0; i < WAVE_1_SPACESHIPS_AMT_OF_ROWS; i++)
-	{
-		//this for loop spawns at Y
-		y += SPACESHIP_HEIGHT+VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//multipled by 2 so rows are one unit height away from each other
-
-		for (int j = 0; j < GAME_WIDTH/(SPACESHIP_WIDTH); j++)
-		{
-			Spaceship* spaceship = new Spaceship();
-
-			//check if current Y can support game_width/spaceship_width amount of ships
-
-			if (x + ((HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS+SPACESHIP_WIDTH)) > GAME_WIDTH-HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS || j >= AMT_OF_SPACESHIPS_PER_ROW)
-			{
-				//if current ship's X is more than game width, shift to next Y, keep current i counter
-
-				x = HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//ship starts as first ship in a new row
-				break;	//means that previous row can no longer support any more spaceships without clipping, breaks and starts new row (Y)
-			}
-
-			else		
-			{
-				//this is true if current y can support more ships
-				//create ship at X position of game_width/width*i, current row
-
-				x = (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS*j);
-			}
-
-			spaceship->setX(x);
-			spaceship->setY(y);
-			spaceship->setHealth(SPACESHIP_STARTING_HEALTH);
-
-			if (!spaceship->initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, spaceshipTexture))
-				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
-
-			array_spaceships.push_back(spaceship);
-			std::cout << "Adding spaceship at row " << i + 1 << "(no. " << j+1 << " in row) for wave one at x: " << spaceship->getX() << " y: " << spaceship->getY() << "." << std::endl;
-
-			currentActiveSpaceships++;
-
-			std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
-
-			if (currentActiveSpaceships == maxActiveSpaceships)
-				break;
-
-		}
-		
-		if (currentActiveSpaceships == maxActiveSpaceships)
-			break;
-		
-	}
-
-#pragma endregion
 	
 	std::async(&Descent::timer_start, this); //run timer thread while main loop is contiuing
 
-	//applyPowerupEffect(1);
+	//instantiating counter and boolean variables
+	currentActiveSpaceships = 0;
+	currentActiveSpaceshipBullets = 0;
+	currentActiveTankAssistBullets = 0;
+	comboSpaceshipCounter = 0;
+	currentScore = 0;
+
+	acquiredPlayerSpeed = 0;
+
+	isAllSpaceshipMovingRight = true;
+	isShipsReadyToShift = false;
+	isPowerupInProgress = false;
+	isPowerupSpawning = false;
+	isCalculatingPlayerPattern = false;
 
 	std::ifstream infile;
 	infile.open(HISCORE_FILE);
@@ -349,8 +304,67 @@ void Descent::initialize(HWND hwnd)
 	else
 		std::cout << "'highscore.txt' is missing from the resources folder Please ensure it exists." << std::endl;
 
-	comboSpaceshipCounter = 0;
-	currentScore = 0;
+#pragma region Spawn Spaceships
+	//place inside game state wave 1 when created
+
+	int x = 0;	//starting position of first spaceship is a unit length away the left side of the screen
+	int y = 0;					//to be manipulated in first for loop
+
+	//wave one
+	std::cout << "GAME WIDTH DIVIDED BY SHIP WIDTH (spaceships per row):" << GAME_WIDTH / (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS) << std::endl;
+
+	for (int i = 0; i < WAVE_1_SPACESHIPS_AMT_OF_ROWS; i++)
+	{
+		//this for loop spawns at Y
+		y += SPACESHIP_HEIGHT + VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//multipled by 2 so rows are one unit height away from each other
+
+		for (int j = 0; j < GAME_WIDTH / (SPACESHIP_WIDTH); j++)
+		{
+			Spaceship* spaceship = new Spaceship();
+
+			//check if current Y can support game_width/spaceship_width amount of ships
+
+			if (x + ((HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS + SPACESHIP_WIDTH)) > GAME_WIDTH - HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS || j >= AMT_OF_SPACESHIPS_PER_ROW)
+			{
+				//if current ship's X is more than game width, shift to next Y, keep current i counter
+
+				x = HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS;	//ship starts as first ship in a new row
+				break;	//means that previous row can no longer support any more spaceships without clipping, breaks and starts new row (Y)
+			}
+
+			else
+			{
+				//this is true if current y can support more ships
+				//create ship at X position of game_width/width*i, current row
+
+				x = (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS*j);
+			}
+
+			spaceship->setX(x);
+			spaceship->setY(y);
+			spaceship->setHealth(SPACESHIP_STARTING_HEALTH);
+
+			if (!spaceship->initialize(this, SpaceshipNS::WIDTH, SpaceshipNS::HEIGHT, SpaceshipNS::TEXTURE_COLS, spaceshipTexture))
+				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
+
+			array_spaceships.push_back(spaceship);
+			std::cout << "Adding spaceship at row " << i + 1 << "(no. " << j + 1 << " in row) for wave one at x: " << spaceship->getX() << " y: " << spaceship->getY() << "." << std::endl;
+
+			currentActiveSpaceships++;
+
+			std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
+
+			if (currentActiveSpaceships == maxActiveSpaceships)
+				break;
+
+		}
+
+		if (currentActiveSpaceships == maxActiveSpaceships)
+			break;
+
+	}
+
+#pragma endregion
 
     return;
 }
@@ -398,54 +412,6 @@ void Descent::update()
 		tank->update(frameTime);
 		//smoke->update(frameTime);
 
-		if (currentActiveSpaceships > 0)
-		{
-			//endlessly loop update for each zombie until no more zombies
-			for (int i = 0; i < currentActiveSpaceships; i++)
-			{
-
-				array_spaceships[i]->update(frameTime);
-
-				if (array_spaceships[i]->getHealth() <= SPACESHIP_STARTING_HEALTH*SPACESHIP_CRITICAL_HEALTH_FACTOR)
-					array_spaceships[i]->setIsAtCritical(true);
-
-				if (array_spaceships[i]->getHealth() <= 0)
-				{
-					array_spaceships[i]->setVisible(false);
-					std::cout << "Spaceship " << i << " is kill" << std::endl;
-					delete array_spaceships[i];
-					array_spaceships.erase(array_spaceships.begin() + i);
-					currentActiveSpaceships--;
-
-					comboSpaceshipCounter++;
-
-					currentScore += (SPACESHIP_REWARD_SCORE*comboSpaceshipCounter);						//update score
-					std::cout << "Combo: " << comboSpaceshipCounter << ", current score: " << currentScore << std::endl;
-				}
-			}
-				
-		}
-
-		if (currentActivePowerups > 0)
-		{
-			for (int i = 0; i < currentActivePowerups; i++)
-			{
-				
-				if (!array_powerups[i]->getActive())
-				{
-					array_powerups[i]->setVisible(false);
-					std::cout << "Powerup " << i+1 << " expired" << std::endl;
-					delete array_powerups[i];
-					array_powerups.erase(array_powerups.begin() + i);
-					currentActivePowerups--;
-				}
-
-				else
-					array_powerups[i]->update(frameTime);
-
-			}
-		}
-
 		if (isPowerupInProgress)
 			powerup_notification_text->print("Powerup - Time Slow!", 100, 100);
 
@@ -453,6 +419,67 @@ void Descent::update()
 			assistTank->update(frameTime);
 		else
 			assistTank->setVisible(false);
+
+		#pragma region For Loops
+
+		for (int i = 0; i < currentActiveSpaceships; i++)
+		{
+
+			array_spaceships[i]->update(frameTime);
+
+			if (array_spaceships[i]->getHealth() <= SPACESHIP_STARTING_HEALTH*SPACESHIP_CRITICAL_HEALTH_FACTOR)
+				array_spaceships[i]->setIsAtCritical(true);
+
+			if (array_spaceships[i]->getHealth() <= 0)
+			{
+				array_spaceships[i]->setVisible(false);
+				std::cout << "Spaceship " << i << " is kill" << std::endl;
+				delete array_spaceships[i];
+				array_spaceships.erase(array_spaceships.begin() + i);
+				currentActiveSpaceships--;
+
+				comboSpaceshipCounter++;
+
+				currentScore += (SPACESHIP_REWARD_SCORE*comboSpaceshipCounter);						//update score
+				std::cout << "Combo: " << comboSpaceshipCounter << ", current score: " << currentScore << std::endl;
+			}
+		}
+
+		for (int i = 0; i < currentActivePowerups; i++)
+		{
+
+			if (!array_powerups[i]->getActive())
+			{
+				array_powerups[i]->setVisible(false);
+				std::cout << "Powerup " << i + 1 << " expired" << std::endl;
+				delete array_powerups[i];
+				array_powerups.erase(array_powerups.begin() + i);
+				currentActivePowerups--;
+			}
+
+			else
+				array_powerups[i]->update(frameTime);
+
+		}
+
+		for (int i = 0; i < currentActiveSpaceshipBullets; i++)
+		{
+			array_spaceship_bullets[i]->update(frameTime);
+
+			if (array_spaceship_bullets[i]->getY() >= GROUND_LEVEL_HEIGHT)			//reaches out of map
+				array_spaceship_bullets[i]->setActive(false);
+
+			if (!array_spaceship_bullets[i]->getActive())
+			{
+				//bullet not active, remove from game
+				std::cout << "Removed spaceship bullet" << std::endl;
+				array_spaceship_bullets[i]->setVisible(false);
+				delete array_spaceship_bullets[i];
+				array_spaceship_bullets.erase(array_spaceship_bullets.begin() + i);
+				currentActiveSpaceshipBullets--;
+			}
+
+		}
 
 		for (int i = 0; i < currentActiveTankAssistBullets; i++)
 		{
@@ -473,10 +500,8 @@ void Descent::update()
 
 		}
 
-		if (!isCurrentScoreHighestScore)
-		{
+#pragma endregion
 
-		}
 			
 
 	// checkpoints: player health = 0 -> change to end game screen
@@ -527,8 +552,12 @@ void Descent::update()
 		 switch (waveState){
 			case WAVE_STATE::pauseWave:{
 											//std::cout << "pause" << std::endl; 
-											if (input->isKeyDown(SPACE_KEY))
-												waveControl->setWaveState(WAVE_STATE::wave1);
+										   if (input->isKeyDown(SPACE_KEY))
+										   {
+											   waveControl->setWaveState(WAVE_STATE::wave1);
+											   maxAmountOfAllowedBulletsPerVolley = WAVE_1_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY;
+										   }
+												
 			 }break;
 			 case WAVE_STATE::wave1:{//add wave 1 behaviors
 										//std::cout << "wave 1" << std::endl;
@@ -536,6 +565,8 @@ void Descent::update()
 										if (input->wasKeyPressed(TW_KEY))
 										{
 											waveControl->setWaveState(WAVE_STATE::wave2);
+											maxAmountOfAllowedBulletsPerVolley = WAVE_2_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY;
+
 										}
 										
 										//simple spaceship bullet shooting
@@ -598,6 +629,16 @@ void Descent::ai()
 
 	//timer feedbacks player movement and speed to AI
 		//DO SOMETHING RELATED 
+
+	//distance to lead target for a bullet travelling at uniform speed with no resistance
+		// where X is equals to target's current position + acquired pattern of speed
+		// shoot at target X = player.positionX + (acquiredSpeedPattern*bulletTravelTime)
+
+	if (!isCalculatingPlayerPattern)
+		std::async(&Descent::acquirePlayerMovementPatterns, this);
+
+	
+
 
 }
 
@@ -717,6 +758,9 @@ void Descent::render()
 								 if (assistTank->getActive())
 									 assistTank->draw();
 
+								 for (int i = 0; i < currentActiveSpaceshipBullets; i++)
+									 array_spaceship_bullets[i]->draw();
+
 								 for (int i = 0; i < currentActiveTankAssistBullets; i++)
 									 array_tank_assist_bullets[i]->draw();
 									 
@@ -765,6 +809,7 @@ void Descent::releaseAll()
 	cannonballTexture->onLostDevice();
 	groundTexture->onLostDevice();
 	spaceshipTexture->onLostDevice();
+	spaceship_bulletTexture->onLostDevice();
 	tankTexture->onLostDevice();
 	turretTexture->onLostDevice();
 	smokeTexture->onLostDevice();
@@ -793,6 +838,7 @@ void Descent::resetAll()
 	cannonballTexture->onResetDevice();
 	groundTexture->onResetDevice();
 	spaceshipTexture->onResetDevice();
+	spaceship_bulletTexture->onResetDevice();
 	tankTexture->onResetDevice();
 	turretTexture->onResetDevice();
 	smokeTexture->onResetDevice();
@@ -826,6 +872,43 @@ void Descent::initializeTank()
 
 	cannonball->setX(tank->getX());
 	cannonball->setY(tank->getY());
+}
+
+//=============================================================================
+// in real-time, acquires and updates player movement patterns
+//=============================================================================
+void Descent::acquirePlayerMovementPatterns()
+{
+	isCalculatingPlayerPattern = true;
+
+	int positionOriginal = 0;
+	int positionFinal = 0;
+
+	int offsetFromOriginal = 0;
+		
+	positionOriginal = tank->getX() + (tank->getWidth() / 2);
+
+	Sleep(3000);
+
+	positionFinal = tank->getX() + (tank->getWidth() / 2);
+
+	offsetFromOriginal = (positionOriginal - positionFinal);
+
+	std::cout << "offset:" << offsetFromOriginal << std::endl;
+	//in three seconds, the player has moved X from original starting position
+
+	//player's actual speed is distance offset
+
+	//if (offsetFromOriginal < 0)
+	//	offsetFromOriginal = abs(offsetFromOriginal);
+
+	acquiredPlayerSpeed = offsetFromOriginal/3;		//three because of Sleep(3000)
+	std::cout << "acquired player speed :" << acquiredPlayerSpeed << std::endl;
+
+	isCalculatingPlayerPattern = false;
+
+	//tweak/refine algorithm later
+	//Sleep(2000);
 }
 
 //=============================================================================
@@ -1200,6 +1283,121 @@ void Descent::addToScore(int scoreToAdd)
 }
 
 //=============================================================================
+// all spaceship runs through a chance and shoots
+// simple shooting
+// spaceships target curret position of player at time of firing
+//=============================================================================
+void Descent::beginSimpleSpaceshipsFiringSequence()
+{
+	//run for loop that iterates through every spaceship
+		//for each spaceship, check and compare seed
+			//if chance misses
+				//nothing happens
+			//if chance hit, 
+				//create bullet
+				//set bullet to target X, where x is player position at time of firing
+				//set and calculate bullet degree to relevant X
+				//set bullet active, let update take care of movment
+		
+	//break once max shots is fired or all spaceships iterated through
+
+	for (int i = 0; i < currentActiveSpaceships; i++)
+	{
+
+		if (currentActiveSpaceshipBullets != maxAmountOfAllowedBulletsPerVolley)
+		{
+			//current max shots per volley not yet reached, so shoot more bullets
+			//if false, stop shooting new bullets, end volley
+
+			double generatedChance = rand() % 100;
+			if (WAVE_1_SPACESHIPS_FIRE_CHANCE >= generatedChance)
+			{
+				std::cout << "Spaceship has decided to shoot " << std::endl;
+				Spaceship_bullet* bullet = new Spaceship_bullet();
+
+				if (!bullet->initialize(this, Spaceship_bullet_NS::WIDTH, Spaceship_bullet_NS::HEIGHT, Spaceship_bullet_NS::TEXTURE_COLS, spaceship_bulletTexture))
+					throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship bullet game object"));
+
+				bullet->setX(array_spaceships[i]->getX() + (array_spaceships[i]->getWidth() / 2));
+				bullet->setY(array_spaceships[i]->getY() + array_spaceships[i]->getHeight());
+				bullet->setActive(true);
+
+				//take current position of player (at time of firing) and fly towards there
+				bullet->setTarget(tank->getX() + (tank->getWidth() / 2));
+
+				array_spaceship_bullets.push_back(bullet);
+				currentActiveSpaceshipBullets++;
+
+			}
+
+		}
+
+		else
+			break;
+	}
+
+}
+
+//=============================================================================
+// all spaceship runs through a chance and shoots
+//=============================================================================
+void Descent::beginAdvancedSpaceshipsFiringSequence()
+{
+	//run for loop that iterates through every spaceship
+	//for each spaceship, check and compare seed
+	//if chance misses
+	//nothing happens
+	//if chance hit, 
+	//create bullet
+	//set bullet to target X, where x is player position at time of firing
+	//set and calculate bullet degree to relevant X
+	//set bullet active, let update take care of movment
+
+	//break once max shots is fired or all spaceships iterated through
+
+	for (int i = 0; i < currentActiveSpaceships; i++)
+	{
+
+		if (currentActiveSpaceshipBullets != maxAmountOfAllowedBulletsPerVolley)
+		{
+			//current max shots per volley not yet reached, so shoot more bullets
+			//if false, stop shooting new bullets, end volley
+
+			double generatedChance = rand() % 100;
+			if (WAVE_1_SPACESHIPS_FIRE_CHANCE >= generatedChance)
+			{
+				
+				Spaceship_bullet* bullet = new Spaceship_bullet();
+
+				if (!bullet->initialize(this, Spaceship_bullet_NS::WIDTH, Spaceship_bullet_NS::HEIGHT, Spaceship_bullet_NS::TEXTURE_COLS, spaceship_bulletTexture))
+					throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship bullet game object"));
+
+				bullet->setX(array_spaceships[i]->getX() + (array_spaceships[i]->getWidth() / 2));
+				bullet->setY(array_spaceships[i]->getY() + array_spaceships[i]->getHeight());
+				bullet->setActive(true);
+
+				//take current position of player (at time of firing) and fly towards there
+				bullet->setTarget(tank->getX() + (tank->getWidth() / 2)
+					+ (acquiredPlayerSpeed*(bullet->getY()/SPACESHIP_BULLET_SPEED)) );
+				std::cout << "Spaceship shoots at " << bullet->getTarget() << ", player position is "
+					<< tank->getX() << std::endl;
+				//acquiredPlayerSPeed * bulletY/Spaceship_bullet_speed
+					//this calculates how far the bullet needs to lead the shot
+
+				array_spaceship_bullets.push_back(bullet);
+				currentActiveSpaceshipBullets++;
+
+			}
+
+		}
+
+		else
+			break;
+	}
+
+}
+
+//=============================================================================
 // moves all spaceships once
 // constantly called by thread (timer) every X seconds
 // when one spaceships hits the screen border, ALL ships shifts 1 level down and moves the other direction
@@ -1349,69 +1547,38 @@ void Descent::timer_start()
 		{
 			setSecondsPassed((clock() - timer) / (double)CLOCKS_PER_SEC);  //convert computer timer to real life seconds
 
+			//MOVE SPACESHIPS
 			if ((fmod(getSecondsPassed(), SPACESHIP_MOVE_FREQUENCY*timeModifier)) == 0)
 			{
-
-				//std::cout << "in game seconds passed: = " << currentInGameTime << std::endl;
-				//std::cout << currentInGameTime << " seconds has passed in-game. " << getSecondsPassed() << " second(s) has passed (in program)." << std::endl;
-
 				moveSpaceships();
-
 			}
 
-			//if game state wave 1
-			//fmod wave 1 speed shooting chance
-
+			//SIMPLE WAVE 1 SPACESHIP SHOOTING
 			if (waveControl->getWaveState() == WAVE_STATE::wave1
-				&& (fmod(getSecondsPassed(), SPACESHIP_ATTACK_FREQUENCY)) == 0)
+				&& (fmod(getSecondsPassed(), SPACESHIP_ATTACK_FREQUENCY)) == 0
+				&& currentActiveSpaceshipBullets == 0)
 			{	//if wave is wave 1, start simple spaceship shooting
 
-				for (int i = 0; i < currentActiveSpaceships; i++)
-				{
-					//run for loop that iterates through every spaceship
-					//for each spaceship, check and compare seed
-					//if chance not hit, ignore
-					//if chance hit, 
-
-					double generatedChance = rand() % 100;
-					if (WAVE_1_SPACESHIPS_FIRE_CHANCE >= generatedChance)	//pew!
-					{
-						std::cout << "Spaceship has decided to shoot " << std::endl;
-						
-						//create bullet
-						//set bullet to target X
-							//where x is player position at time of firing
-						//set and calculate bullet degree to relevant X
-						//set bullet active, let update take care of movment
-					}
-				}
+				std::async(&Descent::beginAdvancedSpaceshipsFiringSequence, this);
 
 			}
 
+			//ADVANCED WAVE 2 SPACESHIP SHOOTING
 			if (waveControl->getWaveState() == WAVE_STATE::wave2
 				&& (fmod(getSecondsPassed(), SPACESHIP_ATTACK_FREQUENCY)) == 0)
-			{	//if wave is wave 1, start simple spaceship shooting
+			{
 
 				for (int i = 0; i < currentActiveSpaceships; i++)
 				{
-					//run for loop that iterates through every spaceship
-					//for each spaceship, check and compare seed
-					//if chance not hit, ignore
-					//if chance hit, 
 
 					double generatedChance = rand() % 100;
+
 					if (WAVE_2_SPACESHIPS_FIRE_CHANCE >= generatedChance)	//pew!
-					{
-						std::cout << "Spaceship has decided to shoot " << std::endl;
+						std::async(&Descent::beginSimpleSpaceshipsFiringSequence, this);
 
-						//SIMPLE SHOOTING
-					}
-
-					double generatedChance = rand() % 100;
+					generatedChance = rand() % 100;	//regenerates chance
 					if (WAVE_2_SPACESHIPS_FIRE_INTELLIGENT_CHANCE >= generatedChance)	//pew!
 					{
-						std::cout << "Spaceship has decided to shoot " << std::endl;
-
 						//ADVANCED SHOOTING
 						//read from AI to calculate possible player position
 					}
@@ -1420,7 +1587,11 @@ void Descent::timer_start()
 
 			}
 
-			if ((fmod(getSecondsPassed(), POWERUP_SPAWN_FREQUENCY)) == 0 && currentActivePowerups < MAX_NO_OF_POWERUPS && !isPowerupInProgress)
+			//SPAWN POWERUP
+			if ((fmod(getSecondsPassed(), POWERUP_SPAWN_FREQUENCY)) == 0
+				&& currentActivePowerups < MAX_NO_OF_POWERUPS
+				&& !isPowerupInProgress
+				&& isPowerupSpawning)
 				spawnPowerup();
 
 		}

@@ -95,7 +95,7 @@ private:
 	Powerup* powerup_passerbyTank;
 
 	std::vector<Spaceship*> array_spaceships;
-	std::vector<Spaceship_bullet*> array_spaceships_bullets;
+	std::vector<Spaceship_bullet*> array_spaceship_bullets;
 	std::vector<Powerup*> array_powerups_drawingSpace;			//the vector where all different types of powerups are initialized
 	std::vector<Powerup*> array_powerups;
 	std::vector<Assist_Tank_bullet*> array_tank_assist_bullets;	//to store attacks by friendly NPC tank
@@ -112,9 +112,6 @@ private:
 	//modifiers
 	int timeModifier = GAME_BASE_TIME_MODIFIER; //Default value is 1, value affects time - this value will multiply by 1 second to achieve new time
 	int speedModifier = GAME_BASE_SPEED_MODIFIER; //Default value is 1, value affects speed - this value will be multiplied by speed values to achieve new speed
-
-	bool isPowerupInProgress = false;		//checks if there is currently an active powerup
-
 	double secondsPassed;
 
 
@@ -124,14 +121,19 @@ public:
 	int currentActivePowerups;				//amt of powerups currently in the game as objects (NOT the ones in effect)
 	int totalAmtOfPowerupVariety;			//for use with array_powerups_drawingSpace, keeps track of amount of hard-coded powerup effects
 	int currentActiveTankAssistBullets;
+	int maxAmountOfAllowedBulletsPerVolley;
 
 	int hiscore;
-
 	int comboSpaceshipCounter;		//to check how much spaceships has been destroyd by a single cannonball
+
+	int acquiredPlayerSpeed;
 
 	bool isAllSpaceshipMovingRight;			//keeps track of ship direction
 	bool isShipsReadyToShift;				//keeps track of ship movement, for use in downwards movement
 	bool isCurrentScoreHighestScore;		// keeps track of high-scoring
+	bool isPowerupInProgress;		//checks if there is currently an active powerup
+	bool isPowerupSpawning;
+	bool isCalculatingPlayerPattern;		//to prevent multiple instances of pattern acquirement
 
     // Constructor
 	Descent();
@@ -156,6 +158,9 @@ public:
 	void timer_start();
 	void powerup_timer_start();
 
+	void beginSimpleSpaceshipsFiringSequence();
+	void beginAdvancedSpaceshipsFiringSequence();
+
 	double getSecondsPassed() { return secondsPassed; }
 	void setSecondsPassed(double seconds) { secondsPassed = seconds; }
 
@@ -164,6 +169,8 @@ public:
 
 	int getSpeedModifier() { return speedModifier; }
 	void setSpeedModifier(int modifyingValue) { speedModifier = modifyingValue; }
+
+	void acquirePlayerMovementPatterns();
 
 	void applyPowerupEffect(int powerupCode);
 
