@@ -93,6 +93,8 @@
   <ItemGroup>
     <ClCompile Include="bosslaser.cpp" />
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="Assist_Tank.cpp" />
+    <ClCompile Include="Assist_Tank_bullet.cpp" />
     <ClCompile Include="Boss_Spaceship.cpp" />
     <ClCompile Include="Cannonball.cpp" />
     <ClCompile Include="entity.cpp" />
@@ -103,8 +105,10 @@
     <ClCompile Include="image.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Powerup.cpp" />
     <ClCompile Include="shell.cpp" />
     <ClCompile Include="Spaceship.cpp" />
+    <ClCompile Include="Spaceship_bullet.cpp" />
     <ClCompile Include="textDX.cpp" />
     <ClCompile Include="Descent.cpp" />
     <ClCompile Include="textureManager.cpp" />
@@ -112,8 +116,11 @@
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <ClInclude Include="bosslaser.h" />
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="Assist_Tank.h" />
+    <ClInclude Include="Assist_Tank_bullet.h" />
     <ClInclude Include="Boss_Spaceship.h" />
     <ClInclude Include="Cannonball.h" />
     <ClInclude Include="constants.h" />
@@ -129,6 +136,7 @@
     <ClInclude Include="powerup.h" />
     <ClInclude Include="shell.h" />
     <ClInclude Include="Spaceship.h" />
+    <ClInclude Include="Spaceship_bullet.h" />
     <ClInclude Include="textDX.h" />
     <ClInclude Include="Descent.h" />
     <ClInclude Include="textureManager.h" />

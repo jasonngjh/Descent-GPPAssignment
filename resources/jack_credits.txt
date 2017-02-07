@@ -1,0 +1,9 @@
+music:
+
+bone666138 for 'powerup increased tank speed' sound from http://www.freesound.org/people/bone666138/sounds/202809/
+
+Dota 2 for 'powerup time slow' and 'powerup time lock' sound
+
+lulyc for 'powerup restore health' sound from http://www.freesound.org/people/lulyc/sounds/346116/
+
+Jesús Lastra for 'powerup spawn' sound from http://opengameart.org/content/8-bit-powerup-1
