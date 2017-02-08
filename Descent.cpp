@@ -587,12 +587,13 @@ void Descent::update()
 			 case WAVE_STATE::wave3:{//add boss spaceship behaviour
 										if (initAlready)
 										{
+											despawnSpaceships();
 											std::cout << "Initialising boss" << std::endl;
 											if (!boss->initialize(this, Boss_SpaceshipNS::WIDTH, Boss_SpaceshipNS::HEIGHT, Boss_SpaceshipNS::TEXTURE_COLS, bossTexture))
 												throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss game object"));
 											initAlready = false;
 											boss->setActive(true);
-											despawnSpaceships();
+											
 										}
 
 										boss->update(frameTime);
@@ -1952,7 +1953,7 @@ void Descent::despawnSpaceships()
 	std::cout << "Array_Spaceship size: " << array_spaceships.size() << std::endl;
 	std::cout << "Current active spaceship size: "<<currentActiveSpaceships << std::endl;
 	
-	for (int i = currentActiveSpaceships - 1; i >= 0; i--)
+	for (int i = array_spaceships.size() - 1; i >= 0; i--)
 	{
 		array_spaceships[i]->setVisible(false);
 		std::cout << "Spaceship " << i << " is deleted" << std::endl;
@@ -2142,12 +2143,17 @@ void Descent::restartGame()
 	hasWaveTwoSpawned = false;
 	hasWaveThreeSpawned = false;
 
+	despawnSpaceships();
+	despawnSpaceshipBullets();
+	despawnPowerups();
+	despawnAssistTankBullets();
+
 	tank->setHealth(PLAYER_MAX_HEALTH);
 	boss->setHealth(BOSS_SPACESHIP_STARTING_HEALTH);
 	gameStatus = 0;
 	currentActiveSpaceships = 0;
 
-	waveControl.setWaveState(WAVE_STATE::pauseWave);
+	waveControl.setWaveState(WAVE_STATE::wave1);
 
 	pause->setCurrentFrame(PAUSE_START_FRAME);
 }
