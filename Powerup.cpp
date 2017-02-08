@@ -96,6 +96,7 @@ void Powerup::powerup_timer_start()
 			//every second in processor, check and update real time
 			time(&clockTimer);  //get and update current time
 			seconds = difftime(clockTimer, startingTime);
+			
 		}
 			
 		if (seconds == POWERUP_START_BLINKING_TIME_MARK)

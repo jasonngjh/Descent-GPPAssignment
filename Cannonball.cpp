@@ -72,7 +72,7 @@ void Cannonball::draw()
 //=============================================================================
 void Cannonball::update(float frameTime)
 {
-	if (onGround){
+	if (onGround && !(getActive())){
 		//if player one
 		if (input->isKeyDown(SPACE_KEY))
 		{
@@ -136,17 +136,12 @@ void Cannonball::hit(hitWho target)
 		Image::setVisible(false);
 		spriteData.y = GROUND;//change value to where ur land is changes
 		velocity.y = 0.0;
-		velocity.x = 0.0;
-		
-	}
-	if (target == spaceShip)
-	{
-		if (forcePower>0)
-			forcePower -= 1;
-		else forcePower = 0;
-	}
+		velocity.x = 0.0;	}
 	if (target == bossShip)
 	{
+		setActive(false);
+		onGround = true;
+
 		if (forcePower>0)
 			forcePower -= 1;
 		else forcePower = 0;

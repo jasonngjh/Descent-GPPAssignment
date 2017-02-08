@@ -132,7 +132,6 @@ void Player::update(float frameTime)
 		health = 0;
 	if (health > PLAYER_MAX_HEALTH)
 		health = PLAYER_MAX_HEALTH;
-
 }
 
 //additional methods here

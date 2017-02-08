@@ -1,7 +1,7 @@
 /*
 player(s)'s city is invaded by alien spaceships in the sky
 sudddenly wormholes appear above the player and drop magical wheels of alien-destroying Cannonball
-also drops a note in English that tells the player(s) to throw the Cannonball, and 
+also drops a note in English that tells the player(s) to throw the Cannonball, and
 then the game starts after player presses a button
 
 this game intentionally does not make sense
@@ -16,7 +16,7 @@ Controls are shown during instructions and during the game so player(s) won't fo
 
 if 2 player, color code them red and blue for clarity
 
-*/ 
+*/
 
 #include "Descent.h"
 
@@ -38,7 +38,10 @@ Descent::Descent()
 	spaceshipTexture = new TextureManager();
 	spaceship_bulletTexture = new TextureManager();
 	menu1Texture = new TextureManager();
+
 	tankTexture = new TextureManager();
+	tankHealthTexture = new TextureManager();
+
 	turretTexture = new TextureManager();
 	pauseTexture = new TextureManager();
 	instructionTexture = new TextureManager();
@@ -48,7 +51,7 @@ Descent::Descent()
 	assistTankTexture = new TextureManager();
 	assistTankBulletTexture = new TextureManager();
 	powerup_timeSlow_texture = new TextureManager();
-	powerup_restoreHealth_texture = new TextureManager();
+	powerup_shield_texture = new TextureManager();
 	powerup_increaseTankSpeed_texture = new TextureManager();
 	powerup_timeLock_texture = new TextureManager();
 	powerup_maxPower_texture = new TextureManager();
@@ -98,7 +101,7 @@ Descent::~Descent()
 	SAFE_DELETE(shell);
 	SAFE_DELETE(assistTank);
 	SAFE_DELETE(powerup_timeSlow);
-	SAFE_DELETE(powerup_restoreHealth);
+	SAFE_DELETE(powerup_shield);
 	SAFE_DELETE(powerup_increaseTankSpeed);
 	SAFE_DELETE(powerup_timeLock);
 	SAFE_DELETE(powerup_maxPower);
@@ -132,13 +135,15 @@ Descent::~Descent()
 //=============================================================================
 void Descent::initialize(HWND hwnd)
 {
-    Game::initialize(hwnd); // throws GameError
+	std::cout << "initialising game" << std::endl;
+
+	std::cout << "Fonts...";
+
+	Game::initialize(hwnd); // throws GameError
 	if (dxFont.initialize(graphics, gameNS::POINT_SIZE, false, false, gameNS::FONT) == false)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Failed to initialize DirectX font."));
 
 	srand(time(NULL));		//seeds the RNG
-	
-#pragma region Initialize Assets
 
 	//object and texture initialization
 
@@ -148,6 +153,10 @@ void Descent::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing wave number font"));
 	if (!powerup_notification_text->initialize(graphics, 28, false, false, "Arial"))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing powerup notification font"));
+
+	std::cout << "loaded. " << std::endl;
+
+	std::cout << "Game textures...";
 
 	if (!groundTexture->initialize(graphics, GROUND_TILESET_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ground texture"));
@@ -179,7 +188,7 @@ void Descent::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank"));
 	if (!cannonball->initialize(this, CannonballNS::WIDTH, CannonballNS::HEIGHT, CannonballNS::TEXTURE_COLS, cannonballTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Cannonball game object"));
-	
+
 	if (!ground->initialize(graphics, 0, 0, 0, groundTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ground tiles"));
 
@@ -202,7 +211,7 @@ void Descent::initialize(HWND hwnd)
 
 
 	if (!background->initialize(graphics, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, BACKGROUND_TEXTURE_COLS, backgroundTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR,"Error initialising background"));
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising background"));
 
 	if (!instructionScreen->initialize(graphics, INSTRUCTIONS_WIDTH, INSTRUCTIONS_HEIGHT, INSTRUCTIONS_TEXTURE_COLUMNS, instructionTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing instruction screen"));
@@ -216,7 +225,7 @@ void Descent::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell texture"));
 	if (!shell->initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, shellTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
-	
+
 	if (!assistTankTexture->initialize(graphics, ASSIST_TANK_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing assist tank texture"));
 	if (!assistTank->initialize(this, Assist_Tank_NS::WIDTH, Assist_Tank_NS::HEIGHT, Assist_Tank_NS::TEXTURE_COLS, assistTankTexture))
@@ -227,7 +236,7 @@ void Descent::initialize(HWND hwnd)
 
 	if (!powerup_timeSlow_texture->initialize(graphics, POWERUP_TIME_SLOW_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (down speed) texture"));
-	if (!powerup_restoreHealth_texture->initialize(graphics, POWERUP_RESTORE_HEALTH_IMAGE))
+	if (!powerup_shield_texture->initialize(graphics, POWERUP_RESTORE_HEALTH_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (restore health) texture"));
 	if (!powerup_increaseTankSpeed_texture->initialize(graphics, POWERUP_INCREASE_TANK_SPEED_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (increase tank speed) texture"));
@@ -252,25 +261,46 @@ void Descent::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss laser texture"));
 	if (!shell->initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, shellTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
-						
+					
+	std::cout << "loaded. " << std::endl;
+					
 	background->setFrames(BACKGROUND_START_FRAME,BACKGROUND_END_FRAME);
 	background->setCurrentFrame(BACKGROUND_START_FRAME);
 
+	std::cout << "Audio...";
 	loadAllAudio();
 	audio[0]->setLoop(true); // background music
 	audio[0]->play();
+	std::cout << "loaded. " << std::endl;
 
 	ground->setX(0);
 	ground->setScale((float)(GAME_WIDTH / ground->getWidth()));
 	ground->setY((int)GROUND_LEVEL_HEIGHT);		//sets ground to 3/4 of game width
 
-	std::cout << "initialising spaceship array" << std::endl;
+	initializeTank();
 
+	std::cout << "Boss...";
+	launchBossLaser();
+	boss->setVelocity(VECTOR2(100, 0)); // VECTOR2(X, Y)
+	boss->setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
+	boss->setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
+	boss->setX(GAME_WIDTH / 4 + 45);
+	boss->setY(20);
+	boss->setScale(0.75);
+	boss->setActive(false);
+
+	shell->setX(boss->getX() + BOSS_SPACESHIP_WIDTH / 2);
+	shell->setY(boss->getY() + BOSS_SPACESHIP_HEIGHT / 2);
+	shell->setScale(0.045);
+
+	std::cout << "loaded. " << std::endl;
+	
 #pragma region Initialize Powerups Drawing Space
-	//loading powerups
+	//loading powerups. Only need to call this ONE TIME
+	std::cout << "Powerups... ";
 
 	powerup_timeSlow = new Powerup();
-	powerup_restoreHealth = new Powerup();
+	powerup_shield = new Powerup();
 	powerup_increaseTankSpeed = new Powerup();
 	powerup_timeLock = new Powerup();
 	powerup_maxPower = new Powerup();
@@ -279,7 +309,7 @@ void Descent::initialize(HWND hwnd)
 	if (!powerup_timeSlow->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_timeSlow_texture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (down speed) object"));
 
-	if (!powerup_restoreHealth->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_restoreHealth_texture))
+	if (!powerup_shield->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_shield_texture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (restore health) object"));
 
 	if (!powerup_increaseTankSpeed->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_increaseTankSpeed_texture))
@@ -294,9 +324,21 @@ void Descent::initialize(HWND hwnd)
 	if (!powerup_passerbyTank->initialize(this, PowerupNS::WIDTH, PowerupNS::HEIGHT, PowerupNS::TEXTURE_COLS, powerup_passerbyTank_texture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing power-up (passerby tank) object"));
 
+	array_powerups_drawingSpace.push_back(powerup_timeSlow);
+	array_powerups_drawingSpace.push_back(powerup_shield);
+	array_powerups_drawingSpace.push_back(powerup_increaseTankSpeed);
+	array_powerups_drawingSpace.push_back(powerup_timeLock);
+	array_powerups_drawingSpace.push_back(powerup_maxPower);
+	array_powerups_drawingSpace.push_back(powerup_passerbyTank);
+
+	totalAmtOfPowerupVariety = array_powerups_drawingSpace.size();
+	currentActivePowerups = 0;
+
+	std::cout << "loaded." << std::endl;
+
 #pragma endregion
 
-    return;
+	return;
 }
 
 //=============================================================================
@@ -309,183 +351,199 @@ void Descent::update()
 	switch (state)
 	{
 	case GENERAL_STATE::menu: {
-		if (input->isKeyDown(DOWN_KEY)){
-			menu1->setCurrentFrame(MENU1_END_FRAME);
-			playerCount = 2;
-		}
-		else if (input->isKeyDown(UP_KEY)){
-			menu1->setCurrentFrame(MENU1_START_FRAME);
-			playerCount = 1;
-		}
-		if (input->wasKeyPressed(ENTER_KEY)){
-			gameControl.setGeneralState(GENERAL_STATE::instructions);
-		}
+								  if (input->isKeyDown(DOWN_KEY)){
+									  menu1->setCurrentFrame(MENU1_END_FRAME);
+									  playerCount = 2;
+								  }
+								  else if (input->isKeyDown(UP_KEY)){
+									  menu1->setCurrentFrame(MENU1_START_FRAME);
+									  playerCount = 1;
+								  }
+								  if (input->wasKeyPressed(ENTER_KEY)){
+									  gameControl.setGeneralState(GENERAL_STATE::instructions);
+								  }
 	}break;
 	case GENERAL_STATE::instructions : {
-										   if (input->wasKeyPressed(SPACE_KEY)){
-											   restartGame();
-											   Sleep(300);
-											   gameControl.setGeneralState(GENERAL_STATE::game);		  
-										   }
+							   if (input->wasKeyPressed(SPACE_KEY)){
+								   restartGame();
+								   Sleep(300);
+								   gameControl.setGeneralState(GENERAL_STATE::game);		  
+								}
 	}break;
-
 	case GENERAL_STATE::game:{
-		background->update(frameTime);
-		checkGamestatus();
+								 background->update(frameTime);
+								 checkGamestatus();
+								 cannonball->update(frameTime);
 
-		if (!cannonball->getActive())
-			comboSpaceshipCounter = 0;		//cannonball now inactive, set collateral counter to 0
+								 if (!cannonball->getActive())
+									 comboSpaceshipCounter = 0;		//cannonball now inactive, set collateral counter to 0
 
-		if (assistTank->getActive())
-			assistTank->update(frameTime);
-		else
-			assistTank->setVisible(false);
+								 if (assistTank->getActive())
+									 assistTank->update(frameTime);
+								 else
+									 assistTank->setVisible(false);
 
-		#pragma region For Loops
+								 // checkpoints: player health = 0 -> change to end game screen
+								 // if boss die -> change to end game screen
+								 // if esc(quit pressed) -> change to end game screen
 
-		for (int i = 0; i < currentActiveSpaceships; i++)
-		{
-			array_spaceships[i]->update(frameTime);
+								 if (input->isKeyDown(LEFT_KEY))
+								 {
+									 audio[1]->play();
+									 turret->setX(tank->getX() + 28.0f);
+									 tankHealth->setX(tank->getX() + 10.0f);
+								 }
+								 if (input->isKeyDown(RIGHT_KEY))
+								 {
+									 audio[1]->play();
+									 turret->setX(tank->getX() + 18.0f);
+									 tankHealth->setX(tank->getX() + 10.0f);
+								 }
+								 tank->update(frameTime);
 
-			if (array_spaceships[i]->getHealth() <= 0)
-			{
-				array_spaceships[i]->setVisible(false);
-				std::cout << "Spaceship " << i << " is kill" << std::endl;
-				delete array_spaceships[i];
-				array_spaceships.erase(array_spaceships.begin() + i);
-				currentActiveSpaceships--;
+								 if (tank->getHealth() < (0.1 * PLAYER_MAX_HEALTH)) //less than 10%
+									 tankHealth->setCurrentFrame(6);
+								 else if (tank->getHealth() < (0.25 * PLAYER_MAX_HEALTH)) // less than 25%
+									 tankHealth->setCurrentFrame(5);
+								 else if (tank->getHealth() < (0.5* PLAYER_MAX_HEALTH)) // less than 50%
+									 tankHealth->setCurrentFrame(4);
+								 else if (tank->getHealth() < (0.6 * PLAYER_MAX_HEALTH)) // less than 60%
+									 tankHealth->setCurrentFrame(3);
+								 else if (tank->getHealth() < (0.8 * PLAYER_MAX_HEALTH)) //less than 80%
+									 tankHealth->setCurrentFrame(2);
+								 else if (tank->getHealth() < PLAYER_MAX_HEALTH) // less than 100%
+									 tankHealth->setCurrentFrame(1);
+								 else if (tank->getHealth() == PLAYER_MAX_HEALTH) // 100%
+									 tankHealth->setCurrentFrame(0);
+								 else if (tank->getHealth() == 0)
+									 tankHealth->setVisible(false); //GAMES END HERE
 
-				comboSpaceshipCounter++;
+								 tankHealth->update(frameTime);
 
-				currentScore += (SPACESHIP_REWARD_SCORE*comboSpaceshipCounter);						//update score
-				std::cout << "Combo: " << comboSpaceshipCounter << ", current score: " << currentScore << std::endl;
-			}
-		}
+								 if (input->wasKeyPressed(SPACE_KEY))
+								 {
+									 cannonball->getTank(tank);
+								 }
+								 cannonball->update(frameTime);
+								 cannonball->updateChargingBar(frameTime, tank->getX());
 
-		for (int i = 0; i < currentActivePowerups; i++)
-		{
+								 if (input->wasKeyPressed(UP_KEY) || (input->wasKeyPressed(DOWN_KEY)))
+								 {
+									 switch (tank->getTankAngle()){
+									 default: break;
+									 case 20:	turret->setCurrentFrame(0);
+										 break;
+									 case 40: turret->setCurrentFrame(1);
+										 break;
+									 case 60: turret->setCurrentFrame(2);
+										 break;
+									 case 90: turret->setCurrentFrame(3);
+										 break;
+									 case 120:turret->setCurrentFrame(4);
+										 break;
+									 case 140:turret->setCurrentFrame(5);
+										 break;
+									 case 160: turret->setCurrentFrame(6);
+										 break;
+									 }
+								 }
 
-			if (!array_powerups[i]->getActive())
-			{
-				array_powerups[i]->setVisible(false);
-				std::cout << "Powerup " << i + 1 << " expired" << std::endl;
-				delete array_powerups[i];
-				array_powerups.erase(array_powerups.begin() + i);
-				currentActivePowerups--;
-			}
-			else{
-				array_powerups[i]->update(frameTime);
-			}
-		}
 
-		for (int i = 0; i < currentActiveSpaceshipBullets; i++)
-		{
-			array_spaceship_bullets[i]->update(frameTime);
+#pragma region In-game Vector For Loops
 
-			if (array_spaceship_bullets[i]->getY() >= GROUND_LEVEL_HEIGHT)			//reaches out of map
-			{
-				array_spaceship_bullets[i]->setActive(false);
-			}
-		}
+								 for (int i = currentActiveSpaceships - 1; i >= 0; i--)
+								 {
+									 //updates spaceships
+									 //checks for HP and changes them accordingly
+									 array_spaceships[i]->update(frameTime);
 
-		for (int i = 0; i < array_spaceship_bullets.size(); i++)
-		{
-			if (!array_spaceship_bullets[i]->getActive())
-			{
-				//bullet not active, remove from game
-				//std::cout << "Removed spaceship bullet" << std::endl;
-				array_spaceship_bullets[i]->setVisible(false);
-				delete array_spaceship_bullets[i];
-				array_spaceship_bullets.erase(array_spaceship_bullets.begin() + i);
-				currentActiveSpaceshipBullets--;
-				std::cout << "current amt of bullets left : " << currentActiveSpaceshipBullets << std::endl;
-			}
+									 if (array_spaceships[i]->getY() >= GAMEOVER_SPACESHIP_DISTANCE)
+									 {
+										 gameStatus = 2; //game over, defeat
+										 gameControl.setGeneralState(GENERAL_STATE::gameOver);
+									 }
+										 
 
-		}
+									 if (array_spaceships[i]->getHealth() <= SPACESHIP_STARTING_HEALTH*SPACESHIP_CRITICAL_HEALTH_FACTOR)
+										 array_spaceships[i]->setIsAtCritical(true);
 
-		for (int i = 0; i < currentActiveTankAssistBullets; i++)
-		{
-			array_tank_assist_bullets[i]->update(frameTime);
+									 if (array_spaceships[i]->getHealth() <= 0)
+									 {
+										 array_spaceships[i]->setVisible(false);
+										 std::cout << "Spaceship " << i << " is kill" << std::endl;
+										 audio[2]->play();
+										 delete array_spaceships[i];
+										 array_spaceships.erase(array_spaceships.begin() + i);
+										 currentActiveSpaceships--;
 
-			if (array_tank_assist_bullets[i]->getY() <= 0)			//reaches out of map
-				array_tank_assist_bullets[i]->setActive(false);
-				
-			if (!array_tank_assist_bullets[i]->getActive())
-			{
-				//bullet not active, remove from game
-				std::cout << "removed bullet " << std::endl;
-				array_tank_assist_bullets[i]->setVisible(false);
-				delete array_tank_assist_bullets[i];
-				array_tank_assist_bullets.erase(array_tank_assist_bullets.begin() + i);
-				currentActiveTankAssistBullets--;
-			}
+										 comboSpaceshipCounter++;
 
-		}
+										 addToScore((SPACESHIP_REWARD_SCORE));
+										//update score
+										 std::cout << "Combo: " << comboSpaceshipCounter << ", current score: " << currentScore << std::endl;
+									 }
+								 }
+
+								 for (int i = currentActivePowerups - 1; i >= 0; i--)
+								 {
+
+									 if (!array_powerups[i]->getActive())
+									 {
+										 array_powerups[i]->setVisible(false);
+										
+										 delete array_powerups[i];
+										 array_powerups.erase(array_powerups.begin() + i);
+										 currentActivePowerups--;
+										 std::cout << "Powerup " << i + 1 << " HAS DIED" << std::endl;
+									 }
+
+									 else
+										 array_powerups[i]->update(frameTime);
+
+								 }
+								 
+								 for (int i = currentActiveSpaceshipBullets - 1; i >= 0; i--)
+								 {
+									 array_spaceship_bullets[i]->update(frameTime);
+
+									 if (array_spaceship_bullets[i]->getY() >= GROUND_LEVEL_HEIGHT)			//reaches out of map
+										 array_spaceship_bullets[i]->setActive(false);
+								 }
+
+								 //below loop purges all inactive spaceship bullets
+								 for (int i = currentActiveSpaceshipBullets - 1; i >= 0; i--)
+								 {
+									 if (!array_spaceship_bullets[i]->getActive())
+									 {
+										 //bullet not active, remove from game
+										 array_spaceship_bullets[i]->setVisible(false);
+										 delete array_spaceship_bullets[i];
+										 array_spaceship_bullets.erase(array_spaceship_bullets.begin() + i);
+										 currentActiveSpaceshipBullets--;
+										 std::cout << "current amt of bullets left : " << currentActiveSpaceshipBullets << std::endl;
+									 }
+								 }
+
+								 for (int i = 0; i < currentActiveTankAssistBullets; i++)
+								 {
+									 array_tank_assist_bullets[i]->update(frameTime);
+
+									 if (array_tank_assist_bullets[i]->getY() <= 0)			//reaches out of map
+										 array_tank_assist_bullets[i]->setActive(false);
+
+									 if (!array_tank_assist_bullets[i]->getActive())
+									 {
+										 //bullet not active, remove from game
+										 std::cout << "removed bullet " << std::endl;
+										 array_tank_assist_bullets[i]->setVisible(false);
+										 delete array_tank_assist_bullets[i];
+										 array_tank_assist_bullets.erase(array_tank_assist_bullets.begin() + i);
+										 currentActiveTankAssistBullets--;
+									 }
+
+								 }
 
 #pragma endregion
-
-	// checkpoints: player health = 0 -> change to end game screen
-	// if boss die -> change to end game screen
-	// if esc(quit pressed) -> change to end game screen
-
-		if (input->isKeyDown(LEFT_KEY))
-		{
-			turret->setX(tank->getX() + 28.0f); 
-			tankHealth->setX(tank->getX() + 10.0f);
-		}
-		if (input->isKeyDown(RIGHT_KEY))
-		{
-			turret->setX(tank->getX() + 18.0f);
-			tankHealth->setX(tank->getX() + 10.0f);
-		}
-		tank->update(frameTime);
-
-		if (input->wasKeyPressed(SPACE_KEY))
-		{
-			cannonball->getTank(tank);
-		}
-		cannonball->update(frameTime);
-		cannonball->updateChargingBar(frameTime, tank->getX());
-
-		if (input->wasKeyPressed(UP_KEY) || (input->wasKeyPressed(DOWN_KEY)))
-		{
-			switch (tank->getTankAngle()){
-			default: break;
-			case 20:	turret->setCurrentFrame(0);
-				break;
-			case 40: turret->setCurrentFrame(1);
-				break;
-			case 60: turret->setCurrentFrame(2);
-				break;
-			case 90: turret->setCurrentFrame(3);
-				break;
-			case 120:turret->setCurrentFrame(4);
-				break;
-			case 140:turret->setCurrentFrame(5);
-				break;
-			case 160: turret->setCurrentFrame(6);
-				break;
-			}
-		}
-
-		if (tank->getHealth() < (0.1 * PLAYER_MAX_HEALTH)) //less than 10%
-			tankHealth->setCurrentFrame(6);
-		else if (tank->getHealth() < (0.25 * PLAYER_MAX_HEALTH)) // less than 25%
-			tankHealth->setCurrentFrame(5);
-		else if (tank->getHealth() < (0.5* PLAYER_MAX_HEALTH)) // less than 50%
-			tankHealth->setCurrentFrame(4);
-		else if (tank->getHealth() < (0.6 * PLAYER_MAX_HEALTH)) // less than 60%
-			tankHealth->setCurrentFrame(3);
-		else if (tank->getHealth() < (0.8 * PLAYER_MAX_HEALTH)) //less than 80%
-			tankHealth->setCurrentFrame(2);
-		else if (tank->getHealth() < PLAYER_MAX_HEALTH) // less than 100%
-			tankHealth->setCurrentFrame(1);
-		else if (tank->getHealth() == PLAYER_MAX_HEALTH) // 100%
-			tankHealth->setCurrentFrame(0);
-		else if (tank->getHealth() == 0)
-			tankHealth->setVisible(false); //GAMES END HERE
-
-		tankHealth->update(frameTime);
 		
 		 switch (waveState){
 			case WAVE_STATE::pauseWave:{
@@ -506,16 +564,26 @@ void Descent::update()
 											despawnSpaceships();
 											spawnSpaceships(1);
 										}
-											
+
+										if (currentActiveSpaceships == 0)
+										{
+											//means all wave 1 spaceships are destroyed
+											maxAmountOfAllowedBulletsPerVolley = WAVE_2_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY;
+											waveControl.setWaveState(WAVE_STATE::wave2);
+										}
+
 										if (input->wasKeyPressed(TW_KEY))
 										{
-											waveControl.setWaveState(WAVE_STATE::wave2);
 											maxAmountOfAllowedBulletsPerVolley = WAVE_2_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY;
-
+											waveControl.setWaveState(WAVE_STATE::wave2);
 										}
 
 			 }break;
 			 case WAVE_STATE::wave2:{//add wave 2 enemy behavior
+
+										//shell->update(frameTime, *turret);
+
+										//std::cout << "wave 2" << std::endl;
 
 										if (!hasWaveTwoSpawned)
 										{
@@ -523,12 +591,17 @@ void Descent::update()
 											spawnSpaceships(2);
 										}
 
-										if (input->wasKeyPressed(TH_KEY))
+										if (currentActiveSpaceships == 0)
 										{
+											//means all wave 1 spaceships are destroyed
 											waveControl.setWaveState(WAVE_STATE::wave3);
 										}
 
+										if (input->wasKeyPressed(TH_KEY))		//press 3, for testing only
+										{
 
+											waveControl.setWaveState(WAVE_STATE::wave3);
+										}
 			 }break;
 			 case WAVE_STATE::wave3:{//add boss spaceship behaviour
 										if (initAlready)
@@ -538,8 +611,8 @@ void Descent::update()
 												throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss game object"));
 											initAlready = false;
 											boss->setActive(true);
+											despawnSpaceships();
 										}
-										despawnSpaceships();
 
 										boss->update(frameTime);
 										shell->update(frameTime, *tank);
@@ -549,7 +622,7 @@ void Descent::update()
 											{
 
 												array_bosslaser[i]->update(frameTime);
-												if (array_bosslaser[i]->getY()>= GROUND_LEVEL_HEIGHT)
+												if (array_bosslaser[i]->getY() >= GROUND_LEVEL_HEIGHT)
 												{
 													delete array_bosslaser[i];
 													array_bosslaser.erase(array_bosslaser.begin() + i);
@@ -562,6 +635,15 @@ void Descent::update()
 										{
 											resetShellPos();
 										}
+
+										if (boss->getHealth() <= 0)
+										{
+											boss->setActive(false);
+											//you win! boop boop
+											gameStatus = 1;
+											gameControl.setGeneralState(GENERAL_STATE::gameOver);
+										}
+
 			 }break;						 
 		}
 		if (input->wasKeyPressed(PAUSE_KEY))
@@ -569,9 +651,7 @@ void Descent::update()
 			gameControl.setGeneralState(GENERAL_STATE::paused);
 		}
 	}break;
-
 	case GENERAL_STATE::paused:{
-
 		if (input->isKeyDown(DOWN_KEY)){
 			pause->setCurrentFrame(PAUSE_END_FRAME);
 			pauseScreen = 1;
@@ -589,12 +669,12 @@ void Descent::update()
 			case 1: gameControl.setGeneralState(GENERAL_STATE::menu);
 				break;
 			}
-			
 		}
 	}break;
 	case GENERAL_STATE::gameOver:{
 									 if (gameStatus == 1)
 									 {
+
 										 gamewin->update(frameTime);
 										 if (input->isKeyDown(DOWN_KEY)){
 											 gamewin->setCurrentFrame(WINLOSE_END_FRAME);
@@ -630,7 +710,6 @@ void Descent::update()
 
 									 }
 	}break;
-
 	}
 }
 
@@ -644,8 +723,8 @@ void Descent::ai()
 
 	if (gameControl.getGeneralState() == GENERAL_STATE::game
 		&&!isCalculatingPlayerPattern)
-			std::async(&Descent::acquirePlayerMovementPatterns, this);
-	
+		std::async(&Descent::acquirePlayerMovementPatterns, this);
+
 }
 
 //=============================================================================
@@ -653,125 +732,135 @@ void Descent::ai()
 //=============================================================================
 void Descent::collisions()
 {
-    VECTOR2 collisionVector;
+	VECTOR2 collisionVector;
 
-		for (int i = 0; i < array_bosslaser.size(); i++)
+	if (gameControl.getGeneralState() == GENERAL_STATE::game)
 	{
-		if (array_bosslaser[i]->collidesWith(*tank, collisionVector))
+		for (int i = 0; i < array_bosslaser.size(); i++)
 		{
-			std::cout << "bosslaser hit tank" << array_bosslaser[i]<<std::endl;
-			existOnScreen=false;
-			delete array_bosslaser[i];
-			array_bosslaser.erase(array_bosslaser.begin() + i);
+			if (array_bosslaser[i]->collidesWith(*tank, collisionVector))
+			{
+				std::cout << "bosslaser hit tank" << array_bosslaser[i] << std::endl;
+				existOnScreen = false;
+				delete array_bosslaser[i];
+				array_bosslaser.erase(array_bosslaser.begin() + i);
+			}
+
 		}
 		
-	}
-	if (shell->collidesWith(*tank, collisionVector))
-	{
+		if (shell->collidesWith(*tank, collisionVector))
+		{
 			std::cout << "collide with tank liao" << std::endl;
 			shell->setActive(false);
 			shell->setVisible(false);
 			std::cout << "can u see dis" << std::endl;
-	}
+		}
 
-	if (cannonball->collidesWith(*shell, collisionVector))
-	{
-		std::cout << "cannonball hit shell" << std::endl;
-		shell->setActive(false);
-		shell->setVisible(false);
-	}
-	if (cannonball->collidesWith(*boss, collisionVector))
-	{
-		cannonball->bounce(collisionVector, *boss);
-		
-		//std::cout << cannonball->getDamageLeft() + "COLLIDE BOSSSHIP" << std::endl;
-		
-		cannonball->hit(bossShip);
-		boss->setHealth((boss->getHealth() - cannonball->getForcePower()));
-		//boss->setVisible(false);
-		std::cout << "Boss HP Left:" <<(int)boss->getHealth()<< std::endl;
-	}	
+		if (cannonball->collidesWith(*shell, collisionVector))
+		{
+			std::cout << "cannonball hit shell" << std::endl;
+			shell->setActive(false);
+			shell->setVisible(false);
+		}
+		if (cannonball->collidesWith(*boss, collisionVector))
+		{
+			if (boss->getActive())
+			{
+				cannonball->bounce(collisionVector, *boss);
 
-	for (int i = 0; i < currentActiveSpaceships; i++)
-	{
-		// if collision between cannonball and spaceship
-		if (cannonball->collidesWith(*array_spaceships[i], collisionVector))
+				//std::cout << cannonball->getDamageLeft() + "COLLIDE BOSSSHIP" << std::endl;
+
+				cannonball->hit(bossShip);
+				boss->setHealth((boss->getHealth() - cannonball->getForcePower()));
+				//boss->setVisible(false);
+				std::cout << "Boss HP Left:" << (int)boss->getHealth() << std::endl;
+			}
+		}
+
+		for (int i = currentActiveSpaceships - 1; i >= 0; i--)
+		{
+			// if collision between cannonball and spaceship
+			if (cannonball->collidesWith(*array_spaceships[i], collisionVector))
+			{
+				if (cannonball->getActive())
+				{
+					//actual damage code
+					//calculate damage from cannonball
+					int spaceshipHealth = array_spaceships[i]->getHealth();
+					array_spaceships[i]->setHealth(array_spaceships[i]->getHealth() - cannonball->getForcePower());	//decreases health of spaceship
+					if (cannonball->getForcePower() > 0)
+					{
+						cannonball->setForcePower(cannonball->getForcePower() - spaceshipHealth); //decreases health of cannonball
+					}
+					else
+					{
+						cannonball->setForcePower(0);
+					}
+
+					if (array_spaceships[i]->getHealth() <= SPACESHIP_STARTING_HEALTH * SPACESHIP_CRITICAL_HEALTH_FACTOR)
+					{
+						array_spaceships[i]->setIsAtCritical(true);
+					}
+
+					if (cannonball->getForcePower() == 0)
+					{
+						cannonball->hit(land);
+					}
+				}
+			}
+		}
+
+		if (cannonball->collidesWith(*tank, collisionVector))
 		{
 			if (cannonball->getActive())
 			{
-				//actual damage code
-				//calculate damage from cannonball
-				int spaceshipHealth = array_spaceships[i]->getHealth();
-				array_spaceships[i]->setHealth(array_spaceships[i]->getHealth() - cannonball->getForcePower());	//decreases health of spaceship
-				if (cannonball->getForcePower() > 0)
-				{
-					cannonball->setForcePower(cannonball->getForcePower() - spaceshipHealth); //decreases health of cannonball
-				}
-				else
-				{
-					cannonball->setForcePower(0);
-				}
-
-				if (array_spaceships[i]->getHealth() <= SPACESHIP_STARTING_HEALTH * SPACESHIP_CRITICAL_HEALTH_FACTOR)
-				{
-					array_spaceships[i]->setIsAtCritical(true);
-				}
-
-				if (array_spaceships[i]->getHealth() <= 0)
-				{
-					audio[2]->play();
-					//simple destruction (not intended for actual game)
-					array_spaceships[i]->setVisible(false);
-					delete array_spaceships[i];
-					array_spaceships.erase(array_spaceships.begin() + i);
-					currentActiveSpaceships--;
-				}
-
-				if (cannonball->getForcePower() == 0)
-				{
-					cannonball->hit(land);
-				}
+				tank->setHealth(tank->getHealth() - (cannonball->getForcePower()*getPlayerDamageTakenModifier()));
+				cannonball->hit(land);
 			}
 		}
-	}
 
-	if (cannonball->collidesWith(*tank, collisionVector))
-	{
-		if (cannonball->getActive())
+		//for collision between tank and powerup
+		for (int i = currentActivePowerups - 1; i >= 0; i--)
 		{
-			tank->setHealth(tank->getHealth() - cannonball->getForcePower());
-			cannonball->hit(land);
-		}
-	}
-
-	//for collision between tank and powerup
-	for (int i = 0; i < currentActivePowerups; i++)
-	{
-		if (tank->collidesWith(*array_powerups[i], collisionVector))
-		{
-			applyPowerupEffect(array_powerups[i]->getPowerupCode());
-
-			delete array_powerups[i];
-			array_powerups.erase(array_powerups.begin() + i);
-			currentActivePowerups--;
-			currentScore += POWERUP_REWARD_SCORE;						//update score
-		}
-	}
-
-	//for collision between assist tank bulles and spaceship
-
-	for (int i = 0; i < currentActiveTankAssistBullets; i++)
-	{
-		for (int j = 0; j < currentActiveSpaceships; j++)
-		{
-			if (array_tank_assist_bullets[i]->collidesWith(*array_spaceships[j], collisionVector))
+			if (tank->collidesWith(*array_powerups[i], collisionVector))
 			{
-				array_spaceships[j]->setHealth(array_spaceships[j]->getHealth() - array_tank_assist_bullets[i]->damage);
-				array_tank_assist_bullets[i]->setActive(false);
+				applyPowerupEffect(array_powerups[i]->getPowerupCode());
+
+				delete array_powerups[i];
+				array_powerups.erase(array_powerups.begin() + i);
+				currentActivePowerups--;
+				currentScore += POWERUP_REWARD_SCORE;						//update score
+			}
+		}
+
+		//for collision between enemy spaceship bullets and tank
+		for (int i = currentActiveSpaceshipBullets - 1; i >= 0; i--)
+		{
+			if (tank->collidesWith(*array_spaceship_bullets[i], collisionVector))
+			{
+				if (array_spaceship_bullets[i]->getActive())
+				{
+					array_spaceship_bullets[i]->setActive(false);		//triggers its deletion clause in update()
+					tank->setHealth(tank->getHealth() - (array_spaceship_bullets[i]->getDamage()*getPlayerDamageTakenModifier()) );
+					std::cout << "player took " << array_spaceship_bullets[i]->getDamage() << "damage. Current health : " << tank->getHealth() << "." << std::endl;
+				}
+
+			}
+		}
+
+		//for collision between assist tank bulles and spaceship
+		for (int i = currentActiveTankAssistBullets - 1; i >= 0; i--)
+		{
+			for (int j = currentActiveSpaceships - 1; j >= 0; j--)
+			{
+				if (array_tank_assist_bullets[i]->collidesWith(*array_spaceships[j], collisionVector))
+				{
+					array_spaceships[j]->setHealth(array_spaceships[j]->getHealth() - array_tank_assist_bullets[i]->damage);
+					array_tank_assist_bullets[i]->setActive(false);
+				}
 			}
 		}
 	}
-
 }
 
 //=============================================================================
@@ -784,17 +873,17 @@ void Descent::render()
     graphics->spriteBegin();                // begin drawing sprites
 	switch (gameControl.getGeneralState())
 	{
-	case GENERAL_STATE::menu :{
+	case GENERAL_STATE::menu:{
 								 menu1->draw();
 	}break;
 	case GENERAL_STATE::instructions:{
-								 instructionScreen->draw();
+										 instructionScreen->draw();
 	}break;
 	case GENERAL_STATE::game:{
 								 dxFont.setFontColor(gameNS::FONT_COLOR);
 								 background->draw();
-								 ground->draw();    	
-								 cannonball->draw();
+								 ground->draw();
+								 cannonball->draw();					//in real game, Cannonball should be drawn later, when wormhole appears
 								 turret->draw();
 								 tank->draw();
 								 tankHealth->draw();
@@ -806,7 +895,7 @@ void Descent::render()
 
 								 for (int i = 0; i < currentActivePowerups; i++)
 									 array_powerups[i]->draw();
-								 
+
 								 if (assistTank->getActive())
 									 assistTank->draw();
 
@@ -820,10 +909,10 @@ void Descent::render()
 								 {
 								 case WAVE_STATE::pauseWave:{
 																waveNumberText->print("Wave 1", GAME_HEIGHT / 2, GAME_WIDTH / 2); // need to change to picture
-																
+
 								 }break;
 								 case WAVE_STATE::wave1:{
-			
+									 
 								 }break;
 								 case WAVE_STATE::wave2:{
 
@@ -837,7 +926,7 @@ void Descent::render()
 															}
 								 }break;
 								 }
-								 
+
 	}break;
 	case GENERAL_STATE::paused:{
 								   pauseText->print("Paused", GAME_HEIGHT / 2, GAME_WIDTH / 2);
@@ -848,13 +937,13 @@ void Descent::render()
 									 {
 										 gamewin->draw();
 									 }
-									 else if (gameStatus ==2)
+									 else if (gameStatus == 2)
 									 {
 										 gamelose->draw();
 									 }
 	}break;
 	}
-    graphics->spriteEnd();                  // end drawing sprites
+	graphics->spriteEnd();                  // end drawing sprites
 }
 
 //=============================================================================
@@ -864,31 +953,38 @@ void Descent::render()
 void Descent::releaseAll()
 {
 	//exampleTexture->onLostDevice();
-	gamewinTexture->onLostDevice();
-	gameloseTexture->onLostDevice();
-	pauseTexture->onLostDevice();
-	instructionTexture->onLostDevice();
+
+	shellTexture->onLostDevice();
+	bossTexture->onLostDevice();
 	backgroundTexture->onLostDevice();
-	cannonballTexture->onLostDevice();
 	groundTexture->onLostDevice();
+	cannonballTexture->onLostDevice();
 	spaceshipTexture->onLostDevice();
 	spaceship_bulletTexture->onLostDevice();
+	menu1Texture->onLostDevice();
 	tankTexture->onLostDevice();
 	turretTexture->onLostDevice();
 	tankHealthTexture->onLostDevice();
+	pauseTexture->onLostDevice();
+	instructionTexture->onLostDevice();
+	gamewinTexture->onLostDevice();
+	gameloseTexture->onLostDevice();
 	bossLaserTexture->onLostDevice();
-	shellTexture->onLostDevice();
-	bossTexture->onLostDevice();
 	assistTankTexture->onLostDevice();
 	assistTankBulletTexture->onLostDevice();
 	powerup_timeSlow_texture->onLostDevice();
-	powerup_restoreHealth_texture->onLostDevice();
+	powerup_shield_texture->onLostDevice();
 	powerup_increaseTankSpeed_texture->onLostDevice();
 	powerup_timeLock_texture->onLostDevice();
 	powerup_maxPower_texture->onLostDevice();
 	powerup_passerbyTank_texture->onLostDevice();
-    Game::releaseAll();
-    return;
+	despawnSpaceships();
+	despawnPowerups();
+	despawnPowerupsDrawingSpace();
+	despawnSpaceshipBullets();
+	despawnAssistTankBullets();
+	Game::releaseAll();
+	return;
 }
 
 //=============================================================================
@@ -897,33 +993,33 @@ void Descent::releaseAll()
 //=============================================================================
 void Descent::resetAll()
 {
-    //exampleTexture->onResetDevice();
-	gamewinTexture->onResetDevice();
-	gameloseTexture->onResetDevice();
-	pauseTexture->onResetDevice();
-	instructionTexture->onResetDevice();
+	//exampleTexture->onResetDevice();
+	shellTexture->onResetDevice();
+	bossTexture->onResetDevice();
 	backgroundTexture->onResetDevice();
-	cannonballTexture->onResetDevice();
 	groundTexture->onResetDevice();
+	cannonballTexture->onResetDevice();
 	spaceshipTexture->onResetDevice();
 	spaceship_bulletTexture->onResetDevice();
+	menu1Texture->onResetDevice();
 	tankTexture->onResetDevice();
 	turretTexture->onResetDevice();
 	tankHealthTexture->onResetDevice();
+	pauseTexture->onResetDevice();
+	instructionTexture->onResetDevice();
+	gamewinTexture->onResetDevice();
+	gameloseTexture->onResetDevice();
 	bossLaserTexture->onResetDevice();
-	shellTexture->onResetDevice();
-	bossTexture->onResetDevice();
 	assistTankTexture->onResetDevice();
 	assistTankBulletTexture->onResetDevice();
 	powerup_timeSlow_texture->onResetDevice();
-	powerup_restoreHealth_texture->onResetDevice();
+	powerup_shield_texture->onResetDevice();
 	powerup_increaseTankSpeed_texture->onResetDevice();
 	powerup_timeLock_texture->onResetDevice();
 	powerup_maxPower_texture->onResetDevice();
 	powerup_passerbyTank_texture->onResetDevice();
-	cannonball->resetAll();
-    Game::resetAll();
-    return;
+	Game::resetAll();
+	return;
 }
 
 //=============================================================================
@@ -939,11 +1035,13 @@ void Descent::loadAudio(std::string source)
 //=============================================================================
 void Descent::initializeTank()
 {
+	std::cout << "Tank...";
 	tank->setFrames(PlayerNS::START_FRAME, PlayerNS::END_FRAME);
 	tank->setCurrentFrame(PlayerNS::START_FRAME);
 
 	tank->setX(GAME_WIDTH / 2);
 	tank->setY(GROUND_LEVEL_HEIGHT - PLAYER_HEIGHT + 2.0f);
+	
 	tank->flipHorizontal(false); 
 
 	tankHealth->setCurrentFrame(0);
@@ -959,6 +1057,8 @@ void Descent::initializeTank()
 	cannonball->setY(tank->getY());
 	cannonball->initialiseChargingbar(tank->getX(), tank->getY());
 
+	std::cout << "loaded." << std::endl;
+
 }
 
 //=============================================================================
@@ -971,10 +1071,10 @@ void Descent::acquirePlayerMovementPatterns()
 	int positionOriginal = 0;
 	int positionFinal = 0;
 	int offsetFromOriginal = 0;
-		
+
 	positionOriginal = tank->getX() + (tank->getWidth() / 2);
 
-	Sleep(1000);		
+	Sleep(1000);
 
 	positionFinal = tank->getX() + (tank->getWidth() / 2);
 
@@ -989,7 +1089,7 @@ void Descent::acquirePlayerMovementPatterns()
 		offsetFromOriginal = abs(offsetFromOriginal);
 
 	acquiredPlayerSpeed = offsetFromOriginal;		//in 1 second, player has moved pO - pF distance
-	acquiredPlayerDirectionIsRight = tank->getTankDirection(); 
+	acquiredPlayerDirectionIsRight = tank->getTankDirection();
 
 	std::cout << "acquired player speed :" << acquiredPlayerSpeed << ". Is player moving right? " << acquiredPlayerDirectionIsRight << std::endl;
 
@@ -1020,7 +1120,7 @@ void Descent::applyPowerupEffect(int powerupCode)
 	case POWERUP_RESTORE_HEALTH_CODE:
 	{
 							audio[5]->play();
-							std::async(&Descent:: applyPowerupEffect_restoreHealth, this);
+							std::async(&Descent:: applyPowerupEffect_shield, this);
 							//this doesn't *need* to be in a thread, but if not it makes everything expire faster for some reason
 	}break;
 
@@ -1046,11 +1146,14 @@ void Descent::applyPowerupEffect(int powerupCode)
 
 	case POWERUP_TANK_ASSIST_CODE:
 	{
-							
-							std::async(&Descent::applyPowerupEffect_tankAssist, this);
+									 audio[9]->play();
+							 std::async(&Descent::applyPowerupEffect_tankAssist, this);
 	}break;
 
 	}
+
+	addToScore(POWERUP_REWARD_SCORE);
+
 }
 
 #pragma region Individual Powerup Effects here
@@ -1075,15 +1178,16 @@ void Descent::applyPowerupEffect_timeSlow()
 
 		if (gameControl.getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
 		{
-			
+			std::cout << "powerup: " << getSecondsPassed()<< std::endl;
 			if ((fmod(getSecondsPassed(), SECOND) == 0))
 			{
 				//every second in processor, check for real-time update
 				time(&clockTimer);  //get and update current time
 				seconds = difftime(clockTimer, startingTime);
+				Sleep(950);
 			}
 
-			if (seconds == POWERUP_INCREASE_TANK_SPEED_DURATION)
+			if (seconds >= POWERUP_INCREASE_TANK_SPEED_DURATION)
 			{
 
 				timeModifier = GAME_BASE_TIME_MODIFIER;
@@ -1101,38 +1205,13 @@ void Descent::applyPowerupEffect_timeSlow()
 
 }
 
-void Descent::applyPowerupEffect_restoreHealth()
-{
-	time_t clockTimer;
-	double seconds = 0;
-
-	int startingTime = time(&clockTimer);
-
-
-	//for one player only
-	if (tank->getHealth() < PLAYER_MAX_HEALTH)
-	{
-		tank->setHealth(tank->getHealth() + POWERUP_RESTORE_HEALTH_VALUE);
-
-		if (tank->getHealth() > PLAYER_MAX_HEALTH)
-			tank->setHealth(PLAYER_MAX_HEALTH);
-	}
-
-	std::cout << "Player health restored " << std::endl;
-
-	//for multiple players
-	//duplicate code for 2nd player (assuming both players are alive)
-	
-	//add to score
-}
-
-void Descent::applyPowerupEffect_increaseTankSpeed()
+void Descent::applyPowerupEffect_shield()
 {
 	isPowerupInProgress = true;
-	tank->setSpeed(tank->getSpeed()*POWERUP_INCREASE_TANK_SPEED_FACTOR);	//increases tank speed
+	setPlayerDamageTakenModifier(POWERUP_SHIELD_DAMAGE_MODIFIER);
 
 	clock_t timer = clock();//start timer
-	
+
 	time_t clockTimer;
 	double seconds = 0;
 
@@ -1144,7 +1223,7 @@ void Descent::applyPowerupEffect_increaseTankSpeed()
 
 		if (gameControl.getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
 		{
-			
+			std::cout << "powerup: " << getSecondsPassed() << std::endl;
 			if ((fmod(getSecondsPassed(), SECOND) == 0))
 			{
 				//every second in processor, check for real-time update
@@ -1152,10 +1231,52 @@ void Descent::applyPowerupEffect_increaseTankSpeed()
 				time(&clockTimer);  //get and update current time
 
 				seconds = difftime(clockTimer, startingTime);
-
+				Sleep(950);
 			}
 
-			if (seconds ==  POWERUP_INCREASE_TANK_SPEED_DURATION)
+			if (seconds >= POWERUP_SHIELD_DURATION)
+			{
+				std::cout << "Tank SHIELD powerup over, speed set back to - " << tank->getSpeed() << std::endl;
+				loop = false;	//breaks the loop, stops thread
+			}
+
+		}
+
+	}
+	isPowerupInProgress = false;
+	
+}
+
+void Descent::applyPowerupEffect_increaseTankSpeed()
+{
+	isPowerupInProgress = true;
+	tank->setSpeed(tank->getSpeed()*POWERUP_INCREASE_TANK_SPEED_FACTOR);	//increases tank speed
+
+	clock_t timer = clock();//start timer
+
+	time_t clockTimer;
+	double seconds = 0;
+
+	int startingTime = time(&clockTimer);
+
+	bool loop = true;
+	while (loop)
+	{
+
+		if (gameControl.getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
+		{
+			std::cout << "powerup: " << getSecondsPassed()<< std::endl;
+			if ((fmod(getSecondsPassed(), SECOND) == 0))
+			{
+				//every second in processor, check for real-time update
+
+				time(&clockTimer);  //get and update current time
+
+				seconds = difftime(clockTimer, startingTime);
+				Sleep(950);
+			}
+
+			if (seconds >= POWERUP_INCREASE_TANK_SPEED_DURATION)
 			{
 
 				tank->setSpeed(PLAYER_BASE_SPEED);	//reset speed back to base value
@@ -1196,24 +1317,24 @@ void Descent::applyPowerupEffect_timeLock()
 
 		if (gameControl.getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
 		{
-			
+			std::cout << "powerup: " << getSecondsPassed()<< std::endl;
 			if ((fmod(getSecondsPassed(), SECOND) == 0))
 			{
 				//every second in processor, check for real-time update
 				time(&clockTimer);  //get and update current time
 				seconds = difftime(clockTimer, startingTime);
+				Sleep(950);
 			}
-
 			if (seconds == (POWERUP_TIME_LOCK_DURATION - POWERUP_TIME_LOCK_UNLOCK_SOUND_DURATION))
 				audio[10]->play();
 
-			if (seconds == POWERUP_TIME_LOCK_DURATION)
+			if (seconds >= POWERUP_TIME_LOCK_DURATION)
 			{
 
 				timeModifier = GAME_BASE_TIME_MODIFIER;
 				std::cout << "Time lock duration over, resetting back to normal time" << std::endl;
 				loop = false;	//breaks the loop, stops thread
-				
+
 			}
 
 		}
@@ -1247,7 +1368,7 @@ void Descent::applyPowerupEffect_maxPower()
 
 		if (gameControl.getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
 		{
-			
+			std::cout << "powerup: " << getSecondsPassed()<< std::endl;
 			if ((fmod(getSecondsPassed(), SECOND) == 0))
 			{
 				//every second in processor, check for real-time update
@@ -1255,10 +1376,10 @@ void Descent::applyPowerupEffect_maxPower()
 				time(&clockTimer);  //get and update current time
 
 				seconds = difftime(clockTimer, startingTime);
-
+				Sleep(950);
 			}
 
-			if (seconds == POWERUP_MAX_POWER_DURATION)
+			if (seconds >= POWERUP_MAX_POWER_DURATION)
 			{
 
 				//set tank power to normal
@@ -1296,19 +1417,20 @@ void Descent::applyPowerupEffect_tankAssist()
 
 		if (gameControl.getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
 		{
-			
+			std::cout << "powerup: " << getSecondsPassed()<< std::endl;
 			if (fmod(getSecondsPassed(), SECOND) == 0)
 			{
 				//every second in processor, check for real-time update
 				time(&clockTimer);  //get and update current time
 				seconds = difftime(clockTimer, startingTime);
+				Sleep(950);
 			}
 
 			if (fmod(seconds, ASSIST_TANK_ATTACK_FREQUENCY) == 0 && currentActiveTankAssistBullets < MAX_NO_OF_ASSIST_TANK_BULLETS)	//fires bullet every X seconds
 			{
 				//creates bullet
 				//add bullet to array
-				
+
 				Assist_Tank_bullet* assist_bullet = new Assist_Tank_bullet();
 
 				if (!assist_bullet->initialize(this, Assist_Tank_bullet_NS::WIDTH, Assist_Tank_bullet_NS::HEIGHT, Assist_Tank_bullet_NS::TEXTURE_COLS, assistTankBulletTexture))
@@ -1324,7 +1446,7 @@ void Descent::applyPowerupEffect_tankAssist()
 				//std::cout << "Passerby tank pew  " << seconds << std::endl;
 			}
 
-			if (seconds == POWERUP_TANK_ASSIST_DURATION)
+			if (seconds >= POWERUP_TANK_ASSIST_DURATION)
 			{
 				///set passerby tank to inactive, let update take care of the rest
 				assistTank->setActive(false);
@@ -1354,12 +1476,12 @@ void Descent::addToScore(int scoreToAdd)
 		isCurrentScoreHighestScore = true;		//triggers the file saving clause
 		hiscore = currentScore;					//also update hiscore
 
-		/*if (isCurrentScoreHighestScore)
+		if (isCurrentScoreHighestScore)
 		{
-			std::ofstream out(HISCORE_FILE);
-			out << 5000;
-			out.close();
-		}*/
+		std::ofstream out(HISCORE_FILE);
+		out << hiscore;
+		out.close();
+		}
 
 	}
 }
@@ -1372,18 +1494,20 @@ void Descent::addToScore(int scoreToAdd)
 void Descent::beginSimpleSpaceshipsFiringSequence()
 {
 	//run for loop that iterates through every spaceship
-		//for each spaceship, check and compare seed
-			//if chance misses
-				//nothing happens
-			//if chance hit, 
-				//create bullet
-				//set bullet to target X, where x is player position at time of firing
-				//set and calculate bullet degree to relevant X
-				//set bullet active, let update take care of movment
-		
+	//for each spaceship, check and compare seed
+	//if chance misses
+	//nothing happens
+	//if chance hit, 
+	//create bullet
+	//set bullet to target X, where x is player position at time of firing
+	//set and calculate bullet degree to relevant X
+	//set bullet active, let update take care of movment
+
 	//break once max shots is fired or all spaceships iterated through
 
 	isAllSpaceshipsFiring = true;
+
+	std::cout << "FIRING COMMENCING. YOU SHOULD NOT SEE THIS TWICE." << std::endl;
 
 	for (int i = 0; i < currentActiveSpaceships; i++)
 	{
@@ -1396,7 +1520,8 @@ void Descent::beginSimpleSpaceshipsFiringSequence()
 			double generatedChance = rand() % 100;
 			if (WAVE_1_SPACESHIPS_FIRE_CHANCE >= generatedChance)
 			{
-				std::cout << "Spaceship has decided to shoot " << std::endl;
+				mciSendString("play resources\\music\\spaceship_attack_sound.wav", NULL, 0, NULL);
+
 				Spaceship_bullet* bullet = new Spaceship_bullet();
 
 				if (!bullet->initialize(this, Spaceship_bullet_NS::WIDTH, Spaceship_bullet_NS::HEIGHT, Spaceship_bullet_NS::TEXTURE_COLS, spaceship_bulletTexture))
@@ -1411,17 +1536,17 @@ void Descent::beginSimpleSpaceshipsFiringSequence()
 
 				array_spaceship_bullets.push_back(bullet);
 				currentActiveSpaceshipBullets++;
-				std::cout << "fired a bullet " << std::endl;
+
 			}
 
 		}
 
-		if (currentActiveSpaceshipBullets > maxAmountOfAllowedBulletsPerVolley)
+		if (currentActiveSpaceshipBullets >= maxAmountOfAllowedBulletsPerVolley)
 		{
 			std::cout << "too much bullets, stopped " << currentActiveSpaceshipBullets << " to " << maxAmountOfAllowedBulletsPerVolley << std::endl;
 			break;
 		}
-			
+
 	}
 
 	isAllSpaceshipsFiring = false;
@@ -1443,14 +1568,14 @@ void Descent::beginAdvancedSpaceshipsFiringSequence()
 
 		if (currentActiveSpaceshipBullets < maxAmountOfAllowedBulletsPerVolley)
 		{
-			
+
 			//current max shots per volley not yet reached, so shoot more bullets
 			//if false, stop shooting new bullets, end volley
 
 			double generatedChance = rand() % 100;
 			if (WAVE_1_SPACESHIPS_FIRE_CHANCE >= generatedChance)
 			{
-				
+
 				Spaceship_bullet* bullet = new Spaceship_bullet();
 
 				if (!bullet->initialize(this, Spaceship_bullet_NS::WIDTH, Spaceship_bullet_NS::HEIGHT, Spaceship_bullet_NS::TEXTURE_COLS, spaceship_bulletTexture))
@@ -1477,11 +1602,11 @@ void Descent::beginAdvancedSpaceshipsFiringSequence()
 				std::cout << "Spaceship shoots at " << bullet->getTarget() << ", player position is "
 					<< tank->getX() + (tank->getWidth() / 2) << std::endl;
 				//acquiredPlayerSPeed * bulletY/Spaceship_bullet_speed
-					//this calculates how far the bullet needs to lead the shot
+				//this calculates how far the bullet needs to lead the shot
 
 				array_spaceship_bullets.push_back(bullet);
 				currentActiveSpaceshipBullets++;
-
+				mciSendString("play resources\\music\\spaceship_attack_sound.wav", NULL, 0, NULL);
 			}
 
 		}
@@ -1505,17 +1630,17 @@ void Descent::moveSpaceships()
 	//pseudo code for this section
 
 	//are ships moving right?
-		//if yes, check for next position of every ship
-			//if any ship is reaching past the screen border, update true for shipsReadyToShift
-			//if not, update false for shipsReadyToShift
-		//if not, do the same for above, but for left side
+	//if yes, check for next position of every ship
+	//if any ship is reaching past the screen border, update true for shipsReadyToShift
+	//if not, update false for shipsReadyToShift
+	//if not, do the same for above, but for left side
 
 	//above segment is to verify if ships need to be shifted to the next row, or they just need to move in the same direction
 
 	//is shipsReadyToShift?
-		//if true, shift all ships downwards and change to opposite moving direction
-		//if false, move them all towards current direction
-	
+	//if true, shift all ships downwards and change to opposite moving direction
+	//if false, move them all towards current direction
+
 	if (isAllSpaceshipMovingRight)
 	{
 		//spaceships are CURRENTLY moving to the right
@@ -1587,7 +1712,7 @@ void Descent::moveSpaceships()
 				array_spaceships[i]->setX(array_spaceships[i]->getX() - SPACESHIP_MOVEMENT_DISTANCE); //ships moves its width horizontally to the left
 				Sleep(5);			//without this line spaceships will move unhindered, not sure why
 			}
-			
+
 		}
 	}
 
@@ -1602,7 +1727,7 @@ void Descent::spawnPowerup()
 {
 	srand(time(NULL));
 	//get random seed based on amount of possible powerups
-	
+
 	int randomPowerupIndex = (rand() % totalAmtOfPowerupVariety);
 	int randomPowerupXPosition = (rand() % GAME_WIDTH - POWERUP_WIDTH);	// for x position of powerup
 
@@ -1638,11 +1763,12 @@ void Descent::timer_start()
 		if (gameControl.getGeneralState() == GENERAL_STATE::game)	//timer only counts down in-game
 		{
 			setSecondsPassed((clock() - timer) / (double)CLOCKS_PER_SEC);  //convert computer timer to real life seconds
-
+			
 			//MOVE SPACESHIPS
 			if ((fmod(getSecondsPassed(), SPACESHIP_MOVE_FREQUENCY*timeModifier)) == 0)
 			{
 				moveSpaceships();
+				
 			}
 
 			//SIMPLE WAVE 1 SPACESHIP SHOOTING
@@ -1651,9 +1777,8 @@ void Descent::timer_start()
 				&& currentActiveSpaceshipBullets == 0
 				&& !isAllSpaceshipsFiring)
 			{	//if wave is wave 1, start simple spaceship shooting
-
 				std::async(&Descent::beginSimpleSpaceshipsFiringSequence, this);
-
+				Sleep(5);	//to prevent thread overload
 			}
 
 			//ADVANCED WAVE 2 SPACESHIP SHOOTING
@@ -1663,9 +1788,8 @@ void Descent::timer_start()
 			{
 
 				std::async(&Descent::beginSimpleSpaceshipsFiringSequence, this);
-
 				std::async(&Descent::beginAdvancedSpaceshipsFiringSequence, this);
-
+				Sleep(5);	//to prevent thread overload
 			}
 
 			//SPAWN POWERUP
@@ -1699,8 +1823,9 @@ void Descent::spawnSpaceships(int waveNumber)
 	}break;
 	case 2: {
 				amountOfRows = WAVE_2_SPACESHIPS_AMT_OF_ROWS;
-				spaceshipHealth = WAVE_2_SPACESHIPS_HEALTH;		
+				spaceshipHealth = WAVE_2_SPACESHIPS_HEALTH;
 				hasWaveTwoSpawned = true;
+				isCalculatingPlayerPattern = false; //is not null anymore, AI now activates
 	}break;
 
 	case 3: {
@@ -1710,14 +1835,11 @@ void Descent::spawnSpaceships(int waveNumber)
 	}break;
 
 	}
-	
+
 	//place inside game state wave 1 when created
 
 	int x = 0;	//starting position of first spaceship is a unit length away the left side of the screen
 	int y = 0;	//to be manipulated in first for loop
-
-	//wave one
-	std::cout << "GAME WIDTH DIVIDED BY SHIP WIDTH (spaceships per row):" << GAME_WIDTH / (HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS) << std::endl;
 
 	for (int i = 0; i < amountOfRows; i++)
 	{
@@ -1755,11 +1877,8 @@ void Descent::spawnSpaceships(int waveNumber)
 				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship game object"));
 
 			array_spaceships.push_back(spaceship);
-			std::cout << "Adding spaceship at row " << i + 1 << "(no. " << j + 1 << " in row) for wave one at x: " << spaceship->getX() << " y: " << spaceship->getY() << "." << std::endl;
-
+		
 			currentActiveSpaceships++;
-
-			std::cout << "Current amt of spaceships: " << currentActiveSpaceships << "." << std::endl;
 
 			if (currentActiveSpaceships == maxActiveSpaceships)
 				break;
@@ -1793,7 +1912,7 @@ void Descent::loadAllAudio()
 	loadAudio("resources\\music\\explode.wav"); //2
 	loadAudio("resources\\music\\powerup_spawn_soundeffect.wav"); //3
 	loadAudio("resources\\music\\powerup_timeSlow_soundeffect.wav"); //4
-	loadAudio("resources\\music\\powerup_restoreHealth_soundeffect.wav"); //5
+	loadAudio("resources\\music\\powerup_shield_soundeffect.wav"); //5
 	loadAudio("resources\\music\\powerup_increaseTankSpeed_soundeffect.wav"); //6
 	loadAudio("resources\\music\\powerup_timeLock_locking_soundeffect.wav"); //7
 	loadAudio("resources\\music\\powerup_maxPower_soundeffect.wav"); //8
@@ -1850,7 +1969,8 @@ void Descent::despawnSpaceships()
 	std::cout << "before despawinning" << std::endl;
 	std::cout << "Array_Spaceship size: " << array_spaceships.size() << std::endl;
 	std::cout << "Current active spaceship size: "<<currentActiveSpaceships << std::endl;
-	for (int i = currentActiveSpaceships-1; i >= 0; i--)
+	
+	for (int i = currentActiveSpaceships - 1; i >= 0; i--)
 	{
 		array_spaceships[i]->setVisible(false);
 		std::cout << "Spaceship " << i << " is deleted" << std::endl;
@@ -1858,9 +1978,89 @@ void Descent::despawnSpaceships()
 		array_spaceships.erase(array_spaceships.begin() + i);
 		currentActiveSpaceships--;
 	}
+
+	if (array_spaceships.size() != 0)
+		std::cout << "WARNING: Spaceship array is not emptied correctly." << std::endl;
+	
 	std::cout << "after despawinning" << std::endl;
 	std::cout << "Array_Spaceship size: " << array_spaceships.size() << std::endl;
 	std::cout << "Current active spaceship size: "<< currentActiveSpaceships << std::endl;
+}
+
+//=============================================================================
+// cleans up powerup arrays
+//=============================================================================
+void Descent::despawnPowerups()
+{
+	for (int i = currentActivePowerups - 1; i >= 0; i--)
+	{
+		array_powerups[i]->setVisible(false);
+		std::cout << "Powerup " << i << " is deleted" << std::endl;
+		delete array_powerups[i];
+		array_powerups.erase(array_powerups.begin() + i);
+		currentActivePowerups--;
+	}
+
+	if (array_powerups.size() != 0)
+		std::cout << "WARNING: Powerup array is not emptied correctly." << std::endl;
+
+}
+
+//=============================================================================
+// cleans up powerup drawing space arrays
+//=============================================================================
+void Descent::despawnPowerupsDrawingSpace()
+{
+	for (int i = totalAmtOfPowerupVariety - 1; i >= 0; i--)
+	{
+		array_powerups_drawingSpace[i]->setVisible(false);
+		std::cout << "Powerup (original) " << i << " is deleted" << std::endl;
+		delete array_powerups_drawingSpace[i];
+		array_powerups_drawingSpace.erase(array_powerups_drawingSpace.begin() + i);
+		currentActivePowerups--;
+	}
+
+	if (array_powerups_drawingSpace.size() != 0)
+		std::cout << "WARNING: Powerup drawingSpace array is not emptied correctly." << std::endl;
+
+}
+
+//=============================================================================
+// cleans up powerup arrays
+//=============================================================================
+void Descent::despawnSpaceshipBullets()
+{
+	for (int i = currentActiveSpaceshipBullets - 1; i >= 0; i--)
+	{
+		array_spaceship_bullets[i]->setVisible(false);
+		std::cout << "Spaceship bullet " << i << " is deleted" << std::endl;
+		delete array_spaceship_bullets[i];
+		array_spaceship_bullets.erase(array_spaceship_bullets.begin() + i);
+		currentActiveSpaceshipBullets--;
+	}
+
+	if (array_spaceship_bullets.size() != 0)
+		std::cout << "WARNING: Spaceship bullets array is not emptied correctly." << std::endl;
+
+}
+
+
+//=============================================================================
+// cleans up powerup arrays
+//=============================================================================
+void Descent::despawnAssistTankBullets()
+{
+	for (int i = currentActiveTankAssistBullets - 1; i >= 0; i--)
+	{
+		array_tank_assist_bullets[i]->setVisible(false);
+		std::cout << "Assist-tank bullet " << i << " is deleted" << std::endl;
+		delete array_tank_assist_bullets[i];
+		array_tank_assist_bullets.erase(array_tank_assist_bullets.begin() + i);
+		currentActiveTankAssistBullets--;
+	}
+
+	if (array_tank_assist_bullets.size() != 0)
+		std::cout << "WARNING: Assist-tank bullets array is not emptied correctly." << std::endl;
 
 }
 
@@ -1893,7 +2093,7 @@ void Descent::loadHighScore()
 //=============================================================================
 void Descent::restartGame()
 {
-	std::cout << "restart game" << std::endl;
+	std::cout << "Restart game" << std::endl;
 	timerLoop = false;
 	initializeTank();
 
@@ -1923,14 +2123,14 @@ void Descent::restartGame()
 	std::async(&Descent::timer_start, this); //run timer thread while main loop is contiuing
 
 	powerup_timeSlow->setPowerupCode(POWERUP_TIME_SLOW_CODE);
-	powerup_restoreHealth->setPowerupCode(POWERUP_RESTORE_HEALTH_CODE);
+	powerup_shield->setPowerupCode(POWERUP_RESTORE_HEALTH_CODE);
 	powerup_increaseTankSpeed->setPowerupCode(POWERUP_INCREASE_TANK_SPEED_CODE);
 	powerup_timeLock->setPowerupCode(POWERUP_TIME_LOCK_CODE);
 	powerup_maxPower->setPowerupCode(POWERUP_MAX_POWER_CODE);
 	powerup_passerbyTank->setPowerupCode(POWERUP_TANK_ASSIST_CODE);
 
 	array_powerups_drawingSpace.push_back(powerup_timeSlow);
-	array_powerups_drawingSpace.push_back(powerup_restoreHealth);
+	array_powerups_drawingSpace.push_back(powerup_shield);
 	array_powerups_drawingSpace.push_back(powerup_increaseTankSpeed);
 	array_powerups_drawingSpace.push_back(powerup_timeLock);
 	array_powerups_drawingSpace.push_back(powerup_maxPower);

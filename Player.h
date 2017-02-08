@@ -39,7 +39,6 @@ private:
 	int		tankAngle;
 	bool	tankDirection;
 
-
 public:
 	// constructor
 	Player();
