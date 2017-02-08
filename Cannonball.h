@@ -46,7 +46,7 @@ private:
 	int		forcePower;
 	TextureManager* chargingTexture;
 	Image* chargingBar;
-
+	int speedMultiplier;
 public:
 	// constructor
 	Cannonball();
