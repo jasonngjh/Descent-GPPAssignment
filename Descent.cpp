@@ -28,7 +28,6 @@ Descent::Descent()
 	pauseText = new TextDX();
 	waveNumberText = new TextDX();
 	powerup_notification_text = new TextDX();
-
 	//textures
 	shellTexture = new TextureManager();
 	bossTexture = new TextureManager();
@@ -38,10 +37,8 @@ Descent::Descent()
 	spaceshipTexture = new TextureManager();
 	spaceship_bulletTexture = new TextureManager();
 	menu1Texture = new TextureManager();
-
 	tankTexture = new TextureManager();
 	tankHealthTexture = new TextureManager();
-
 	turretTexture = new TextureManager();
 	pauseTexture = new TextureManager();
 	instructionTexture = new TextureManager();
@@ -57,7 +54,6 @@ Descent::Descent()
 	powerup_maxPower_texture = new TextureManager();
 	powerup_passerbyTank_texture = new TextureManager();
 	tankHealthTexture = new TextureManager();
-
 	//images
 	background = new Image();
 	ground = new Image();
@@ -69,7 +65,6 @@ Descent::Descent()
 	instructionScreen = new Image();
 	gamewin = new Image();
 	gamelose = new Image();
-
 	//entities
 	tank = new Player();
 	bosslaser = new BossLaser();
@@ -83,7 +78,6 @@ Descent::Descent()
 //=============================================================================
 Descent::~Descent()
 {
-	
 	SAFE_DELETE(pauseText);
 	SAFE_DELETE(waveNumberText);
 	SAFE_DELETE(powerup_notification_text);
@@ -112,11 +106,6 @@ Descent::~Descent()
 		SAFE_DELETE(a);
 	}
 	SAFE_DELETE(powerup_notification_text);
-	despawnSpaceships();
-	despawnPowerups();
-	despawnPowerupsDrawingSpace();
-	despawnSpaceshipBullets();
-	despawnAssistTankBullets();
 	releaseAll();
 }
 
@@ -127,6 +116,8 @@ Descent::~Descent()
 void Descent::initialize(HWND hwnd)
 {
 	std::cout << "initialising game" << std::endl;
+
+	std::thread loadingAudioThread(&Descent::loadAllAudio,this);
 
 	std::cout << "Fonts...";
 
@@ -258,15 +249,13 @@ void Descent::initialize(HWND hwnd)
 	background->setFrames(BACKGROUND_START_FRAME,BACKGROUND_END_FRAME);
 	background->setCurrentFrame(BACKGROUND_START_FRAME);
 
-	std::cout << "Audio...";
-	loadAllAudio();
-	audio[0]->setLoop(true); // background music
-	audio[0]->play();
-	std::cout << "loaded. " << std::endl;
-
 	ground->setX(0);
 	ground->setScale((float)(GAME_WIDTH / ground->getWidth()));
 	ground->setY((int)GROUND_LEVEL_HEIGHT);		//sets ground to 3/4 of game width
+
+	loadingAudioThread.join();
+	audio[0]->setLoop(true); // background music
+	audio[0]->play();
 
 	initializeTank();
 
@@ -666,7 +655,6 @@ void Descent::update()
 	case GENERAL_STATE::gameOver:{
 									 if (gameStatus == 1)
 									 {
-
 										 gamewin->update(frameTime);
 										 if (input->isKeyDown(DOWN_KEY)){
 											 gamewin->setCurrentFrame(WINLOSE_END_FRAME);
@@ -737,7 +725,6 @@ void Descent::collisions()
 				delete array_bosslaser[i];
 				array_bosslaser.erase(array_bosslaser.begin() + i);
 			}
-
 		}
 		
 		if (shell->collidesWith(*tank, collisionVector))
@@ -796,6 +783,7 @@ void Descent::collisions()
 
 					if (cannonball->getForcePower() == 0)
 					{
+						cannonball->hit(spaceShip);
 						cannonball->hit(land);
 					}
 				}
@@ -807,7 +795,7 @@ void Descent::collisions()
 			if (cannonball->getActive())
 			{
 				tank->setHealth(tank->getHealth() - (cannonball->getForcePower()*getPlayerDamageTakenModifier()));
-				cannonball->hit(land);
+				cannonball->hit(player);
 			}
 		}
 
@@ -869,7 +857,7 @@ void Descent::render()
 								 menu1->draw();
 	}break;
 	case GENERAL_STATE::instructions:{
-										 instructionScreen->draw();
+								 instructionScreen->draw();
 	}break;
 	case GENERAL_STATE::game:{
 								 dxFont.setFontColor(gameNS::FONT_COLOR);
@@ -970,6 +958,11 @@ void Descent::releaseAll()
 	powerup_timeLock_texture->onLostDevice();
 	powerup_maxPower_texture->onLostDevice();
 	powerup_passerbyTank_texture->onLostDevice();
+	despawnSpaceships();
+	despawnPowerups();
+	despawnPowerupsDrawingSpace();
+	despawnSpaceshipBullets();
+	despawnAssistTankBullets();
 	Game::releaseAll();
 	return;
 }
@@ -1894,6 +1887,7 @@ void Descent::resetShellPos()
 //=============================================================================
 void Descent::loadAllAudio()
 {
+	std::cout << "loading audio" << std::endl;
 	loadAudio("resources\\music\\background.ogg"); //0
 	loadAudio("resources\\music\\tankMoving.wav"); //1
 	loadAudio("resources\\music\\explode.wav"); //2
@@ -1905,6 +1899,7 @@ void Descent::loadAllAudio()
 	loadAudio("resources\\music\\powerup_maxPower_soundeffect.wav"); //8
 	loadAudio("resources\\music\\powerup_tankAssist_soundeffect.wav"); //9
 	loadAudio("resources\\music\\powerup_timeLock_unlocking_soundeffect.wav"); //10
+	std::cout << "loaded. " << std::endl;
 }
 
 //=============================================================================
@@ -2148,7 +2143,7 @@ void Descent::restartGame()
 	hasWaveThreeSpawned = false;
 
 	tank->setHealth(PLAYER_MAX_HEALTH);
-	//boss->setHealth();
+	boss->setHealth(BOSS_SPACESHIP_STARTING_HEALTH);
 	gameStatus = 0;
 	currentActiveSpaceships = 0;
 

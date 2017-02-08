@@ -28,7 +28,7 @@ Boss_Spaceship::Boss_Spaceship() :Entity()
 bool Boss_Spaceship::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM)
 {
-	health = SPACESHIP_STARTING_HEALTH;
+	health = BOSS_SPACESHIP_STARTING_HEALTH;
 
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
 }

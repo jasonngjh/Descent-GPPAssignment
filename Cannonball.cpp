@@ -136,16 +136,22 @@ void Cannonball::hit(hitWho target)
 		Image::setVisible(false);
 		spriteData.y = GROUND;//change value to where ur land is changes
 		velocity.y = 0.0;
-		velocity.x = 0.0;	}
+		velocity.x = 0.0;
+	}
+	if (target == spaceShip)
+	{
+		onGround = true;
+		setActive(false);
+	}
 	if (target == bossShip)
 	{
 		setActive(false);
 		onGround = true;
-
-		if (forcePower>0)
-			forcePower -= 1;
-		else forcePower = 0;
-		
+	}
+	if (target == player)
+	{
+		setActive(false);
+		onGround = true;
 	}
 }
 //additional methods here
@@ -319,17 +325,17 @@ void Cannonball::calulateForce(double time)
 	if (time >= 0.0 && time < 1.0)
 	{
 		setForcePower(10);
-		speedMultiplier = 2;
+		speedMultiplier = 1.5;
 	}
 	if (time >= 1.0 && time < 2.0)
 	{
 		setForcePower(25);
-		speedMultiplier = 3;
+		speedMultiplier = 2;
 	}
 	if (time >= 2.0 && time <= 3.0)
 	{
 		setForcePower(50);
-		speedMultiplier = 4;
+		speedMultiplier = 2.75;
 	}
 	boolKeyHold = false;
 	isCharging = false;
