@@ -124,6 +124,7 @@ private:
 	int pauseScreen = 0;
 	int gameOverScreen = 0;
 	float array[3];
+	float array_angle[3];
 	int laserCounter = 0;
 	bool existOnScreen = true;
 	bool missileFire=true;

@@ -53,13 +53,13 @@ void BossLaser::update(float frameTime)
 	//http://jsfiddle.net/LyM87/ cannonball physics
 	//if thrown
 	Entity::update(frameTime);
-	velocity.x= (float)(sin(degree)*BOSSLASER_BASE_SPEED);
-	velocity.y = (float)(cos(degree)*BOSSLASER_BASE_SPEED);
+	velocity.x = (float)(sin(degree*RADTODEGREE)*BOSSLASER_BASE_SPEED);
+	velocity.y = (float)(cos(degree*RADTODEGREE)*BOSSLASER_BASE_SPEED);
 	spriteData.x += velocity.x*frameTime;
 	spriteData.y += velocity.y*frameTime;
-	setFrames(BossLaserNS::START_FRAME, BossLaserNS::END_FRAME);
-	setCurrentFrame(BossLaserNS::START_FRAME);
-	setFrameDelay(BossLaserNS::ANIMATION_DELAY);
+	setFrames(startFrame, endFrame);
+	setCurrentFrame(startFrame);
+	setFrameDelay(frameDelay);
 //	spriteData.x += velocity.x;
 //	spriteData.y += velocity.y;
 	if (spriteData.x > GAME_WIDTH - BossLaserNS::WIDTH*getScale())
@@ -95,4 +95,5 @@ void BossLaser::update(float frameTime)
 
 
 }
+
 

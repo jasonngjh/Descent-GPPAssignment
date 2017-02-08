@@ -271,7 +271,7 @@ void Descent::initialize(HWND hwnd)
 
 	shell->setX(boss->getX() + BOSS_SPACESHIP_WIDTH / 2);
 	shell->setY(boss->getY() + BOSS_SPACESHIP_HEIGHT / 2);
-	shell->setScale(0.045);
+	//shell->setScale(0.045);
 
 	std::cout << "loaded. " << std::endl;
 	
@@ -598,7 +598,7 @@ void Descent::update()
 
 										boss->update(frameTime);
 										shell->update(frameTime, *tank);
-
+										
 										if (array_bosslaser.size() != 0){
 											for (int i = 0; i < array_bosslaser.size(); i++)
 											{
@@ -625,6 +625,7 @@ void Descent::update()
 											gameStatus = 1;
 											gameControl.setGeneralState(GENERAL_STATE::gameOver);
 										}
+										std::cout << "Number of laser in the vector: " << array_bosslaser.size() << std::endl;
 
 			 }break;						 
 		}
@@ -715,11 +716,12 @@ void Descent::collisions()
 {
 	VECTOR2 collisionVector;
 
-	if (gameControl.getGeneralState() == GENERAL_STATE::game)
-	{
+
+	//if (gameControlgetGeneralState() == GENERAL_STATE::game)
+	//{
 		for (int i = 0; i < array_bosslaser.size(); i++)
 		{
-			if (array_bosslaser[i]->collidesWith(*tank, collisionVector))
+			if (array_bosslaser[i]->collidesWith(*tank , collisionVector))
 			{
 				std::cout << "bosslaser hit tank" << array_bosslaser[i] << std::endl;
 				existOnScreen = false;
@@ -842,7 +844,7 @@ void Descent::collisions()
 			}
 		}
 	}
-}
+//}
 
 //=============================================================================
 // Render game items
@@ -1924,6 +1926,9 @@ void Descent::launchBossLaser()
 	array[0] = 45;
 	array[1] = 0;
 	array[2] = -45;
+	array_angle[0] = 20;
+	array_angle[1] = 0;
+	array_angle[2] = -20;
 	for (int i = 0; i < 3; i++)
 	{
 		std::cout << "initialising laser number " << i << std::endl;
@@ -1934,12 +1939,12 @@ void Descent::launchBossLaser()
 		array_bosslaser[i]->setX(boss->getCenterX());
 		array_bosslaser[i]->setY(boss->getY());
 		array_bosslaser[i]->setDegrees(-array[i]);
-		array_bosslaser[i]->setDegree(array[i]);
+		array_bosslaser[i]->setDegree(array_angle[i]);
 		array_bosslaser[i]->setFrames(BossLaserNS::START_FRAME, BossLaserNS::END_FRAME);
 		array_bosslaser[i]->setCurrentFrame(BossLaserNS::START_FRAME);
 		laserCounter++;
 	}
-	existOnScreen = false;
+	//existOnScreen = false;
 }
 
 //=============================================================================
@@ -2081,19 +2086,18 @@ void Descent::restartGame()
 	initializeTank();
 
 	boss->setVelocity(VECTOR2(100, 0)); // VECTOR2(X, Y)
-	launchBossLaser();
+	//launchBossLaser();
 	boss->setFrames(Boss_SpaceshipNS::START_FRAME, Boss_SpaceshipNS::END_FRAME);
 	boss->setCurrentFrame(Boss_SpaceshipNS::START_FRAME);
 	boss->setX(GAME_WIDTH / 4 + 45);
 	boss->setY(20);
-	boss->setScale(0.75);
 	currentActiveSpaceships = 0;
 	isAllSpaceshipMovingRight = true;
 	isShipsReadyToShift = false;
 
-	shell->setX(boss->getX() + BOSS_SPACESHIP_WIDTH / 2);
-	shell->setY(boss->getY() + BOSS_SPACESHIP_HEIGHT / 2);
-	shell->setScale(0.045);
+	//shell->setX(boss->getX() + BOSS_SPACESHIP_WIDTH / 2);
+	//shell->setY(boss->getY() + BOSS_SPACESHIP_HEIGHT / 2);
+	//shell->setScale(0.045);
 
 	assistTank->setFrames(ASSIST_TANK_START_FRAME, ASSIST_TANK_END_FRAME);
 	assistTank->setCurrentFrame(ASSIST_TANK_START_FRAME);

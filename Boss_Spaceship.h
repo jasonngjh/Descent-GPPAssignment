@@ -24,7 +24,7 @@ namespace Boss_SpaceshipNS
 	//DERIVED PERMANENT VALUES
 	const int X = GAME_WIDTH / 2 - WIDTH / 2;				// location on screen
 	const int Y = GAME_HEIGHT / 2 - HEIGHT / 2;
-
+	
 }
 
 // inherits from Entity class
@@ -37,6 +37,8 @@ private:
 	Shell shell;
 	Image turret;
 	bool leftright=true;
+	int hitRightCount;
+	bool isTop;
 public:
 	// constructor
 	Boss_Spaceship();
