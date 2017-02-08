@@ -83,6 +83,7 @@ Descent::Descent()
 //=============================================================================
 Descent::~Descent()
 {
+	
 	SAFE_DELETE(pauseText);
 	SAFE_DELETE(waveNumberText);
 	SAFE_DELETE(powerup_notification_text);
@@ -110,22 +111,12 @@ Descent::~Descent()
 	{
 		SAFE_DELETE(a);
 	}
-	for (Spaceship* s : array_spaceships){
-		SAFE_DELETE(s);
-	}
-	for (BossLaser* bs : array_bosslaser){
-		SAFE_DELETE(bs);
-	}
-	for (Spaceship_bullet* sb : array_spaceship_bullets){
-		SAFE_DELETE(sb);
-	}
-	for (Powerup* p : array_powerups){
-		SAFE_DELETE(p);
-	}
-	for (Assist_Tank_bullet* atb : array_tank_assist_bullets){
-		SAFE_DELETE(atb);
-	}
 	SAFE_DELETE(powerup_notification_text);
+	despawnSpaceships();
+	despawnPowerups();
+	despawnPowerupsDrawingSpace();
+	despawnSpaceshipBullets();
+	despawnAssistTankBullets();
 	releaseAll();
 }
 
@@ -149,7 +140,7 @@ void Descent::initialize(HWND hwnd)
 
 	if (!pauseText->initialize(graphics, 62, true, false, "Arial"))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pause text font"));
-	if (!waveNumberText->initialize(graphics, 62, true, false, "Invasion2000"))
+	if (!waveNumberText->initialize(graphics,62, true, false, "Invasion2000"))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing wave number font"));
 	if (!powerup_notification_text->initialize(graphics, 28, false, false, "Arial"))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing powerup notification font"));
@@ -908,7 +899,7 @@ void Descent::render()
 								 switch (waveControl.getWaveState())
 								 {
 								 case WAVE_STATE::pauseWave:{
-																waveNumberText->print("Wave 1", GAME_HEIGHT / 2, GAME_WIDTH / 2); // need to change to picture
+																waveNumberText->print("Wave 1", GAME_HEIGHT / 2, GAME_WIDTH/2 + 60.0f); // need to change to picture
 
 								 }break;
 								 case WAVE_STATE::wave1:{
@@ -978,11 +969,6 @@ void Descent::releaseAll()
 	powerup_timeLock_texture->onLostDevice();
 	powerup_maxPower_texture->onLostDevice();
 	powerup_passerbyTank_texture->onLostDevice();
-	despawnSpaceships();
-	despawnPowerups();
-	despawnPowerupsDrawingSpace();
-	despawnSpaceshipBullets();
-	despawnAssistTankBullets();
 	Game::releaseAll();
 	return;
 }
