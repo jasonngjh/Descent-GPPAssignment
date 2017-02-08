@@ -156,7 +156,7 @@ float Player::getSpeed()
 
 //=============================================================================
 // setTankAngle
-// set the speed of the player
+// set the angle of the player
 //=============================================================================
 void Player::setTankAngle(int a)
 {
@@ -165,7 +165,7 @@ void Player::setTankAngle(int a)
 
 //=============================================================================
 // getSpeed
-// get the speed of the player
+// get the angle of the player
 //=============================================================================
 int Player::getTankAngle()
 {

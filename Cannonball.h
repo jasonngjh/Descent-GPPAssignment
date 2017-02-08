@@ -47,6 +47,7 @@ private:
 	TextureManager* chargingTexture;
 	Image* chargingBar;
 
+
 public:
 	// constructor
 	Cannonball();

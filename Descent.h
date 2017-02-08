@@ -46,8 +46,8 @@ private:
 	TextDX* pauseText;
 	TextDX* waveNumberText;
 	TextDX* powerup_notification_text;
-	GameControl*	gameControl;
-	WaveControl*	waveControl;
+	GameControl	gameControl;
+	WaveControl	waveControl;
 	GENERAL_STATE currentState;
 
 	TextureManager* shellTexture;
@@ -128,11 +128,13 @@ private:
 	bool existOnScreen = true;
 	bool missileFire=true;
 	int gameStatus= 0;
+	bool timerLoop = true;
 
 	//modifiers
 	int timeModifier = GAME_BASE_TIME_MODIFIER; //Default value is 1, value affects time - this value will multiply by 1 second to achieve new time
 	int speedModifier = GAME_BASE_SPEED_MODIFIER; //Default value is 1, value affects speed - this value will be multiplied by speed values to achieve new speed
 	double playerDamageTakenModifier = PLAYER_DAMAGE_TAKEN_MODIFIER;
+	
 public:
 	int currentActiveSpaceships;			//amt of spaceships currently alive (should be dynamically less or equal to maxActiveSpaceships)
 	int currentActiveSpaceshipBullets;		//amt of spaceship bullets active
