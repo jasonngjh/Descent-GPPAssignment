@@ -123,7 +123,7 @@ Descent::~Descent()
 		SAFE_DELETE(atb);
 	}
 	SAFE_DELETE(powerup_notification_text);
-	deleteAll();
+	releaseAll();
 }
 
 //=============================================================================
