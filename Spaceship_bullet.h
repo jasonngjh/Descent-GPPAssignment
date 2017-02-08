@@ -32,6 +32,7 @@ private:
 	bool	isAlive;
 	float	speed = SPACESHIP_BULLET_SPEED;						// X pixels per second
 	int		targetX;
+	int damage = SPACESHIP_BULLET_DAMAGE;
 
 public:
 	// constructor
@@ -39,7 +40,7 @@ public:
 
 	//~Spaceship_bullet();
 
-	int damage = SPACESHIP_BULLET_DAMAGE;
+	
 
 	// inherited member functions
 	virtual void draw();
@@ -53,6 +54,8 @@ public:
 	void setTarget(int x) { targetX = x; }
 	int getTarget() { return targetX; }
 
+	void setDamage(int dmg) { damage = dmg; }
+	int getDamage() { return damage; }
 
 };
 #endif

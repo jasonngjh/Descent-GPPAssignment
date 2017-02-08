@@ -40,8 +40,8 @@ const UINT GAME_HEIGHT = 640;               // height of game in pixels
 const double PI = 3.14159265;
 const float FRAME_RATE = 200.0f;                // the target frame rate (frames/sec)
 const float MIN_FRAME_RATE = 10.0f;             // the minimum frame rate
-const float MIN_FRAME_TIME = 1.0f/FRAME_RATE;   // minimum desired time for 1 frame
-const float MAX_FRAME_TIME = 1.0f/MIN_FRAME_RATE; // maximum time used in calculations
+const float MIN_FRAME_TIME = 1.0f / FRAME_RATE;   // minimum desired time for 1 frame
+const float MAX_FRAME_TIME = 1.0f / MIN_FRAME_RATE; // maximum time used in calculations
 const float GRAVITY = 225.5f;             // gravitational constant
 const float MASS_PLANET = 5000.0;
 const float MASS_SPACE_SHIP = 5.0f;		//number subject to change
@@ -58,6 +58,7 @@ const float PLAYER_ANIMATION_DELAY = 0.2f;		//note: make player animate only whe
 const float PLAYER_BASE_STRENGTH = 25.0f;		//base strength, related to player throwing
 const float PLAYER_BASE_SPEED = 100.0f;
 const float PLAYER_MAX_HEALTH = 100;			//for dynamic health values, should represent health as a number
+const int PLAYER_DAMAGE_TAKEN_MODIFIER = 1;
 
 //player(tank) health
 const int PLAYER_HEALTH_WIDTH = 28;
@@ -87,7 +88,7 @@ const int CHARGINGBAR_END_FRAME = 0;
 //refers to a wormhole/blackhole image, is not an actual object. Remove if confirmed to go for tank theme instead of Cannonball theme
 //can also incorporate to 'explain' arrival of spaceships
 //not priority
-const int WORMHOLE_WIDTH = 160;			
+const int WORMHOLE_WIDTH = 160;
 const int WORMHOLE_HEIGHT = 160;
 const int WORMHOLE_TEXTURE_COLUMNS = 1;
 const int WORMHOLE_START_FRAME = 0;
@@ -103,17 +104,17 @@ const int SPACESHIP_END_FRAME = 11;
 const int SPACESHIP_DAMAGED_START_FRAME = 12;
 const int SPACESHIP_DAMAGED_END_FRAME = 23;
 const float SPACESHIP_MASS = 50.0f;				//number subject to change - idk what to put here
-const float SPACESHIP_SPEED = 50.0f;				
+const float SPACESHIP_SPEED = 50.0f;
 const float SPACESHIP_ANIMATION_DELAY = 0.1f;		//passively animates
 const int SPACESHIP_STARTING_HEALTH = 5;
 const int SPACESHIP_MOVEMENT_DISTANCE = 29;
 const double SPACESHIP_MOVE_FREQUENCY = 0;
 const int SPACESHIP_ATTACK_FREQUENCY = 1;
 const double SPACESHIP_CRITICAL_HEALTH_FACTOR = 0.25;
-const int SPACESHIP_REWARD_SCORE = 50;
+const int SPACESHIP_REWARD_SCORE = 333;
 const double SPACESHIP_REWARD_COMBO_MULTIPLIER = 1;		//amt of points multiplied for collateral kills
 const int HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 80;	//this affects how much ships can be created in a row, if values are too high will lead to weird spaceship orientation
-const int VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 20;	
+const int VERTICAL_GAP_LENGTH_BETWEEN_SPACESHIPS = 20;
 
 //SPACESHIP_BULLET variables
 const int SPACESHIP_BULLET_WIDTH = 6;
@@ -164,7 +165,7 @@ const int POWERUP_TEXTURE_COLUMNS = 2;
 const int POWERUP_START_FRAME = 0;
 const int POWERUP_END_FRAME = 0;
 const float POWERUP_ANIMATION_DELAY = 0.25f;
-const float POWERUP_ROTATION_RATE = (float)PI/4;
+const float POWERUP_ROTATION_RATE = (float)PI / 4;
 const int POWERUP_MOVEMENT_SPEED = 200;
 const int POWERUP_SPAWN_CHANCE = 25;			//in percentage, spawn chance when a spaceship is destroyed
 const int POWERUP_SPAWN_FREQUENCY = 1;			//in seconds, value depicts if powerup spawns every X seconds
@@ -172,7 +173,7 @@ const int POWERUP_SPAWN_HEIGHT = GAME_WIDTH / 2;
 const int POWERUP_REWARD_SCORE = 25;
 const int MAX_NO_OF_POWERUPS = 1;
 const int POWERUP_OBJECT_DURATION = 5;		//how long the powerup stays as an ingame object before expiring
-const int POWERUP_BLINKING_END_FRAME = 1;	
+const int POWERUP_BLINKING_END_FRAME = 1;
 const int POWERUP_START_BLINKING_TIME_MARK = 3;	//at what secondsPassed does the powerup starts blinking to show it is close to expiring
 
 //individual powerup effect values
@@ -180,11 +181,12 @@ const double POWERUP_TIME_SLOW_MULTIPLER = 2; //the bigger the number the slower
 const int POWERUP_TIME_SLOW_DURATION = 10;
 const int POWERUP_TIME_SLOW_CODE = 1;
 
-const int POWERUP_RESTORE_HEALTH_VALUE = 5;
+const int POWERUP_SHIELD_DAMAGE_MODIFIER = 0;	//damageTaken*(this value)
+const int POWERUP_SHIELD_DURATION = 5;
 const int POWERUP_RESTORE_HEALTH_CODE = 2;
 
 const double POWERUP_INCREASE_TANK_SPEED_FACTOR = 2; //the higher the number the faster (too high = too fast)
-const int POWERUP_INCREASE_TANK_SPEED_DURATION = 9;
+const int POWERUP_INCREASE_TANK_SPEED_DURATION = 5;
 const int POWERUP_INCREASE_TANK_SPEED_CODE = 3;
 
 const int POWERUP_TIME_LOCK_DURATION = 5; //in seconds
@@ -192,7 +194,7 @@ const int POWERUP_TIME_LOCK_FACTOR = 0; //anything that is not 0 means this isn'
 const int POWERUP_TIME_LOCK_CODE = 4;
 const int POWERUP_TIME_LOCK_UNLOCK_SOUND_DURATION = 3;
 
-const int POWERUP_MAX_POWER_DURATION = 10;
+const int POWERUP_MAX_POWER_DURATION = 5;
 const int POWERUP_MAX_POWER_CODE = 5;
 
 const int POWERUP_TANK_ASSIST_DURATION = 10;			//spawns an allied tank that moves across X at ground level and periodically shoots weak bullets at spaceships, cannot be destroyed but is temporary
@@ -204,7 +206,7 @@ const int ASSIST_TANK_HEIGHT = 64;
 const int ASSIST_TANK_TEXTURE_COLUMNS = 2;
 const int ASSIST_TANK_START_FRAME = 0;
 const int ASSIST_TANK_END_FRAME = 1;
-const float ASSIST_TANK_ANIMATION_DELAY = 0.2f;		
+const float ASSIST_TANK_ANIMATION_DELAY = 0.2f;
 
 const int ASSIST_TANK_ATTACK_FREQUENCY = 1;			//fires every X seconds
 const float ASSIST_TANK_MOVEMENT_SPEED = 100.0f;
@@ -214,15 +216,15 @@ const int ASSIST_TANK_BULLET_WIDTH = 6;
 const int ASSIST_TANK_BULLET_HEIGHT = 12;
 const int ASSIST_TANK_BULLET_TEXTURE_COLUMNS = 2;
 const int ASSIST_TANK_BULLET_START_FRAME = 0;
-const int ASSIST_TANK_BULLET_END_FRAME = 1;		
-const float ASSIST_TANK_BULLET_SPEED = 800.0f;			
-const float ASSIST_TANK_BULLET_ANIMATION_DELAY = 0.2f;	
-const int ASSIST_TANK_BULLET_DAMAGE = 5;	
+const int ASSIST_TANK_BULLET_END_FRAME = 1;
+const float ASSIST_TANK_BULLET_SPEED = 200.0f;
+const float ASSIST_TANK_BULLET_ANIMATION_DELAY = 0.2f;
+const int ASSIST_TANK_BULLET_DAMAGE = 5;
 const int MAX_NO_OF_ASSIST_TANK_BULLETS = 1;
 
 //gameplay condition variables (affected by powerups, otherwise they generally stays the same)
 const int GROUND_LEVEL_HEIGHT = GAME_HEIGHT - GAME_HEIGHT / 10;			//no objects may go beyond this line, essentially means 'ground level'
-const int GAMEOVER_SPACESHIP_DISTANCE = GROUND_LEVEL_HEIGHT - 200;		//when spaceship reaches here, game over, boom
+const int GAMEOVER_SPACESHIP_DISTANCE = GROUND_LEVEL_HEIGHT - 150;		//when spaceship reaches here, game over, boom
 const int SKY_LEVEL_DIVIDER = 78;
 const int GROUND = 560;
 
@@ -297,7 +299,7 @@ const int BOSSLASER_END_FRAME = 1;
 const int BOSSLASER_TEXTURE_COLUMNS = 2;
 const float BOSSLASER_ANIMATION_DELAY = 0.5f;
 const float BOSSLASER_BASE_SPEED = 300.0f;
-const float BOSSLASER_MASS = 5.0f;	
+const float BOSSLASER_MASS = 5.0f;
 // graphic images
 const char GROUND_TILESET_IMAGE[] = "resources\\images\\ground_tile.png";
 const char CANNONBALL_IMAGE[] = "resources\\images\\cannonball.png";
@@ -312,15 +314,15 @@ const char INSTRUCTION_IMAGE[] = "resources\\images\\instruction.png";
 const char TURRET_IMAGE[] = "resources\\images\\turret.png";
 const char SHELL_IMAGE[] = "resources\\images\\shell.png";
 const char CHARGINGBAR_IMAGE[] = "resources\\images\\chargingbar.png";
-const char BOSSLASER_IMAGE[]="resources\\images\\bosslaser.png";
+const char BOSSLASER_IMAGE[] = "resources\\images\\bosslaser.png";
 const char GAME_WIN_IMAGE[] = "resources\\images\\gamewin.png";
 const char GAME_LOSE_IMAGE[] = "resources\\images\\gamelose.png";
 const char SPACESHIP_BULLET_IMAGE[] = "resources\\images\\spaceship_bullet.png";
 const char ASSIST_TANK_IMAGE[] = "resources\\images\\assist_tank.png";
 const char ASSIST_TANK_BULLET_IMAGE[] = "resources\\images\\assist_tank_bullet.png";
 const char POWERUP_TIME_SLOW_IMAGE[] = "resources\\images\\powerup_timeSlow.png";
-const char POWERUP_RESTORE_HEALTH_IMAGE[] = "resources\\images\\powerup_restoreHealth.png";
-const char POWERUP_INCREASE_TANK_SPEED_IMAGE[] = "resources\\images\\powerup_increaseSpeed.png";	//does not yet exist
+const char POWERUP_RESTORE_HEALTH_IMAGE[] = "resources\\images\\powerup_shield.png";
+const char POWERUP_INCREASE_TANK_SPEED_IMAGE[] = "resources\\images\\powerup_increaseSpeed.png";
 const char POWERUP_TIME_LOCK_IMAGE[] = "resources\\images\\powerup_timeLock.png";
 const char POWERUP_MAX_POWER_IMAGE[] = "resources\\images\\powerup_maxPower.png";
 const char POWERUP_PASSERBY_TANK_IMAGE[] = "resources\\images\\powerup_passerbyTank.png";
@@ -329,10 +331,10 @@ const char HISCORE_FILE[] = "resources\\highscore.txt";
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
 // it would be possible to save and restore key mappings from a data file.
-const UCHAR ESC_KEY      = VK_ESCAPE;       // escape key
-const UCHAR ALT_KEY      = VK_MENU;         // Alt key
-const UCHAR ENTER_KEY    = VK_RETURN;       // Enter key
-const UCHAR DOWN_KEY	 = VK_DOWN;
+const UCHAR ESC_KEY = VK_ESCAPE;       // escape key
+const UCHAR ALT_KEY = VK_MENU;         // Alt key
+const UCHAR ENTER_KEY = VK_RETURN;       // Enter key
+const UCHAR DOWN_KEY = VK_DOWN;
 const UCHAR SPACE_KEY = VK_SPACE;
 const UCHAR UP_KEY = VK_UP;
 const UCHAR LEFT_KEY = VK_LEFT;
@@ -350,6 +352,6 @@ const UCHAR S_KEY = 0x53;
 const UCHAR D_KEY = 0x44;
 const UCHAR F_KEY = 0x46;
 
-enum hitWho{land,spaceShip,bossShip,player};
+enum hitWho{ land, spaceShip, bossShip, player };
 
 #endif
