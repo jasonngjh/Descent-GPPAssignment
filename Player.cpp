@@ -102,8 +102,8 @@ void Player::update(float frameTime)
 			break;
 		case 120:	tankAngle = 140;
 			break;
-		case 140:	tankAngle = 160;
-			break;
+		//case 140:	tankAngle = 160;
+			//break;
 		case 160: break;
 		default: break;
 		}
@@ -112,9 +112,9 @@ void Player::update(float frameTime)
 	{
 		switch (tankAngle){
 		default: break;
-		case 20: break;
-		case 40:	tankAngle = 20;
-			break;
+		//case 20: break;
+		//case 40:	tankAngle = 20;
+		//	break;
 		case 60:	tankAngle = 40;
 			break;
 		case 90:	tankAngle = 60;
@@ -123,7 +123,7 @@ void Player::update(float frameTime)
 			break;
 		case 140:	tankAngle = 120;
 			break;
-		case 160:	tankAngle = 140;
+		//case 160:	tankAngle = 140;
 			break;
 		}
 	}

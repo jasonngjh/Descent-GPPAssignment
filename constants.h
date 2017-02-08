@@ -37,7 +37,10 @@ const UINT GAME_WIDTH = 540;               // width of game in pixels
 const UINT GAME_HEIGHT = 640;               // height of game in pixels
 
 // game
+const double ADAPTCIRCLE = 160;
+const double FIXANGLE = 10;
 const double PI = 3.14159265;
+const double RADTODEGREE = PI / 180;
 const float FRAME_RATE = 200.0f;                // the target frame rate (frames/sec)
 const float MIN_FRAME_RATE = 10.0f;             // the minimum frame rate
 const float MIN_FRAME_TIME = 1.0f / FRAME_RATE;   // minimum desired time for 1 frame
@@ -125,7 +128,7 @@ const int SPACESHIP_BULLET_END_FRAME = 1;
 const float SPACESHIP_BULLET_SPEED = 300.0f;
 const float SPACESHIP_BULLET_ANIMATION_DELAY = 0.2f;
 const int SPACESHIP_BULLET_DAMAGE = 1;
-const int MAX_NO_OF_SPACESHIP_BULLETS = 10;
+const int MAX_NO_OF_SPACESHIP_BULLETS = 1;
 
 //spaceship spawn variables
 const int MAX_NO_OF_SPACESHIPS = 60; //number of spaceships allowed to exist at any time

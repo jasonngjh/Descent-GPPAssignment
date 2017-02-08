@@ -171,7 +171,8 @@ void Cannonball::playerCannonball()
 	setActive(true);
 	Image::setVisible(true);
 	D3DXVECTOR2 v;
-	switch (tank->getTankAngle())
+	int ang = tank->getTankAngle();
+	switch (ang)
 	{
 
 	case 20:
@@ -183,8 +184,9 @@ void Cannonball::playerCannonball()
 			spriteData.x = tank->getX() + 63.0f;
 			spriteData.y = tank->getY() - 15.0f;
 		}
-		velocity.x = initialVelocity * (float)cos(0.349066);
-		velocity.y = initialVelocity * (float)sin(0.349066) * GRAVITY;
+		std::cout << "tank angle 20" << std::endl;
+		velocity.y = -(sin((ADAPTCIRCLE - ang+FIXANGLE) * RADTODEGREE)*CANNONBALL_BASE_SPEED*speedMultiplier);
+		velocity.x = -(cos((ADAPTCIRCLE -ang+FIXANGLE)  * RADTODEGREE)*CANNONBALL_BASE_SPEED*speedMultiplier);
 		std::cout << velocity.x << std::endl;
 		std::cout << velocity.y << std::endl;
 		break;
@@ -197,8 +199,9 @@ void Cannonball::playerCannonball()
 			spriteData.x = tank->getX() + 63.0f;
 			spriteData.y = tank->getY() - 23.0f;
 		}
-		velocity.y = -200.0;
-		velocity.x = 200.0f;
+		std::cout << "tank angle 40" << std::endl;
+		velocity.y = -(sin((ADAPTCIRCLE - ang + FIXANGLE) * RADTODEGREE)*CANNONBALL_BASE_SPEED*speedMultiplier);
+		velocity.x = -(cos((ADAPTCIRCLE - ang + FIXANGLE) * RADTODEGREE)*CANNONBALL_BASE_SPEED*speedMultiplier);
 		break;
 	case 60:
 		if (tank->getTankDirection()){
@@ -209,8 +212,9 @@ void Cannonball::playerCannonball()
 			spriteData.x = tank->getX() + 55.0f;
 			spriteData.y = tank->getY() - 31.0f;
 		}
-		velocity.y = -300.0;
-		velocity.x = 200.0f;
+		std::cout << "tank angle 60" << std::endl;
+		velocity.y = -(sin((ADAPTCIRCLE - ang + FIXANGLE) * RADTODEGREE)*CANNONBALL_BASE_SPEED*speedMultiplier);
+		velocity.x = -(cos((ADAPTCIRCLE - ang + FIXANGLE) * RADTODEGREE)*CANNONBALL_BASE_SPEED*speedMultiplier);
 		break;
 
 	case 90:
@@ -222,8 +226,9 @@ void Cannonball::playerCannonball()
 			spriteData.x = tank->getX() + 37.0f;
 			spriteData.y = tank->getY() - 33.0f;
 		}
-		velocity.y = -400.0;
-		velocity.x = 0.0;
+		std::cout << "tank angle 90" << std::endl;
+		velocity.y = -(sin(ang * RADTODEGREE)*CANNONBALL_BASE_SPEED*speedMultiplier);
+		velocity.x = -(cos(ang * RADTODEGREE)*CANNONBALL_BASE_SPEED*speedMultiplier);
 		break;
 
 	case 120:
@@ -235,8 +240,9 @@ void Cannonball::playerCannonball()
 			spriteData.x = tank->getX() + 21.0f;
 			spriteData.y = tank->getY() - 31.0f;
 		}
-		velocity.y = -300.0;
-		velocity.x = -200.0f;
+		std::cout << "tank angle 120" << std::endl;
+		velocity.y = -(sin(ADAPTCIRCLE-ang * RADTODEGREE)*CANNONBALL_BASE_SPEED*speedMultiplier);
+		velocity.x = -(cos(ADAPTCIRCLE-ang * RADTODEGREE)*CANNONBALL_BASE_SPEED*speedMultiplier);
 		break;
 	case 140:
 		if (tank->getTankDirection()){
@@ -247,8 +253,9 @@ void Cannonball::playerCannonball()
 			spriteData.x = tank->getX() + 17.0f;
 			spriteData.y = tank->getY() - 23.0f;
 		}
-		velocity.y = -200.0;
-		velocity.x = -200.0f;
+		std::cout << "tank angle 140" << std::endl;
+		velocity.y = -(sin(ADAPTCIRCLE-ang* RADTODEGREE)*CANNONBALL_BASE_SPEED*speedMultiplier);
+		velocity.x = -(cos(ADAPTCIRCLE-ang* RADTODEGREE)*CANNONBALL_BASE_SPEED*speedMultiplier);
 		break;
 	case 160:
 		if (tank->getTankDirection()){
@@ -259,8 +266,9 @@ void Cannonball::playerCannonball()
 			spriteData.x = tank->getX() + 14.0f;
 			spriteData.y = tank->getY() - 15.0f;
 		}
-		velocity.y = -100.0;
-		velocity.x = -200.0;
+		std::cout << "tank angle ADAPTCIRCLE" << std::endl;
+		velocity.y = -(sin(ADAPTCIRCLE - ang * RADTODEGREE)*CANNONBALL_BASE_SPEED*speedMultiplier);
+		velocity.x = -(cos(ADAPTCIRCLE - ang * RADTODEGREE)*CANNONBALL_BASE_SPEED*speedMultiplier);
 		break;
 		}
 }
@@ -311,14 +319,17 @@ void Cannonball::calulateForce(double time)
 	if (time >= 0.0 && time < 1.0)
 	{
 		setForcePower(10);
+		speedMultiplier = 2;
 	}
 	if (time >= 1.0 && time < 2.0)
 	{
 		setForcePower(25);
+		speedMultiplier = 3;
 	}
 	if (time >= 2.0 && time <= 3.0)
 	{
 		setForcePower(50);
+		speedMultiplier = 4;
 	}
 	boolKeyHold = false;
 	isCharging = false;

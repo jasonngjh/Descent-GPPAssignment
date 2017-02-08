@@ -330,6 +330,7 @@ void Descent::initialize(HWND hwnd)
 #pragma endregion
 
 	return;
+
 }
 
 //=============================================================================
