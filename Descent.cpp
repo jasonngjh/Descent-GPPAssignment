@@ -323,7 +323,7 @@ void Descent::initialize(HWND hwnd)
 	isAllSpaceshipMovingRight = true;
 	isShipsReadyToShift = false;
 	isPowerupInProgress = false;
-	isPowerupSpawning = true;
+	isPowerupSpawning = false;
 	isCalculatingPlayerPattern = false;
 	isAllSpaceshipsFiring = false;
 
@@ -1689,7 +1689,7 @@ void Descent::timer_start()
 				&& !isAllSpaceshipsFiring)
 			{	//if wave is wave 1, start simple spaceship shooting
 
-				std::async(&Descent::beginSimpleSpaceshipsFiringSequence, this);
+				//std::async(&Descent::beginSimpleSpaceshipsFiringSequence, this);
 
 			}
 

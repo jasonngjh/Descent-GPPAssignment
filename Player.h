@@ -36,7 +36,7 @@ private:
 	bool	isAlive = true;
 	double		health;
 	float	speed;						// X pixels per second
-	int		tankAngle;
+	int	tankAngle;
 	bool	tankDirection;
 
 
