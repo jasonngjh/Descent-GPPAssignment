@@ -285,6 +285,7 @@ void Cannonball::playerCannonball()
 //=============================================================================
 void Cannonball::checkForHold()
 {
+	std::cout << "Holding cannonball" << std::endl;
 	isCharging = true;
 	double currentChargeTime = 0.0;
 	clock_t timer = clock();//start timer
@@ -315,6 +316,7 @@ void Cannonball::checkForHold()
 	calulateForce(currentChargeTime);
 	playerCannonball();
 	currentChargeTime = 0.0;
+	std::cout << "Holding cannonball end" << std::endl;
 }
 //=============================================================================
 // calculateForce(double)

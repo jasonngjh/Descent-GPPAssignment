@@ -205,8 +205,8 @@ void Descent::initialize(HWND hwnd)
 
 	if (!shellTexture->initialize(graphics, SHELL_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell texture"));
-	if (!shell->initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, shellTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
+	/*if (!shell->initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, shellTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));*/
 
 	if (!assistTankTexture->initialize(graphics, ASSIST_TANK_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing assist tank texture"));
@@ -241,9 +241,8 @@ void Descent::initialize(HWND hwnd)
 
 	if (!bossLaserTexture->initialize(graphics, BOSSLASER_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss laser texture"));
-	if (!shell->initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, shellTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
-					
+
+
 	std::cout << "loaded. " << std::endl;
 					
 	background->setFrames(BACKGROUND_START_FRAME,BACKGROUND_END_FRAME);
@@ -271,6 +270,7 @@ void Descent::initialize(HWND hwnd)
 
 	shell->setX(boss->getX() + BOSS_SPACESHIP_WIDTH / 2);
 	shell->setY(boss->getY() + BOSS_SPACESHIP_HEIGHT / 2);
+	shell->setActive(false);
 	//shell->setScale(0.045);
 
 	std::cout << "loaded. " << std::endl;
@@ -591,6 +591,7 @@ void Descent::update()
 											std::cout << "Initialising boss" << std::endl;
 											if (!boss->initialize(this, Boss_SpaceshipNS::WIDTH, Boss_SpaceshipNS::HEIGHT, Boss_SpaceshipNS::TEXTURE_COLS, bossTexture))
 												throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss game object"));
+											resetShellPos();
 											initAlready = false;
 											boss->setActive(true);
 											
@@ -1067,7 +1068,7 @@ void Descent::acquirePlayerMovementPatterns()
 
 	offsetFromOriginal = (positionOriginal - positionFinal);
 
-	std::cout << "offset:" << offsetFromOriginal << std::endl;
+	//std::cout << "offset:" << offsetFromOriginal << std::endl;
 	//in three seconds, the player has moved X from original starting position
 
 	//player's actual speed is distance offset
@@ -1078,7 +1079,7 @@ void Descent::acquirePlayerMovementPatterns()
 	acquiredPlayerSpeed = offsetFromOriginal;		//in 1 second, player has moved pO - pF distance
 	acquiredPlayerDirectionIsRight = tank->getTankDirection();
 
-	std::cout << "acquired player speed :" << acquiredPlayerSpeed << ". Is player moving right? " << acquiredPlayerDirectionIsRight << std::endl;
+	//std::cout << "acquired player speed :" << acquiredPlayerSpeed << ". Is player moving right? " << acquiredPlayerDirectionIsRight << std::endl;
 
 	isCalculatingPlayerPattern = false;
 
