@@ -525,7 +525,7 @@ void Descent::update()
 								 }
 
 #pragma endregion
-		
+								// std::cout << "seconds Passed" << secondsPassed << std::endl;
 		 switch (waveState){
 			case WAVE_STATE::pauseWave:{
 											//std::cout << "pause" << std::endl; 
@@ -613,8 +613,10 @@ void Descent::update()
 										}
 										else launchBossLaser();
 
-										if ((fmod(secondsPassed, SHELL_SPAWNCOUNTER) == 0) && (shell->getActive() == false))
+										if ((secondsPassed-shellStartSeconds>=10) && (shell->getActive() == false))
 										{
+											std::cout << "spawning shell" << std::endl;
+											delete shell;
 											resetShellPos();
 										}
 
@@ -625,7 +627,7 @@ void Descent::update()
 											gameStatus = 1;
 											gameControl.setGeneralState(GENERAL_STATE::gameOver);
 										}
-										std::cout << "Number of laser in the vector: " << array_bosslaser.size() << std::endl;
+										//std::cout << "Number of laser in the vector: " << array_bosslaser.size() << std::endl;
 
 			 }break;						 
 		}
@@ -723,8 +725,8 @@ void Descent::collisions()
 		{
 			if (array_bosslaser[i]->collidesWith(*tank , collisionVector))
 			{
-				std::cout << "bosslaser hit tank" << array_bosslaser[i] << std::endl;
 				existOnScreen = false;
+				tank->setHealth(tank->getHealth() - BossLaserNS::DAMAGE);
 				delete array_bosslaser[i];
 				array_bosslaser.erase(array_bosslaser.begin() + i);
 			}
@@ -735,6 +737,7 @@ void Descent::collisions()
 			std::cout << "collide with tank liao" << std::endl;
 			shell->setActive(false);
 			shell->setVisible(false);
+			tank->setHealth(tank->getHealth() - shell->getDamage());
 			std::cout << "can u see dis" << std::endl;
 		}
 
@@ -901,12 +904,13 @@ void Descent::render()
 
 								 }break;//draw wave 2 stuff
 								 case WAVE_STATE::wave3:{
-															boss->draw();
-															shell->draw();
 															for (int i = 0; i < array_bosslaser.size(); i++)
 															{
 																array_bosslaser[i]->draw();
 															}
+															boss->draw();
+															shell->draw();
+															
 								 }break;
 								 }
 
@@ -1877,10 +1881,13 @@ void Descent::spawnSpaceships(int waveNumber)
 //=============================================================================
 void Descent::resetShellPos()
 {
-	shell->setActive(true);
-	shell->setVisible(true);
+	Shell* shell = new Shell;
 	if (!shell->initialize(this, ShellNS::WIDTH, ShellNS::HEIGHT, ShellNS::TEXTURE_COLS, shellTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing shell game object"));
+	shellStartSeconds = secondsPassed;
+	shell->setActive(true);
+	shell->setVisible(true);
+	
 	shell->setX(boss->getX() + BOSS_SPACESHIP_WIDTH / 2);
 	shell->setY(boss->getY() + BOSS_SPACESHIP_HEIGHT / 2);
 }
@@ -1937,7 +1944,7 @@ void Descent::launchBossLaser()
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initialising background"));
 		array_bosslaser.push_back(bosslaser);
 		array_bosslaser[i]->setX(boss->getCenterX());
-		array_bosslaser[i]->setY(boss->getY());
+		array_bosslaser[i]->setY(boss->getY() + Boss_SpaceshipNS::HEIGHT*boss->getScale());
 		array_bosslaser[i]->setDegrees(-array[i]);
 		array_bosslaser[i]->setDegree(array_angle[i]);
 		array_bosslaser[i]->setFrames(BossLaserNS::START_FRAME, BossLaserNS::END_FRAME);
@@ -2108,21 +2115,21 @@ void Descent::restartGame()
 	timerLoop = true;
 
 	std::async(&Descent::timer_start, this); //run timer thread while main loop is contiuing
-
+	/*
 	powerup_timeSlow->setPowerupCode(POWERUP_TIME_SLOW_CODE);
 	powerup_shield->setPowerupCode(POWERUP_RESTORE_HEALTH_CODE);
 	powerup_increaseTankSpeed->setPowerupCode(POWERUP_INCREASE_TANK_SPEED_CODE);
 	powerup_timeLock->setPowerupCode(POWERUP_TIME_LOCK_CODE);
 	powerup_maxPower->setPowerupCode(POWERUP_MAX_POWER_CODE);
 	powerup_passerbyTank->setPowerupCode(POWERUP_TANK_ASSIST_CODE);
-
+	
 	array_powerups_drawingSpace.push_back(powerup_timeSlow);
 	array_powerups_drawingSpace.push_back(powerup_shield);
 	array_powerups_drawingSpace.push_back(powerup_increaseTankSpeed);
 	array_powerups_drawingSpace.push_back(powerup_timeLock);
 	array_powerups_drawingSpace.push_back(powerup_maxPower);
 	array_powerups_drawingSpace.push_back(powerup_passerbyTank);
-
+	*/
 	//instantiating counter and boolean variables
 	totalAmtOfPowerupVariety = array_powerups_drawingSpace.size();
 	std::cout << "total amount of loaded powerups: " << totalAmtOfPowerupVariety << std::endl;

@@ -16,6 +16,7 @@ namespace BossLaserNS
 	const int START_FRAME = BOSSLASER_START_FRAME;
 	const int END_FRAME = BOSSLASER_END_FRAME;
 	const float ANIMATION_DELAY = BOSSLASER_ANIMATION_DELAY;
+	const int DAMAGE = BOSSLASER_DAMAGE;
 	const int X = 0;
 	const int Y = 0;
 }

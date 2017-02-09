@@ -62,29 +62,6 @@ void BossLaser::update(float frameTime)
 	setFrameDelay(frameDelay);
 //	spriteData.x += velocity.x;
 //	spriteData.y += velocity.y;
-	if (spriteData.x > GAME_WIDTH - BossLaserNS::WIDTH*getScale())
-	{
-		// position at right screen edge
-		spriteData.x = GAME_WIDTH - BossLaserNS::WIDTH*getScale();
-		velocity.x = -velocity.x*frameTime;               // reverse X direction
-	}
-	else if (spriteData.x < 0)                  // else if hit left screen edge
-	{
-		spriteData.x = 0;                       // position at left screen edge
-		velocity.x = -velocity.x*frameTime;               // reverse X direction
-	}
-	// if hit bottom screen edge
-	if (spriteData.y > GAME_HEIGHT - BossLaserNS::HEIGHT*getScale())
-	{
-		// position at bottom screen edge
-		spriteData.y = GAME_HEIGHT - BossLaserNS::HEIGHT*getScale();
-		velocity.y = -velocity.y;               // reverse Y direction
-	}
-	else if (spriteData.y < 0)                  // else if hit top screen edge
-	{
-		spriteData.y = 0;                       // position at top screen edge
-		velocity.y = -velocity.y;               // reverse Y direction
-	}
 	
 	
 
