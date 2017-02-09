@@ -345,7 +345,7 @@ void Descent::update()
 								  }
 	}break;
 	case GENERAL_STATE::instructions : {
-							   if (input->wasKeyPressed(SPACE_KEY)){
+							   if (input->wasKeyPressed(ENTER_KEY)){
 								   restartGame();
 								   Sleep(300);
 								   gameControl.setGeneralState(GENERAL_STATE::game);		  
