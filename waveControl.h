@@ -2,6 +2,7 @@
 #define _WAVECONTROL_H
 
 enum class WAVE_STATE{
+	preWave,
 	wave1,
 	wave2,
 	wave3,//bosswave

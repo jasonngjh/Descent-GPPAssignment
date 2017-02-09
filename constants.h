@@ -80,6 +80,7 @@ const float CANNONBALL_MASS = 1200.0f;				//number subject to change - idk what 
 const float CANNONBALL_BASE_SPEED = 200.0f;			//base speed that CANNONBALL always moves on, MAY NOT BE RELEVANT DEPENDING ON HOW WE CALCULATE SPEED 
 const float CANNONBALL_ANIMATION_DELAY = 0.2f;		//note: maybe Cannonball animates when moving 
 const int CANNONBALL_DAMAGE = 5;
+const double CANNONBALL_FORCE_POWER_DAMAGE_FACTOR = 0.5;	//how much of force is actual damage
 
 //charging bar variabbles
 const int CHARGINGBAR_WIDTH = 28;
@@ -91,11 +92,13 @@ const int CHARGINGBAR_END_FRAME = 0;
 //refers to a wormhole/blackhole image, is not an actual object. Remove if confirmed to go for tank theme instead of Cannonball theme
 //can also incorporate to 'explain' arrival of spaceships
 //not priority
-const int WORMHOLE_WIDTH = 160;
-const int WORMHOLE_HEIGHT = 160;
+const int WORMHOLE_Y = 25;
+const int WORMHOLE_WIDTH = 200;
+const int WORMHOLE_HEIGHT = 200;
 const int WORMHOLE_TEXTURE_COLUMNS = 1;
 const int WORMHOLE_START_FRAME = 0;
-const int WORMHOLE_END_FRAME = 5;
+const int WORMHOLE_END_FRAME = 0;
+const float WORMHOLE_ROTATION_RATE = (float)PI*4;
 const float WORMHOLE_ANIMATION_DELAY = 0.1f;		//animation can look very cool
 
 //spaceship variables
@@ -110,7 +113,7 @@ const float SPACESHIP_MASS = 50.0f;				//number subject to change - idk what to 
 const float SPACESHIP_SPEED = 50.0f;
 const float SPACESHIP_ANIMATION_DELAY = 0.1f;		//passively animates
 const int SPACESHIP_STARTING_HEALTH = 5;
-const int SPACESHIP_MOVEMENT_DISTANCE = 29;
+const double SPACESHIP_MOVEMENT_DISTANCE = 14.5;
 const double SPACESHIP_MOVE_FREQUENCY = 1;
 const int SPACESHIP_ATTACK_FREQUENCY = 1;
 const double SPACESHIP_CRITICAL_HEALTH_FACTOR = 0.25;
@@ -125,32 +128,36 @@ const int SPACESHIP_BULLET_HEIGHT = 12;
 const int SPACESHIP_BULLET_TEXTURE_COLUMNS = 2;
 const int SPACESHIP_BULLET_START_FRAME = 0;
 const int SPACESHIP_BULLET_END_FRAME = 1;
-const float SPACESHIP_BULLET_SPEED = 300.0f;
+const float SPACESHIP_BULLET_SPEED = 150.0f;
 const float SPACESHIP_BULLET_ANIMATION_DELAY = 0.2f;
-const int SPACESHIP_BULLET_DAMAGE = 1;
-const int MAX_NO_OF_SPACESHIP_BULLETS = 1;
+const int SPACESHIP_BULLET_DAMAGE = 10;
+const int MAX_NO_OF_SPACESHIP_BULLETS = 10;
 
 //spaceship spawn variables
 const int MAX_NO_OF_SPACESHIPS = 60; //number of spaceships allowed to exist at any time
 const int AMT_OF_SPACESHIPS_PER_ROW = 5; //number should not be less than GAME_WIDTH/(SPACESHIP_WIDTH + HORIZONTAL_GAP_LENGTH_BETWEEN_SPACESHIPS)
 const int WAVE_1_SPACESHIPS_AMT_OF_ROWS = 4;
-const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 6;
+const int WAVE_2_SPACESHIPS_AMT_OF_ROWS = 5;
 const int WAVE_3_SPACESHIPS_AMT_OF_ROWS = 6;
 
-const int WAVE_1_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY = 2;		//bullet hell limiter
+const int WAVE_1_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY = 4;		//bullet hell limiter
 const int WAVE_2_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY = 4;		//bullet hell limiter
 const int WAVE_3_MAX_AMOUNT_OF_SPACESHIP_BULLETS_PER_VOLLEY = 6;		//bullet hell limiter
 
-
-const double WAVE_1_SPACESHIPS_FIRE_CHANCE = 25;				//measured in percentages
+const double WAVE_1_SPACESHIPS_FIRE_CHANCE = 10;				//measured in percentages
 const double WAVE_2_SPACESHIPS_FIRE_CHANCE = 10;					//measured in percentages
-const double WAVE_2_SPACESHIPS_FIRE_INTELLIGENT_CHANCE = 100;	//measured in percentages
-const double WAVE_3_SPACESHIPS_FIRE_CHANCE = 20;					//measured in percentages
-const double WAVE_3_SPACESHIPS_FIRE_INTELLIGENT_CHANCE = 100;	//measured in percentages
+const double WAVE_2_SPACESHIPS_FIRE_INTELLIGENT_CHANCE = 25;	//measured in percentages
+const double WAVE_3_SPACESHIPS_FIRE_CHANCE = 25;					//measured in percentages
+const double WAVE_3_SPACESHIPS_FIRE_INTELLIGENT_CHANCE = 30;	//measured in percentages
 
 const int WAVE_1_SPACESHIPS_HEALTH = 20;
-const int WAVE_2_SPACESHIPS_HEALTH = 20;
+const int WAVE_2_SPACESHIPS_HEALTH = 30;
 const int WAVE_3_SPACESHIPS_HEALTH = 40;
+
+const int PRE_WAVE_WAITING_TIME = 3;
+const int PRE_WAVE_TEXT_X = 20;
+const int PRE_WAVE_TEXT_Y = 150;
+
 
 //boss spaceship variables
 const int BOSS_SPACESHIP_WIDTH = 212;
@@ -159,7 +166,7 @@ const int BOSS_SPACESHIP_TEXTURE_COLUMNS = 3;
 const int BOSS_SPACESHIP_START_FRAME = 0;
 const int BOSS_SPACESHIP_END_FRAME = 2;
 const float BOSS_SPACESHIP_ANIMATION_DELAY = 1.0f;
-const int BOSS_SPACESHIP_STARTING_HEALTH = 100;
+const int BOSS_SPACESHIP_STARTING_HEALTH = 10;
 
 //powerup variables
 const int POWERUP_WIDTH = 36;
@@ -171,7 +178,7 @@ const float POWERUP_ANIMATION_DELAY = 0.25f;
 const float POWERUP_ROTATION_RATE = (float)PI / 4;
 const int POWERUP_MOVEMENT_SPEED = 200;
 const int POWERUP_SPAWN_CHANCE = 25;			//in percentage, spawn chance when a spaceship is destroyed
-const int POWERUP_SPAWN_FREQUENCY = 1;			//in seconds, value depicts if powerup spawns every X seconds
+const int POWERUP_SPAWN_FREQUENCY = 5;			//in seconds, value depicts if powerup spawns every X seconds
 const int POWERUP_SPAWN_HEIGHT = GAME_WIDTH / 2;
 const int POWERUP_REWARD_SCORE = 25;
 const int MAX_NO_OF_POWERUPS = 1;
@@ -194,14 +201,14 @@ const int POWERUP_INCREASE_TANK_SPEED_CODE = 3;
 
 const int POWERUP_TIME_LOCK_DURATION = 5; //in seconds
 const int POWERUP_TIME_LOCK_FACTOR = 0; //anything that is not 0 means this isn't working gracefully
-const int POWERUP_TIME_LOCK_CODE = 4;
+const int POWERUP_TIME_LOCK_CODE = 1;
 const int POWERUP_TIME_LOCK_UNLOCK_SOUND_DURATION = 3;
 
 const int POWERUP_MAX_POWER_DURATION = 5;
 const int POWERUP_MAX_POWER_CODE = 5;
 
 const int POWERUP_TANK_ASSIST_DURATION = 10;			//spawns an allied tank that moves across X at ground level and periodically shoots weak bullets at spaceships, cannot be destroyed but is temporary
-const int POWERUP_TANK_ASSIST_CODE = 6;
+const int POWERUP_TANK_ASSIST_CODE = 2;
 
 //helpful turret variables
 const int ASSIST_TANK_WIDTH = 64;
@@ -285,7 +292,7 @@ const int SHELL_TEXTURE_COLUMNS = 2;
 const float SHELL_MASS = 5.0f;
 const float SHELL_BASE_SPEED = 5.0f;
 const float SHELL_ANIMATION_DELAY = 0.0f;
-const int SHELL_DAMAGE = 50;
+const int SHELL_DAMAGE = 30;
 const int SHELL_SPAWNCOUNTER = 10;
 
 //background frames
@@ -301,9 +308,9 @@ const int BOSSLASER_START_FRAME = 0;
 const int BOSSLASER_END_FRAME = 1;
 const int BOSSLASER_TEXTURE_COLUMNS = 2;
 const float BOSSLASER_ANIMATION_DELAY = 0.5f;
-const float BOSSLASER_BASE_SPEED = 300.0f;
+const float BOSSLASER_BASE_SPEED = 150.0f;
 const float BOSSLASER_MASS = 5.0f;
-const int BOSSLASER_DAMAGE = 20;
+const int BOSSLASER_DAMAGE = 10;
 // graphic images
 const char GROUND_TILESET_IMAGE[] = "resources\\images\\ground_tile.png";
 const char CANNONBALL_IMAGE[] = "resources\\images\\cannonball.png";
@@ -330,6 +337,7 @@ const char POWERUP_INCREASE_TANK_SPEED_IMAGE[] = "resources\\images\\powerup_inc
 const char POWERUP_TIME_LOCK_IMAGE[] = "resources\\images\\powerup_timeLock.png";
 const char POWERUP_MAX_POWER_IMAGE[] = "resources\\images\\powerup_maxPower.png";
 const char POWERUP_PASSERBY_TANK_IMAGE[] = "resources\\images\\powerup_passerbyTank.png";
+const char WORMHOLE_IMAGE[] = "resources\\images\\wormhole.png";
 const char HISCORE_FILE[] = "resources\\highscore.txt";
 
 // key mappings

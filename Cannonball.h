@@ -30,7 +30,7 @@ namespace CannonballNS
 	//DERIVED PERMANENT VALUES
 	const int X = GAME_WIDTH / 2 - WIDTH / 2;				// location on screen
 	const int Y = 0;
-		//GAME_HEIGHT / 2 - HEIGHT / 2;
+	//GAME_HEIGHT / 2 - HEIGHT / 2;
 
 }
 
@@ -65,7 +65,7 @@ public:
 		if (playerNumber == 1 || playerNumber == 2)
 			playerNumber = playerNo;
 		else
-			playerNumber = 0;	
+			playerNumber = 0;
 	}
 	void getTank(Player* tank);
 	void playerCannonball();
@@ -76,7 +76,13 @@ public:
 	void releaseAll();
 	void resetAll();
 	void initialiseChargingbar(float x, float y);
-	void updateChargingBar(float frameTime,float x);
+	void updateChargingBar(float frameTime, float x);
+
+	bool hasJustFired = false;
+
+	double secondsPassed;
+	double getSecondsPassed() { return secondsPassed; }						//for expiry timer
+	void setSecondsPassed(double seconds) { secondsPassed = seconds; }		//for expiry timer
 
 
 };
