@@ -121,15 +121,16 @@ private:
 	bool initAlready = true;
 	int waveNumber = 1;
 	double secondsPassed;
+	double shellStartSeconds;
 	int pauseScreen = 0;
 	int gameOverScreen = 0;
 	float array[3];
+	float array_angle[3];
 	int laserCounter = 0;
 	bool existOnScreen = true;
 	bool missileFire=true;
 	int gameStatus= 0;
 	bool timerLoop = true;
-
 	//modifiers
 	int timeModifier = GAME_BASE_TIME_MODIFIER; //Default value is 1, value affects time - this value will multiply by 1 second to achieve new time
 	int speedModifier = GAME_BASE_SPEED_MODIFIER; //Default value is 1, value affects speed - this value will be multiplied by speed values to achieve new speed

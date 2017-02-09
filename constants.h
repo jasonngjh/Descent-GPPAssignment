@@ -285,7 +285,7 @@ const int SHELL_TEXTURE_COLUMNS = 2;
 const float SHELL_MASS = 5.0f;
 const float SHELL_BASE_SPEED = 5.0f;
 const float SHELL_ANIMATION_DELAY = 0.0f;
-const int SHELL_DAMAGE = 10;
+const int SHELL_DAMAGE = 50;
 const int SHELL_SPAWNCOUNTER = 10;
 
 //background frames
@@ -303,6 +303,7 @@ const int BOSSLASER_TEXTURE_COLUMNS = 2;
 const float BOSSLASER_ANIMATION_DELAY = 0.5f;
 const float BOSSLASER_BASE_SPEED = 300.0f;
 const float BOSSLASER_MASS = 5.0f;
+const int BOSSLASER_DAMAGE = 20;
 // graphic images
 const char GROUND_TILESET_IMAGE[] = "resources\\images\\ground_tile.png";
 const char CANNONBALL_IMAGE[] = "resources\\images\\cannonball.png";
