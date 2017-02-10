@@ -159,6 +159,7 @@ void Cannonball::hit(hitWho target)
 	}
 	if (target == bossShip)
 	{
+		forcePower = 0;
 		setActive(false);
 		onGround = true;
 	}
@@ -367,6 +368,10 @@ void Cannonball::calulateForce(double time)
 void Cannonball::setForcePower(int f)
 {
 	forcePower = f;
+	if (f = 0)
+	{
+		setVisible(false);
+	}
 }
 
 //=============================================================================

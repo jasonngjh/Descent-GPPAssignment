@@ -415,7 +415,11 @@ void Descent::update()
 								 }
 								 cannonball->update(frameTime);
 								 cannonball->updateChargingBar(frameTime, tank->getX());
-
+								 if (cannonball->getVelocity() == 0)
+								 {
+									 cannonball->setActive(false);
+									 cannonball->setVisible(false);
+								 }
 								 if (cannonball->hasJustFired)
 								 {
 									 audio[13]->play();
@@ -672,7 +676,7 @@ void Descent::update()
 										}
 										else launchBossLaser();
 
-										if ((secondsPassed-shellStartSeconds>=10) && (shell->getActive() == false))
+										if ((secondsPassed-shellStartSeconds>=5) && (shell->getActive() == false))
 										{
 											std::cout << "spawning shell" << std::endl;
 											delete shell;
@@ -828,12 +832,25 @@ void Descent::collisions()
 		{
 			if (boss->getActive())
 			{
-				cannonball->bounce(collisionVector, *boss);
 
-				//std::cout << cannonball->getDamageLeft() + "COLLIDE BOSSSHIP" << std::endl;
-
-				cannonball->hit(bossShip);
+				//cannonball->bounce(collisionVector, *boss);
 				boss->setHealth((boss->getHealth() - cannonball->getForcePower()));
+				//std::cout << cannonball->getDamageLeft() + "COLLIDE BOSSSHIP" << std::endl;
+				//if (cannonball->getForcePower() > 0)
+				//{
+				//	cannonball->setForcePower(cannonball->getForcePower()*CANNONBALL_FORCE_POWER_DAMAGE_FACTOR - boss->getHealth()); //decreases health of cannonball
+				//}
+				//else
+				//{
+					cannonball->setForcePower(0);
+				//}
+				cannonball->hit(bossShip);
+				if (cannonball->getForcePower() == 0)
+				{
+					cannonball->setVisible(false);
+				}
+				std::cout << "Cannonball force left" << cannonball->getForcePower() << std::endl;
+				//boss->setHealth((boss->getHealth() - cannonball->getForcePower()));
 				//boss->setVisible(false);
 				std::cout << "Boss HP Left:" << (int)boss->getHealth() << std::endl;
 				audio[2]->play();	//play explode sound
@@ -878,6 +895,7 @@ void Descent::collisions()
 		{
 			if (cannonball->getActive())
 			{
+				cannonball->setVisible(false);
 				tank->setHealth(tank->getHealth() - (cannonball->getForcePower()*getPlayerDamageTakenModifier()));
 				cannonball->hit(player);
 			}
@@ -989,7 +1007,7 @@ void Descent::render()
 																		 waveNumberText->print("The portal came back...", PRE_WAVE_TEXT_X, PRE_WAVE_TEXT_Y);	//magic number due to inability to calculate text length
 															  }break;
 															  case 2:{
-																		 waveNumberText->print("You feel that something big is about to happen", 0, PRE_WAVE_TEXT_Y);	//magic number due to inability to calculate text length
+																		 waveNumberText->print("You feel that something big \n is about to happen", 0, PRE_WAVE_TEXT_Y);	//magic number due to inability to calculate text length
 															  }break;
 															  //end switch case for wave number
 															  }
@@ -2088,9 +2106,9 @@ void Descent::launchBossLaser()
 	array[0] = 45;
 	array[1] = 0;
 	array[2] = -45;
-	array_angle[0] = 20;
+	array_angle[0] = 25;
 	array_angle[1] = 0;
-	array_angle[2] = -20;
+	array_angle[2] = -25;
 	for (int i = 0; i < 3; i++)
 	{
 		std::cout << "initialising laser number " << i << std::endl;
