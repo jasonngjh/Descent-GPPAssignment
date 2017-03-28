@@ -75,6 +75,7 @@ private:
 	TextureManager* powerup_passerbyTank_texture;
 	TextureManager* tankHealthTexture;
 	TextureManager* loadingTexture;
+	TextureManager* wormholeTexture;
 
 	Image* background;
 	Image* pause;
@@ -86,6 +87,7 @@ private:
 	Image* gamewin;
 	Image* gamelose;
 	Image* tankHealth;
+	Image* wormhole;
 
 	Cannonball* cannonball;
 	Boss_Spaceship* boss;
@@ -118,7 +120,7 @@ private:
 	int currentScore;
 	int playerCount;
 
-	bool initAlready = true;
+	bool isBossLevelInitialised = true;
 	int waveNumber = 1;
 	double secondsPassed;
 	double shellStartSeconds;
@@ -130,13 +132,14 @@ private:
 	bool existOnScreen = true;
 	bool missileFire=true;
 	int gameStatus= 0;
-	bool timerLoop = true;
+	bool mainGameTimerLoop = true;
 	//modifiers
 	int timeModifier = GAME_BASE_TIME_MODIFIER; //Default value is 1, value affects time - this value will multiply by 1 second to achieve new time
 	int speedModifier = GAME_BASE_SPEED_MODIFIER; //Default value is 1, value affects speed - this value will be multiplied by speed values to achieve new speed
 	double playerDamageTakenModifier = PLAYER_DAMAGE_TAKEN_MODIFIER;
 	
 public:
+	//limiter and counter variables
 	int currentActiveSpaceships;			//amt of spaceships currently alive (should be dynamically less or equal to maxActiveSpaceships)
 	int currentActiveSpaceshipBullets;		//amt of spaceship bullets active
 	int currentActivePowerups;				//amt of powerups currently in the game as objects (NOT the ones in effect)
@@ -144,12 +147,15 @@ public:
 	int currentActiveTankAssistBullets;
 	int maxAmountOfAllowedBulletsPerVolley;
 
+	//misc variables
+
 	int hiscore;
 	int comboSpaceshipCounter;		//to check how much spaceships has been destroyd by a single cannonball
 
 	int acquiredPlayerSpeed;
 	bool acquiredPlayerDirectionIsRight;
 
+	//game check variables
 	bool isAllSpaceshipMovingRight;			//keeps track of ship direction
 	bool isShipsReadyToShift;				//keeps track of ship movement, for use in downwards movement
 	bool isCurrentScoreHighestScore;		// keeps track of high-scoring
@@ -157,10 +163,19 @@ public:
 	bool isPowerupSpawning;
 	bool isCalculatingPlayerPattern;		//to prevent multiple instances of pattern acquirement
 	bool isAllSpaceshipsFiring;
+	bool isGameWaiting = false;			//to check if the game is in 'break time'
+	bool isWaveReadyToBegin = false;	//to check if game/wave is ready for player
 
 	bool hasWaveOneSpawned = false;
 	bool hasWaveTwoSpawned = false;
 	bool hasWaveThreeSpawned = false;
+
+	int currentWaveNumber = 0;
+	bool isNextLevelBossLevel = false;
+
+	//music-related boolean
+	bool hasDefeatSoundPlayed = false;
+	bool hasVictorySoundPlayed = false;
 
 	// Constructor
 	Descent();
@@ -181,10 +196,12 @@ public:
 	void loadAudio(std::string source);
 	void loadAllAudio();
 	void initializeTank();
+	void initializeBoss();
 	void moveSpaceships();
 	void spawnPowerup();
 
 	void timer_start();
+	void beginGameBreakTime();
 	void setTanks();
 	void checkGamestatus();
 	void resetShellPos();
@@ -223,6 +240,7 @@ public:
 	void despawnSpaceshipBullets();
 	void despawnAssistTankBullets();
 	void loadHighScore();
+	void refreshCannonball();
 
 };
 #endif
