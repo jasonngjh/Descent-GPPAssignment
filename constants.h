@@ -244,11 +244,11 @@ const int GAME_BASE_SPEED_MODIFIER = 1; //Base value for speed modifier, affects
 const int SECOND = 1;				//an ingame second equals to 1
 
 //main menu frames
-const int MENU1_WIDTH = GAME_WIDTH;
-const int MENU1_HEIGHT = GAME_HEIGHT;
-const int MENU1_TEXTURE_COLUMNS = 0;
-const int MENU1_START_FRAME = 0;
-const int MENU1_END_FRAME = 1;
+const int MENU_WIDTH = GAME_WIDTH;
+const int MENU_HEIGHT = GAME_HEIGHT;
+const int MENU_TEXTURE_COLUMNS = 0;
+const int MENU_START_FRAME = 0;
+const int MENU_END_FRAME = 1;
 
 //pause frames
 const int PAUSE_WIDTH = GAME_WIDTH;
@@ -263,6 +263,13 @@ const int INSTRUCTIONS_HEIGHT = GAME_HEIGHT;
 const int INSTRUCTIONS_TEXTURE_COLUMNS = 0;
 const int INSTRUCTIONS_START_FRAME = 0;
 const int INSTRUCTIONS_END_FRAME = 0;
+
+//credits frames
+const int CREDITS_WIDTH = GAME_WIDTH;
+const int CREDITS_HEIGHT = GAME_HEIGHT;
+const int CREDITS_TEXTURE_COLUMNS = 0;
+const int CREDITS_START_FRAME = 0;
+const int CREDITS_END_FRAME = 0;
 
 //game win/lose frames
 const int WINLOSE_WIDTH = GAME_WIDTH;
@@ -315,7 +322,7 @@ const int BOSSLASER_DAMAGE = 10;
 const char GROUND_TILESET_IMAGE[] = "resources\\images\\ground_tile.png";
 const char CANNONBALL_IMAGE[] = "resources\\images\\cannonball.png";
 const char SPACESHIP_IMAGE[] = "resources\\images\\spaceship.png";
-const char MENU1_IMAGE[] = "resources\\images\\menu1.png";
+const char MENU_IMAGE[] = "resources\\images\\menu.png";
 const char PAUSE_IMAGE[] = "resources\\images\\pause.png";
 const char BOSS_SPACESHIP_IMAGE[] = "resources\\images\\boss_spaceship.png";
 const char TANK_IMAGE[] = "resources\\images\\tank.png";
@@ -339,6 +346,7 @@ const char POWERUP_MAX_POWER_IMAGE[] = "resources\\images\\powerup_maxPower.png"
 const char POWERUP_PASSERBY_TANK_IMAGE[] = "resources\\images\\powerup_passerbyTank.png";
 const char WORMHOLE_IMAGE[] = "resources\\images\\wormhole.png";
 const char HISCORE_FILE[] = "resources\\highscore.txt";
+const char CREDITS_IMAGE[] = "resources\\images\\credits.png";
 
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used

@@ -310,15 +310,15 @@ void Cannonball::checkForHold()
 
 	if (currentChargeTime > 0 && currentChargeTime <= 0.5)
 	chargingBar->setCurrentFrame(5);
-	if (currentChargeTime > 0.5 && currentChargeTime <= 1.0)
+	else if (currentChargeTime > 0.5 && currentChargeTime <= 1.0)
 	chargingBar->setCurrentFrame(4);
-	if (currentChargeTime > 1.0 && currentChargeTime <= 1.5)
+	else if (currentChargeTime > 1.0 && currentChargeTime <= 1.5)
 	chargingBar->setCurrentFrame(3);
-	if (currentChargeTime > 1.5 && currentChargeTime <= 2.0)
+	else if (currentChargeTime > 1.5 && currentChargeTime <= 2.0)
 	chargingBar->setCurrentFrame(2);
-	if (currentChargeTime > 2.0 && currentChargeTime <= 2.5)
+	else if (currentChargeTime > 2.0 && currentChargeTime <= 2.5)
 	chargingBar->setCurrentFrame(1);
-	if (currentChargeTime > 2.5 && currentChargeTime <= 3.0)
+	else if (currentChargeTime > 2.5 && currentChargeTime <= 3.0)
 	chargingBar->setCurrentFrame(0);
 
 	if (currentChargeTime > 3.0)
@@ -348,12 +348,12 @@ void Cannonball::calulateForce(double time)
 		setForcePower(10);
 		speedMultiplier = 1.5;
 	}
-	if (time >= 1.0 && time < 2.0)
+	else if (time >= 1.0 && time < 2.0)
 	{
 		setForcePower(25);
 		speedMultiplier = 2;
 	}
-	if (time >= 2.0 && time <= 3.0)
+	else if (time >= 2.0 && time <= 3.0)
 	{
 		setForcePower(50);
 		speedMultiplier = 2.75;

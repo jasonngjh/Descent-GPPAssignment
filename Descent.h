@@ -46,6 +46,7 @@ private:
 	TextDX* pauseText;
 	TextDX* waveNumberText;
 	TextDX* powerup_notification_text;
+	TextDX* highscoreText;
 	GameControl	gameControl;
 	WaveControl	waveControl;
 	GENERAL_STATE currentState;
@@ -57,7 +58,7 @@ private:
 	TextureManager* cannonballTexture;
 	TextureManager* spaceshipTexture;
 	TextureManager* spaceship_bulletTexture;
-	TextureManager* menu1Texture;
+	TextureManager* menuTexture;
 	TextureManager* tankTexture;
 	TextureManager* turretTexture;
 	TextureManager* pauseTexture;
@@ -76,18 +77,20 @@ private:
 	TextureManager* tankHealthTexture;
 	TextureManager* loadingTexture;
 	TextureManager* wormholeTexture;
+	TextureManager* creditsTexture;
 
 	Image* background;
 	Image* pause;
 	Image* instructionScreen;
 	Image* loading;
 	Image* ground;
-	Image* menu1;
+	Image* menu;
 	Image* turret;
 	Image* gamewin;
 	Image* gamelose;
 	Image* tankHealth;
 	Image* wormhole;
+	Image* credits;
 
 	Cannonball* cannonball;
 	Boss_Spaceship* boss;
