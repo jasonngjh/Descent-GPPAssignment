@@ -28,8 +28,9 @@ Boss_Spaceship::Boss_Spaceship() :Entity()
 bool Boss_Spaceship::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM)
 {
-	health = SPACESHIP_STARTING_HEALTH;
-
+	health = BOSS_SPACESHIP_STARTING_HEALTH;
+	hitRightCount = 0;
+	isTop = true;
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
 }
 
@@ -55,6 +56,8 @@ void Boss_Spaceship::update(float frameTime)
 		// position at right screen edge
 		spriteData.x = GAME_WIDTH - Boss_SpaceshipNS::WIDTH*getScale();
 		velocity.x = -velocity.x;               // reverse X direction
+		hitRightCount++;
+		std::cout << "Hit right " << hitRightCount << " times" << std::endl;
 	}
 	else if (spriteData.x < 0)                  // else if hit left screen edge
 	{
@@ -72,6 +75,18 @@ void Boss_Spaceship::update(float frameTime)
 	{
 		spriteData.y = 0;                       // position at top screen edge
 		velocity.y = -velocity.y;               // reverse Y direction
+	}
+	if (isTop&&hitRightCount==3)
+	{
+		spriteData.y = spriteData.y + 50;
+		hitRightCount = 0; 
+		isTop = false;
+	}
+	else if (!isTop&&hitRightCount == 3)
+	{
+		spriteData.y = spriteData.y - 50;
+		hitRightCount = 0;
+		isTop = true;
 	}
 }
 
