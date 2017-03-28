@@ -13,6 +13,7 @@ Descent::Descent()
 	pauseText = new TextDX();
 	waveNumberText = new TextDX();
 	powerup_notification_text = new TextDX();
+	highscoreText = new TextDX();
 	//textures
 	shellTexture = new TextureManager();
 	bossTexture = new TextureManager();
@@ -21,7 +22,7 @@ Descent::Descent()
 	cannonballTexture = new TextureManager();
 	spaceshipTexture = new TextureManager();
 	spaceship_bulletTexture = new TextureManager();
-	menu1Texture = new TextureManager();
+	menuTexture = new TextureManager();
 	tankTexture = new TextureManager();
 	tankHealthTexture = new TextureManager();
 	turretTexture = new TextureManager();
@@ -40,12 +41,12 @@ Descent::Descent()
 	powerup_passerbyTank_texture = new TextureManager();
 	tankHealthTexture = new TextureManager();
 	wormholeTexture = new TextureManager();
-	//wormholeTexture = new TextureManager();
+	creditsTexture = new TextureManager();
 	//images
 	background = new Image();
 	ground = new Image();
 	cannonball = new Cannonball();
-	menu1 = new Image();
+	menu = new Image();
 	tankHealth = new Image();
 	turret = new Image();
 	pause = new Image();
@@ -53,7 +54,7 @@ Descent::Descent()
 	gamewin = new Image();
 	gamelose = new Image();
 	wormhole = new Image();
-	//wormhole = new Image();
+	credits = new Image();
 	//entities
 	tank = new Player();
 	bosslaser = new BossLaser();
@@ -71,9 +72,11 @@ Descent::~Descent()
 	SAFE_DELETE(pauseText);
 	SAFE_DELETE(waveNumberText);
 	SAFE_DELETE(powerup_notification_text);
+	SAFE_DELETE(highscoreText);
 	SAFE_DELETE(background);
 	SAFE_DELETE(ground);
-	SAFE_DELETE(menu1);
+	SAFE_DELETE(menu);
+	SAFE_DELETE(credits);
 	SAFE_DELETE(gamewin);
 	SAFE_DELETE(gamelose);
 	SAFE_DELETE(instructionScreen);
@@ -125,6 +128,8 @@ void Descent::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing wave text font"));
 	if (!powerup_notification_text->initialize(graphics, 28, false, false, "Arial"))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing powerup notification font"));
+	if (!highscoreText->initialize(graphics, 47, false, false, "Arial"))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing highscore font"));
 
 	std::cout << "loaded. " << std::endl;
 
@@ -142,7 +147,7 @@ void Descent::initialize(HWND hwnd)
 	if (!spaceship_bulletTexture->initialize(graphics, SPACESHIP_BULLET_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing spaceship bullet texture"));
 
-	if (!menu1Texture->initialize(graphics, MENU1_IMAGE))
+	if (!menuTexture->initialize(graphics, MENU_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu texture"));
 	if (!pauseTexture->initialize(graphics, PAUSE_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pause texture"));
@@ -155,6 +160,8 @@ void Descent::initialize(HWND hwnd)
 
 	if (!instructionTexture->initialize(graphics, INSTRUCTION_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing instruction texture"));
+	if (!creditsTexture->initialize(graphics, CREDITS_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing credits texture"));
 
 	if (!tank->initialize(this, PlayerNS::WIDTH, PlayerNS::HEIGHT, PlayerNS::TEXTURE_COLS, tankTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tank"));
@@ -164,7 +171,7 @@ void Descent::initialize(HWND hwnd)
 	if (!ground->initialize(graphics, 0, 0, 0, groundTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ground tiles"));
 
-	if (!menu1->initialize(graphics,MENU1_WIDTH, MENU1_HEIGHT, 2, menu1Texture))
+	if (!menu->initialize(graphics, MENU_WIDTH, MENU_HEIGHT, 2, menuTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menu"));
 
 	if (!pause->initialize(graphics, PAUSE_WIDTH, PAUSE_HEIGHT, 2, pauseTexture))
@@ -187,6 +194,9 @@ void Descent::initialize(HWND hwnd)
 
 	if (!instructionScreen->initialize(graphics, INSTRUCTIONS_WIDTH, INSTRUCTIONS_HEIGHT, INSTRUCTIONS_TEXTURE_COLUMNS, instructionTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing instruction screen"));
+
+	if (!credits->initialize(graphics, CREDITS_WIDTH, CREDITS_HEIGHT, CREDITS_TEXTURE_COLUMNS, creditsTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing credits screen"));
 
 	if (!bossTexture->initialize(graphics, BOSS_SPACESHIP_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing boss texture"));
@@ -339,17 +349,22 @@ void Descent::update()
 	case GENERAL_STATE::menu: {
 
 								  if (input->isKeyDown(DOWN_KEY)){
-									  menu1->setCurrentFrame(MENU1_END_FRAME);
+									  menu->setCurrentFrame(MENU_END_FRAME);
 									  playerCount = 2;
 									  
 								  }
 								  else if (input->isKeyDown(UP_KEY)){
-									  menu1->setCurrentFrame(MENU1_START_FRAME);
+									  menu->setCurrentFrame(MENU_START_FRAME);
 									  playerCount = 1;
 
 								  }
 								  if (input->wasKeyPressed(ENTER_KEY)){
-									  gameControl.setGeneralState(GENERAL_STATE::instructions);
+									  if (playerCount == 2){
+										  gameControl.setGeneralState(GENERAL_STATE::credits);
+									  }
+									  else if (playerCount == 1){
+										  gameControl.setGeneralState(GENERAL_STATE::instructions); 
+									  }
 								  }
 	}break;
 	case GENERAL_STATE::instructions : {
@@ -773,6 +788,11 @@ void Descent::update()
 
 									 }
 	}break;
+	case GENERAL_STATE::credits: {
+										  if (input->wasKeyPressed(ENTER_KEY)){
+											  gameControl.setGeneralState(GENERAL_STATE::menu);
+										  }
+	}break;
 	}
 }
 
@@ -956,9 +976,10 @@ void Descent::render()
 	switch (gameControl.getGeneralState())
 	{
 	case GENERAL_STATE::menu:{
-								 menu1->draw();
+								 menu->draw();
 								 _snprintf_s(buffer, BUF_SIZE, "Highest score:%d ", hiscore);
-								 dxFont.print(buffer, GAME_WIDTH - 200, GAME_HEIGHT - 75);
+								 //dxFont.print(buffer, GAME_WIDTH/4, GAME_HEIGHT/3);
+								 highscoreText->print(buffer,GAME_WIDTH/6,GAME_HEIGHT/3);
 	}break;
 	case GENERAL_STATE::instructions:{
 								 instructionScreen->draw();
@@ -1049,6 +1070,9 @@ void Descent::render()
 										 gamelose->draw();
 									 }
 	}break;
+	case GENERAL_STATE::credits:{
+										 credits->draw();
+	}break;
 	}
 	graphics->spriteEnd();                  // end drawing sprites
 }
@@ -1060,7 +1084,7 @@ void Descent::render()
 void Descent::releaseAll()
 {
 	//exampleTexture->onLostDevice();
-
+	creditsTexture->onLostDevice();
 	shellTexture->onLostDevice();
 	bossTexture->onLostDevice();
 	backgroundTexture->onLostDevice();
@@ -1068,7 +1092,7 @@ void Descent::releaseAll()
 	cannonballTexture->onLostDevice();
 	spaceshipTexture->onLostDevice();
 	spaceship_bulletTexture->onLostDevice();
-	menu1Texture->onLostDevice();
+	menuTexture->onLostDevice();
 	tankTexture->onLostDevice();
 	turretTexture->onLostDevice();
 	tankHealthTexture->onLostDevice();
@@ -1101,6 +1125,7 @@ void Descent::releaseAll()
 void Descent::resetAll()
 {
 	//exampleTexture->onResetDevice();
+	creditsTexture->onResetDevice();
 	shellTexture->onResetDevice();
 	bossTexture->onResetDevice();
 	backgroundTexture->onResetDevice();
@@ -1108,7 +1133,7 @@ void Descent::resetAll()
 	cannonballTexture->onResetDevice();
 	spaceshipTexture->onResetDevice();
 	spaceship_bulletTexture->onResetDevice();
-	menu1Texture->onResetDevice();
+	menuTexture->onResetDevice();
 	tankTexture->onResetDevice();
 	turretTexture->onResetDevice();
 	tankHealthTexture->onResetDevice();
