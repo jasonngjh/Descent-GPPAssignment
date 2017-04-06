@@ -88,12 +88,6 @@ Descent::~Descent()
 	SAFE_DELETE(boss);
 	SAFE_DELETE(shell);
 	SAFE_DELETE(assistTank);
-	SAFE_DELETE(powerup_timeSlow);
-	SAFE_DELETE(powerup_shield);
-	SAFE_DELETE(powerup_increaseTankSpeed);
-	SAFE_DELETE(powerup_timeLock);
-	SAFE_DELETE(powerup_maxPower);
-	SAFE_DELETE(powerup_passerbyTank);
 	for (Audio* a : audio)
 	{
 		SAFE_DELETE(a);
@@ -347,7 +341,6 @@ void Descent::update()
 	switch (state)
 	{
 	case GENERAL_STATE::menu: {
-
 								  if (input->isKeyDown(DOWN_KEY)){
 									  menu->setCurrentFrame(MENU_END_FRAME);
 									  playerCount = 2;
@@ -1967,18 +1960,18 @@ void Descent::timer_start()
 void Descent::beginGameBreakTime()
 {
 	isGameWaiting = true;
-	Sleep(100);
+	Sleep(500);
 	double startingTime = getSecondsPassed();
-	while (isGameWaiting && waveControl.getWaveState() == WAVE_STATE::preWave)
+	bool loop = isGameWaiting && waveControl.getWaveState() == WAVE_STATE::preWave;
+	while (loop)
 	{
 		//std::cout << "waiting for " << getSecondsPassed() << " - " << startingTime + PRE_WAVE_WAITING_TIME << std::endl;
-		if (getSecondsPassed() >= (startingTime + PRE_WAVE_WAITING_TIME))
+		if (getSecondsPassed() == 5000);// >= (startingTime + PRE_WAVE_WAITING_TIME))
 		{
 			std::cout << "wait over! yay" << std::endl;
 			isGameWaiting = false;
-			break;
+			loop = false;
 		}
-			
 	}
 
 	isWaveReadyToBegin = true;
@@ -2162,17 +2155,18 @@ void Descent::despawnSpaceships()
 	std::cout << "Array_Spaceship size: " << array_spaceships.size() << std::endl;
 	std::cout << "Current active spaceship size: "<<currentActiveSpaceships << std::endl;
 	
-	for (int i = array_spaceships.size() - 1; i >= 0; i--)
-	{
-		array_spaceships[i]->setVisible(false);
-		std::cout << "Spaceship " << i << " is deleted" << std::endl;
-		delete array_spaceships[i];
-		array_spaceships.erase(array_spaceships.begin() + i);
-		currentActiveSpaceships--;
+	if (array_spaceships.size() != 0){
+		for (int i = array_spaceships.size() - 1; i >= 0; i--)
+		{
+			array_spaceships[i]->setVisible(false);
+			std::cout << "Spaceship " << i << " is deleted" << std::endl;
+			delete array_spaceships[i];
+			array_spaceships.erase(array_spaceships.begin() + i);
+			currentActiveSpaceships--;
+		}
+		if (array_spaceships.size() != 0)
+			std::cout << "WARNING: Spaceship array is not emptied correctly." << std::endl;
 	}
-
-	if (array_spaceships.size() != 0)
-		std::cout << "WARNING: Spaceship array is not emptied correctly." << std::endl;
 	
 	std::cout << "after despawinning" << std::endl;
 	std::cout << "Array_Spaceship size: " << array_spaceships.size() << std::endl;

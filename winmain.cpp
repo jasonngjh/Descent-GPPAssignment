@@ -33,7 +33,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
     #endif
 
 	//opens console and redirect all output to console
-	RedirectIOToConsole();
+	//RedirectIOToConsole();
 
     MSG msg;
 

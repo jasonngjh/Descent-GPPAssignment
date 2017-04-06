@@ -121,7 +121,7 @@ private:
 
 	int highestY;
 	int currentScore;
-	int playerCount;
+	int playerCount = 1;
 
 	bool isBossLevelInitialised = true;
 	int waveNumber = 1;
